@@ -5,21 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "medical_records")
-public class MedicalRecord {
+@Table(name = "notifications")
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private LocalDate date;
-    private String diagnosis;
-    private String treatment;
-    private String prescription;
-    private String notes;
+    private String content;
+    private String type;
+    private boolean isRead;
+    private LocalDateTime createdAt;
 }
