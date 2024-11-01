@@ -132,7 +132,8 @@ CREATE TABLE PrescriptionMedicine (
     prescription_id INT,
     medicine_id INT,
     dosage VARCHAR(100) NOT NULL,
-    quantity INT NOT NULL
+    quantity INT NOT NULL,
+    notes VARCHAR(255)
 );
 
 CREATE TABLE LabTest (

@@ -21,6 +21,9 @@ public class PrescriptionMedicine {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @Column(name = "note")
+    private String note;
+
     @ManyToOne
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
