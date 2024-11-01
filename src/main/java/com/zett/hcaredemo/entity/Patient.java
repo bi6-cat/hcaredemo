@@ -72,4 +72,13 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private Set<Payment> payments;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

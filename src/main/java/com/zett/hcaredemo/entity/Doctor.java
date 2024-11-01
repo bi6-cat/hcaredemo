@@ -1,11 +1,14 @@
 package com.zett.hcaredemo.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-
-import jakarta.persistence.*;
-import lombok.*;
 
 @Getter
 @Setter
@@ -39,15 +42,13 @@ public class Doctor {
     @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
     private String profilePictureUrl;
 
-    @OneToOne(mappedBy = "doctor")
-    private Patient patient;
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
-    
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
