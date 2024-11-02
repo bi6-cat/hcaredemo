@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+
+<body>
+    <section layout:fragment="content">
+    <!-- Hero Section -->
+    <section class="hero-bg relative pt-32 pb-40">
+        <div class="container mx-auto px-6 relative">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 text-white">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+                        Chăm sóc sức khỏe <br/>
+                        <span class="text-blue-200">thông minh</span> &<br/> 
+                        <span class="text-blue-200">tiện lợi</span>
+                    </h1>
+                    <p class="text-xl mb-12 text-blue-100 leading-relaxed">
+                        Đặt lịch khám trực tuyến, theo dõi hồ sơ sức khỏe và nhận tư vấn từ các bác sĩ hàng đầu. Chúng tôi mang đến trải nghiệm y tế hiện đại nhất cho bạn.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                        <button class="bg-white text-blue-600 px-10 py-4 rounded-xl hover:bg-blue-50 transition duration-300 text-lg font-semibold shadow-xl">
+                            <i class="fas fa-calendar-plus mr-2"></i>
+                            Đặt lịch khám
+                        </button>
+                        <button class="glass-effect text-white px-10 py-4 rounded-xl hover:bg-white hover:text-blue-600 transition duration-300 text-lg font-semibold">
+                            <i class="fas fa-play mr-2"></i>
+                            Xem giới thiệu
+                        </button>
+                    </div>
+                    <div class="mt-12 flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-12">
+                        <div class="flex items-center glass-effect px-6 py-3 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 mr-3 text-2xl"></i>
+                            <span class="text-lg">Bác sĩ chuyên môn</span>
+                        </div>
+                        <div class="flex items-center glass-effect px-6 py-3 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 mr-3 text-2xl"></i>
+                            <span class="text-lg">Đặt lịch 24/7</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-16 md:mt-0 relative">
+                    <div class="relative z-10 floating">
+                        <img src="https://img.freepik.com/free-photo/young-handsome-physician-medical-robe-with-stethoscope_1303-17818.jpg" 
+                             alt="Healthcare" 
+                             class="rounded-2xl shadow-2xl w-full h-auto object-cover">
+                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-heartbeat text-green-600 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-600 font-medium">Bệnh nhân hài lòng</div>
+                                    <div class="text-2xl font-bold text-gray-800">98%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+ <!-- Features -->
+ <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 font-semibold text-lg">Dịch Vụ Nổi Bật</span>
+            <h2 class="text-4xl font-bold mt-2 text-gray-800">Giải pháp chăm sóc sức khỏe toàn diện</h2>
+            <p class="text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
+                Chúng tôi cung cấp các dịch vụ y tế chất lượng cao, đảm bảo trải nghiệm tốt nhất cho người bệnh
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-tr from-blue-500 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-calendar-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Đặt lịch trực tuyến</h3>
+                <p class="text-gray-600 leading-relaxed mb-6">Dễ dàng đặt lịch khám với bác sĩ yêu thích của bạn chỉ với vài thao tác đơn giản.</p>
+                <a href="#" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                    Tìm hiểu thêm
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-tr from-green-500 to-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-user-md text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Bác sĩ chuyên môn</h3>
+                <p class="text-gray-600 leading-relaxed mb-6">Đội ngũ bác sĩ giàu kinh nghiệm từ nhiều chuyên khoa, luôn sẵn sàng phục vụ.</p>
+                <a href="#" class="inline-flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors">
+                    Tìm hiểu thêm
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div class="bg-gradient-to-tr from-purple-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-file-medical text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Hồ sơ điện tử</h3>
+                <p class="text-gray-600 leading-relaxed mb-6">Quản lý hồ sơ bệnh án và đơn thuốc trực tuyến một cách an toàn, bảo mật.</p>
+                <a href="#" class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700 transition-colors">
+                    Tìm hiểu thêm
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
+            <div class="text-center">
+                <div class="text-4xl font-bold text-blue-600 mb-2">1000+</div>
+                <div class="text-gray-600">Bệnh nhân tin tưởng</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">50+</div>
+                <div class="text-gray-600">Bác sĩ chuyên môn</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-purple-600 mb-2">15+</div>
+                <div class="text-gray-600">Chuyên khoa</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-red-600 mb-2">24/7</div>
+                <div class="text-gray-600">Hỗ trợ trực tuyến</div>
+            </div>
+        </div>
+
+        <!-- CTA Button -->
+        <div class="text-center mt-16">
+            <a th:href="@{/appointment}" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                <i class="fas fa-stethoscope mr-2"></i>
+                <span th:text="#{button.bookNow}">Đặt lịch khám ngay</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Doctors -->
+<section class="py-20 bg-gradient-to-b from-white to-blue-50">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 font-semibold">Chuyên gia y tế</span>
+            <h2 class="text-4xl font-bold mt-2 mb-4">Đội ngũ bác sĩ</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Với đội ngũ bác sĩ giàu kinh nghiệm và tận tâm, chúng tôi cam kết mang đến dịch vụ chăm sóc sức khỏe tốt nhất cho bạn
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <!-- Doctor 1 -->
+            <div class="group">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 transition-opacity duration-300 flex items-end justify-center pb-6">
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <img src="https://taimuihongsg.com/wp-content/uploads/2019/01/Trinh-Tan-Lap_taimuihongsg.jpg" alt="BS. Nguyễn Văn A" 
+                         class="w-full h-64 object-cover">
+                </div>
+                <div class="text-center mt-6">
+                    <h3 class="text-xl font-bold text-gray-800">Ts. Nguyễn Văn A</h3>
+                    <p class="text-blue-600 font-medium mt-1">Khoa Tim mạch</p>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        Hơn 15 năm kinh nghiệm<br>
+                        Chuyên gia về bệnh lý tim mạch
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 2 -->
+            <div class="group">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 transition-opacity duration-300 flex items-end justify-center pb-6">
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <img src="https://i1-suckhoe.vnecdn.net/2024/03/14/ba-c-si-1710350934-1710350945-9229-1710351046.png?w=460&h=0&q=100&dpr=2&fit=crop&s=EM9kmTMFROqcOJrSRyrMzQ
+" alt="BS. Trần Thị B" 
+                         class="w-full h-64 object-cover">
+                </div>
+                <div class="text-center mt-6">
+                    <h3 class="text-xl font-bold text-gray-800">ThS. Trần Thị Hạnh</h3>
+                    <p class="text-blue-600 font-medium mt-1">Khoa Nhi</p>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        Hơn 10 năm kinh nghiệm<br>
+                        Chuyên gia nhi khoa
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 3 -->
+            <div class="group">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 transition-opacity duration-300 flex items-end justify-center pb-6">
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <img src="https://benhviennhitrunguong.gov.vn/wp-content/uploads/2020/07/PGS.TS-TRAN-MINH-DIEN-2.jpg" 
+                         class="w-full h-64 object-cover">
+                </div>
+                <div class="text-center mt-6">
+                    <h3 class="text-xl font-bold text-gray-800">ThS. Lê Văn Cường</h3>
+                    <p class="text-blue-600 font-medium mt-1">Khoa Nội tổng quát</p>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        Hơn 12 năm kinh nghiệm<br>
+                        Chuyên gia nội khoa
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 4 -->
+            <div class="group">
+                <div class="relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent opacity-0 transition-opacity duration-300 flex items-end justify-center pb-6">
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <img src="https://monozy.net/wp-content/uploads/2023/12/chup-anh-profile-bac-si-phong-kham-657d4478271fd.jpg" 
+                         class="w-full h-64 object-cover">
+                </div>
+                <div class="text-center mt-6">
+                    <h3 class="text-xl font-bold text-gray-800">BS. Phạm Thị Đào</h3>
+                    <p class="text-blue-600 font-medium mt-1">Khoa Da liễu</p>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        Hơn 8 năm kinh nghiệm<br>
+                        Chuyên gia da liễu
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View All Button -->
+        <div class="text-center mt-12">
+            <a href="#" class="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                Xem tất cả bác sĩ
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+    </section>
+</body>
+</html>
