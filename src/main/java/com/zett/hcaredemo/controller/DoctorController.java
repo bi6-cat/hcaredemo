@@ -1,5 +1,11 @@
 package com.zett.hcaredemo.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
@@ -49,7 +56,7 @@ public class DoctorController {
         model.addAttribute("sortBy", sortBy);
 
         model.addAttribute("order", order);
-        //Passing totalPage to view
+ 
         model.addAttribute("totalPages", doctors.getTotalPages());
 
         model.addAttribute("totalElements", doctors.getTotalElements());
@@ -71,12 +78,40 @@ public class DoctorController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,
+            @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
             BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "doctors/create";
         }
 
+        // Handle file upload
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            try {
+                byte[] bytes = profilePicture.getBytes();
+
+                String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
+
+                Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
+
+                if (!Files.exists(directoryPath)) {
+                    Files.createDirectories(directoryPath);
+                }
+                
+                Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
+
+                Files.write(filePath, bytes);
+
+                doctorCreateDTO.setProfilePictureUrl("/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
+            } catch (Exception e) {
+                e.printStackTrace();
+                model.addAttribute("message", "Failed to upload image");
+                return "doctors/create";
+            }
+        }
+
         doctorService.create(doctorCreateDTO);
+
         return "redirect:/doctors";
     }
 
@@ -88,7 +123,42 @@ public class DoctorController {
     }
 
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable UUID id, @ModelAttribute DoctorDTO doctorDTO){
+    public String edit(@PathVariable UUID id, @ModelAttribute DoctorDTO doctorDTO,
+            @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
+
+        var oldDoctor = doctorService.findById(id);
+
+        // Case 1: User does not select a new image
+        if (profilePicture.getOriginalFilename().isEmpty()) {
+            doctorDTO.setProfilePictureUrl(oldDoctor.getProfilePictureUrl());
+        } else {
+            // Case 2: User selects a new image
+            if (profilePicture.getOriginalFilename() != null && !profilePicture.getOriginalFilename().isEmpty()) {
+                try {
+                    byte[] bytes = profilePicture.getBytes();
+
+                    String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
+
+                    Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
+
+                    if (!Files.exists(directoryPath)) {
+                        Files.createDirectories(directoryPath);
+                    }
+                    
+                    Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
+
+                    Files.write(filePath, bytes);
+
+                    doctorDTO.setProfilePictureUrl("/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    model.addAttribute("message", "Failed to upload image");
+                    return "doctors/edit";
+                }
+            }
+        }
+
         doctorService.update(id, doctorDTO);
         return "redirect:/doctors";
     }
