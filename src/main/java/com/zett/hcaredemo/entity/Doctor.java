@@ -42,7 +42,6 @@ public class Doctor {
     @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
     private String profilePictureUrl;
 
-
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
 
