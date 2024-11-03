@@ -27,7 +27,7 @@ public class DoctorSchedule {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
     
-    @Column(name = "is_available", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_available")
     private Boolean isAvailable;
     
     @Column(name = "created_at", updatable = false)
@@ -35,6 +35,17 @@ public class DoctorSchedule {
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")

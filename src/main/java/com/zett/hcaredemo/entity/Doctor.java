@@ -27,7 +27,7 @@ public class Doctor {
     @Column(name = "degree", columnDefinition = "NVARCHAR(10)")
     private String degree;
 
-    @Column(name = "gender", columnDefinition = "ENUM('MALE', 'FEMALE', 'OTHER')")
+    @Column(name = "gender", columnDefinition = "NVARCHAR(10)")
     private String gender;
 
     @Column(name = "phone_number", columnDefinition = "NVARCHAR(20)")
@@ -42,15 +42,6 @@ public class Doctor {
     @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
     private String profilePictureUrl;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -60,7 +51,7 @@ public class Doctor {
     private Department department;
 
     @OneToMany(mappedBy = "doctor")
-    private Set<DoctorSchedule> schedules;
+    private Set<DoctorSchedule> doctorSchedules;
 
     @OneToMany(mappedBy = "doctor")
     private Set<HealthCheckAppointment> healthCheckAppointments;

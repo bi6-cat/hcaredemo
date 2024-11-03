@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.entity;
 
+import java.util.Set;
 import java.util.UUID;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
@@ -22,7 +23,7 @@ public class Medicine {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10, 2)")
+    @Column(name = "price", nullable = false)
     private Double price;
 
     @Column(name = "quantity", nullable = false)
@@ -33,4 +34,19 @@ public class Medicine {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    @OneToMany
+    @JoinColumn(name = "medicine_id")  
+    private Set<PrescriptionMedicine> prescriptionMedicines;
 }

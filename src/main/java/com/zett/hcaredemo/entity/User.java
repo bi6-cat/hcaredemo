@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.entity;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,6 +29,15 @@ public class User {
 
     @Column(name = "phone", nullable = false, unique = true, columnDefinition = "NVARCHAR(255)")
     private String phone;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @ManyToMany
     @JoinTable(

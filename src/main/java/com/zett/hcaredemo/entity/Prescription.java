@@ -26,6 +26,17 @@ public class Prescription {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+    
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
@@ -38,7 +49,7 @@ public class Prescription {
     @JoinColumn(name = "appointment_id")
     private HealthCheckAppointment appointment;
 
-    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "prescription")
     private Set<PrescriptionMedicine> prescriptionMedicines;
 
     @OneToOne(mappedBy = "prescription")

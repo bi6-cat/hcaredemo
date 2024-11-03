@@ -19,7 +19,7 @@ public class HealthCheckAppointment {
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
     
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'COMPLETED', 'CANCELLED')")
+    @Column(name = "status", nullable = false)
     private String status;
     
     @Column(name = "created_at", updatable = false)
@@ -28,6 +28,17 @@ public class HealthCheckAppointment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
@@ -35,10 +46,6 @@ public class HealthCheckAppointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
-    
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
 
     @ManyToOne
     @JoinColumn(name = "department_service_id")

@@ -24,7 +24,7 @@ public class Patient {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "gender", columnDefinition = "ENUM('MALE', 'FEMALE', 'OTHER')")
+    @Column(name = "gender")
     private String gender;
 
     @Column(name = "address", columnDefinition = "NVARCHAR(255)")
@@ -42,21 +42,12 @@ public class Patient {
     @Column(name = "allergies", columnDefinition = "NVARCHAR(1000)")
     private String allergies;
 
-    @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
+    @Column(name = "profile_picture_url")
     private String profilePictureUrl;
-
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "patient")
     private Set<HealthCheckAppointment> healthCheckAppointments;
@@ -72,13 +63,5 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private Set<Payment> payments;
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }
