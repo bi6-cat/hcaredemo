@@ -36,10 +36,10 @@ public class DoctorController {
     @GetMapping
     public String index(
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "5") Integer size,
+            @RequestParam(required = false, defaultValue = "12") Integer size,
             @RequestParam(required = false, defaultValue = "fullName") String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String order,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "") String keyword,
             Model model) {
         
         Pageable pageable = null;
@@ -65,7 +65,7 @@ public class DoctorController {
 
         model.addAttribute("pageSize", size);
 
-        model.addAttribute("pageSizes", new Integer[]{5, 10, 20, 50, 100});
+        model.addAttribute("pageSizes", new Integer[]{6, 12, 24, 60, 100});
         return "doctors/index";
     }
 

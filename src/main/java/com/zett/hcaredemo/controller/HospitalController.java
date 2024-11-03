@@ -32,7 +32,7 @@ public class HospitalController {
             @RequestParam(required = false, defaultValue = "5") Integer size,
             @RequestParam(required = false, defaultValue = "name") String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String order,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "") String keyword,
             Model model) {
         
         Pageable pageable = null;
@@ -49,7 +49,7 @@ public class HospitalController {
         model.addAttribute("sortBy", sortBy);
 
         model.addAttribute("order", order);
-        //Passing totalPage to view
+
         model.addAttribute("totalPages", hospitals.getTotalPages());
 
         model.addAttribute("totalElements", hospitals.getTotalElements());

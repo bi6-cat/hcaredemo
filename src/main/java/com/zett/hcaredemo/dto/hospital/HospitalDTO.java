@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
-import com.zett.hcaredemo.dto.heathcheckappointment.HealthCheckAppointmentDTO;
 
 @Getter
 @Setter
@@ -24,5 +23,4 @@ public class HospitalDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Set<DepartmentDTO> departments; 
-    private Set<HealthCheckAppointmentDTO> healthCheckAppointments;
 }
