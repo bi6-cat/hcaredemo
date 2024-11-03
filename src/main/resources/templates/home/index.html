@@ -12,79 +12,144 @@
         .hero-bg {
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
+        
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        
         .floating {
-            animation: float 3s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite;
         }
+        
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
             100% { transform: translateY(0px); }
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 2s ease-out forwards;
         }
     </style>
 </head>
 
 <body>
     <section layout:fragment="content">
-    <!-- Hero Section -->
-    <section class="hero-bg relative pt-32 pb-40">
-        <div class="container mx-auto px-6 relative">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 text-white">
-                    <h1 class="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-                        Chăm sóc sức khỏe <br/>
-                        <span class="text-blue-200">thông minh</span> &<br/> 
-                        <span class="text-blue-200">tiện lợi</span>
-                    </h1>
-                    <p class="text-xl mb-12 text-blue-100 leading-relaxed">
-                        Đặt lịch khám trực tuyến, theo dõi hồ sơ sức khỏe và nhận tư vấn từ các bác sĩ hàng đầu. Chúng tôi mang đến trải nghiệm y tế hiện đại nhất cho bạn.
-                    </p>
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-                        <button class="bg-white text-blue-600 px-10 py-4 rounded-xl hover:bg-blue-50 transition duration-300 text-lg font-semibold shadow-xl">
-                            <i class="fas fa-calendar-plus mr-2"></i>
-                            Đặt lịch khám
-                        </button>
-                        <button class="glass-effect text-white px-10 py-4 rounded-xl hover:bg-white hover:text-blue-600 transition duration-300 text-lg font-semibold">
-                            <i class="fas fa-play mr-2"></i>
-                            Xem giới thiệu
-                        </button>
-                    </div>
-                    <div class="mt-12 flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-12">
-                        <div class="flex items-center glass-effect px-6 py-3 rounded-xl">
-                            <i class="fas fa-check-circle text-green-400 mr-3 text-2xl"></i>
-                            <span class="text-lg">Bác sĩ chuyên môn</span>
+   <!-- Hero Section -->
+<section class="hero-bg relative min-h-screen flex items-center">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-600/90"></div>
+    </div>
+
+    <div class="container mx-auto px-6 relative py-20">
+        <div class="flex flex-col lg:flex-row items-center">
+            <!-- Left Content -->
+            <div class="lg:w-1/2 text-white">
+                <h1 class="text-5xl lg:text-7xl font-bold mb-8 leading-tight animate-fade-in">
+                    Chăm sóc <br/>
+                    <span class="text-blue-300">sức khỏe</span><br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-blue-400">
+                        thông minh
+                    </span>
+                </h1>
+
+                <p class="text-xl mb-12 text-blue-100 leading-relaxed max-w-2xl">
+                    Đặt lịch khám trực tuyến, theo dõi sức khỏe và nhận tư vấn từ các bác sĩ hàng đầu. 
+                    Chúng tôi mang đến trải nghiệm y tế hiện đại nhất cho bạn và gia đình.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-6 mb-12">
+                    <button class="group bg-white hover:bg-blue-50 text-blue-600 px-8 py-4 rounded-2xl transition duration-300 text-lg font-semibold shadow-lg hover:shadow-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-plus mr-3 group-hover:scale-110 transition-transform"></i>
+                        Đặt lịch ngay
+                    </button>
+                    
+                    <button class="group glass-effect text-white border border-white/20 px-8 py-4 rounded-2xl hover:bg-white/10 transition duration-300 text-lg font-semibold flex items-center justify-center">
+                        <i class="fas fa-play mr-3 group-hover:scale-110 transition-transform"></i>
+                        Xem video
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="glass-effect rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-500/20">
+                                <i class="fas fa-user-md text-2xl text-blue-300"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-xl">100+</h3>
+                                <p class="text-blue-200">Bác sĩ chuyên khoa</p>
+                            </div>
                         </div>
-                        <div class="flex items-center glass-effect px-6 py-3 rounded-xl">
-                            <i class="fas fa-check-circle text-green-400 mr-3 text-2xl"></i>
-                            <span class="text-lg">Đặt lịch 24/7</span>
+                    </div>
+
+                    <div class="glass-effect rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-green-500/20">
+                                <i class="fas fa-heartbeat text-2xl text-green-300"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-xl">98%</h3>
+                                <p class="text-blue-200">Bệnh nhân hài lòng</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="md:w-1/2 mt-16 md:mt-0 relative">
-                    <div class="relative z-10 floating">
+            </div>
+
+            <!-- Right Content -->
+            <div class="lg:w-1/2 mt-16 lg:mt-0">
+                <div class="relative">
+                    <!-- Main Image -->
+                    <div class="relative z-20 floating">
                         <img src="https://img.freepik.com/free-photo/young-handsome-physician-medical-robe-with-stethoscope_1303-17818.jpg" 
-                             alt="Healthcare" 
-                             class="rounded-2xl shadow-2xl w-full h-auto object-cover">
-                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-heartbeat text-green-600 text-2xl"></i>
+                             alt="Doctor" 
+                             class="rounded-3xl shadow-2xl w-full max-w-lg mx-auto">
+                    </div>
+
+                    <!-- Decorative Elements -->
+                    <div class="absolute top-10 -right-10 z-10 w-72 h-72 bg-blue-400/30 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-10 -left-10 z-10 w-72 h-72 bg-blue-600/30 rounded-full blur-3xl"></div>
+
+                    <!-- Stats Card -->
+                    <div class="absolute -bottom-30 right-0 z-30 bg-white p-5 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-105">
+                                <i class="fas fa-star text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Đánh giá từ khách hàng</p>
+                                <div class="flex items-center">
+                                    <span class="text-2xl font-bold text-gray-800 mr-2">4.9</span>
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="text-sm text-gray-600 font-medium">Bệnh nhân hài lòng</div>
-                                    <div class="text-2xl font-bold text-gray-800">98%</div>
-                                </div>
+                                <p class="text-sm text-gray-500 mt-1">từ 2,394 lượt đánh giá</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Abstract Shapes -->
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-white" style="clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 100%);"></div>
+</section>
+
+
 
  <!-- Features -->
  <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
@@ -307,6 +372,116 @@
         </div>
     </div>
 </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 font-semibold">Liên Hệ</span>
+            <h2 class="text-4xl font-bold mt-2 mb-4">Kết nối với chúng tôi</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Hãy để lại thông tin, chúng tôi sẽ liên hệ với bạn sớm nhất có thể
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Contact Info -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="space-y-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Địa chỉ</h3>
+                                <p class="text-gray-600">99 Đường Nguyễn Trãi, Mộ Lao, Quận Hà Đông<br>TP. Hà Nội</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-phone-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Điện thoại</h3>
+                                <p class="text-gray-600">+84 123 456 789</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-envelope text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Email</h3>
+                                <p class="text-gray-600">info@example.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-8 border-t">
+                        <h3 class="font-semibold mb-4">Theo dõi chúng tôi</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Họ và tên</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+                                <input type="tel" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Chuyên khoa</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                <option>Chọn chuyên khoa</option>
+                                <option>Tim mạch</option>
+                                <option>Nhi khoa</option>
+                                <option>Da liễu</option>
+                                <option>Nội tổng quát</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nội dung</label>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                            Gửi tin nhắn
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
     </section>
 </body>
 </html>

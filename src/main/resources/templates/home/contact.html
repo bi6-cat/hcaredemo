@@ -8,64 +8,107 @@
     <title>HealthCare Management System</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .hover-float:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+        </style>
 </head>
 
 <body>
     <section layout:fragment="content">
-
-    <!-- About Section -->
-    <section class="py-20 bg-white">
-    <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div class="relative">
-                <div class="bg-blue-100 rounded-lg absolute -top-4 -left-4 w-full h-full"></div>
-                <img src="/api/placeholder/600/400" alt="About Us" class="relative rounded-lg shadow-xl w-full">
-                <div class="absolute -bottom-8 -right-8 bg-white p-6 rounded-lg shadow-xl">
-                    <div class="flex items-center space-x-4">
-                        <div class="text-4xl font-bold text-blue-600">15+</div>
-                        <div class="text-gray-600">Năm kinh nghiệm<br>trong ngành y tế</div>
+    
+    <!-- About Section --><br><br><br>
+    <section class="py-20 bg-white overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left Column - Image -->
+                <div class="relative">
+                    <!-- Background Decoration -->
+                    <div class="absolute -top-4 -left-4 w-full h-full bg-blue-100 rounded-2xl"></div>
+                    
+                    <!-- Main Image -->
+                    <div class="relative">
+                        <img 
+                            src="https://img.freepik.com/free-photo/young-handsome-physician-medical-robe-with-stethoscope_1303-17818.jpg" 
+                            alt="About Us" 
+                            class="w-full h-[500px] object-cover rounded-2xl shadow-xl"
+                        >
                     </div>
-                </div>
-            </div>
 
-            <div>
-                <span class="text-blue-600 font-semibold">Về Chúng Tôi</span>
-                <h2 class="text-4xl font-bold mt-2 mb-6">Chăm sóc sức khỏe chuyên nghiệp</h2>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    Với sứ mệnh mang đến dịch vụ y tế chất lượng cao và tiếp cận dễ dàng cho mọi người, chúng tôi không ngừng đổi mới và phát triển để đáp ứng nhu cầu ngày càng cao của khách hàng.
-                </p>
-                <div class="grid grid-cols-2 gap-6 mb-8">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-user-md text-blue-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2">Đội ngũ chuyên nghiệp</h3>
-                            <p class="text-gray-600 text-sm">Bác sĩ giàu kinh nghiệm, tận tâm</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-hospital text-blue-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-2">Cơ sở vật chất</h3>
-                            <p class="text-gray-600 text-sm">Trang thiết bị hiện đại</p>
+                    <!-- Experience Badge -->
+                    <div class="absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl font-bold text-blue-600">15+</div>
+                            <div class="text-gray-600 text-sm leading-tight">
+                                Năm kinh nghiệm<br>trong ngành y tế
+                            </div>
                         </div>
                     </div>
                 </div>
-                <a href="#contact" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300">
-                    Liên hệ ngay
-                    <i class="fas fa-arrow-right ml-2"></i>
-                </a>
+
+                <!-- Right Column - Content -->
+                <div class="lg:pl-8">
+                    <div class="space-y-6">
+                        <!-- Section Header -->
+                        <div>
+                            <span class="text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full">Về Chúng Tôi</span>
+                            <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-6">Chăm sóc sức khỏe chuyên nghiệp</h2>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-gray-600 leading-relaxed">
+                            Với sứ mệnh mang đến dịch vụ y tế chất lượng cao và tiếp cận dễ dàng cho mọi người, 
+                            chúng tôi không ngừng đổi mới và phát triển để đáp ứng nhu cầu ngày càng cao của khách hàng.
+                        </p>
+
+                        <!-- Features Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+                            <!-- Feature 1 -->
+                            <div class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors duration-300">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user-md text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold mb-2">Đội ngũ chuyên nghiệp</h3>
+                                    <p class="text-gray-600 text-sm">Bác sĩ giàu kinh nghiệm, tận tâm</p>
+                                </div>
+                            </div>
+
+                            <!-- Feature 2 -->
+                            <div class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors duration-300">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-hospital text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold mb-2">Cơ sở vật chất</h3>
+                                    <p class="text-gray-600 text-sm">Trang thiết bị hiện đại</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <a href="#contact" 
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 hover:shadow-lg">
+                            Liên hệ ngay
+                            <i class="fas fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     </section>
+
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-gray-50">
+    <br>
     <div class="container mx-auto px-6">
         <div class="text-center mb-16">
             <span class="text-blue-600 font-semibold">Liên Hệ</span>
