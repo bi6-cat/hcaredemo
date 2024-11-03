@@ -29,10 +29,7 @@ CREATE TABLE Patient (
     blood_type NVARCHAR(10),
     allergies NVARCHAR(1000),
     profile_picture_url NVARCHAR(255),
-    is_active BOOLEAN DEFAULT TRUE,
     user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Doctor (
@@ -44,10 +41,7 @@ CREATE TABLE Doctor (
     experience NVARCHAR(1000),
     profile_picture_url NVARCHAR(255),
     department_id INT,
-    is_active BOOLEAN DEFAULT TRUE,
     user_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE DoctorSchedule (
@@ -94,14 +88,14 @@ CREATE TABLE DepartmentService (
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Room (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    room_number VARCHAR(50) NOT NULL,
-    type ENUM('EXAMINATION', 'TESTING', 'WAITING', 'VACCINATION') NOT NULL,
-    department_id INT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
-);
+-- CREATE TABLE Room (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     room_number VARCHAR(50) NOT NULL,
+--     type ENUM('EXAMINATION', 'TESTING', 'WAITING', 'VACCINATION') NOT NULL,
+--     department_id INT,
+--     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+-- );
 
 CREATE TABLE HealthCheckAppointment (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -111,7 +105,6 @@ CREATE TABLE HealthCheckAppointment (
     patient_id INT,
     doctor_id INT,
     appointment_date DATETIME NOT NULL,
-    room_id INT,
     status ENUM('PENDING', 'COMPLETED', 'CANCELLED') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -140,7 +133,7 @@ CREATE TABLE LabTest (
     id INT AUTO_INCREMENT PRIMARY KEY,
     test_name VARCHAR(100) NOT NULL,
     description TEXT,
-    room_id INT,
+    room VARCHAR(50) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -202,8 +195,8 @@ ALTER TABLE Doctor ADD FOREIGN KEY (department_id) REFERENCES Department(id);
 ALTER TABLE DoctorSchedule ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
 ALTER TABLE Department ADD FOREIGN KEY (hospital_id) REFERENCES Hospital(id);
 ALTER TABLE DepartmentService ADD FOREIGN KEY (department_id) REFERENCES Department(id);
-ALTER TABLE Room ADD FOREIGN KEY (department_id) REFERENCES Department(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (room_id) REFERENCES Room(id);
+-- ALTER TABLE Room ADD FOREIGN KEY (department_id) REFERENCES Department(id);
+-- ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (room_id) REFERENCES Room(id);
 ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
 ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
 ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (departmentService_id) REFERENCES DepartmentService(id);
@@ -214,7 +207,7 @@ ALTER TABLE Prescription ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
 ALTER TABLE Prescription ADD FOREIGN KEY (appointment_id) REFERENCES HealthCheckAppointment(id);
 ALTER TABLE PrescriptionMedicine ADD FOREIGN KEY (prescription_id) REFERENCES Prescription(id);
 ALTER TABLE PrescriptionMedicine ADD FOREIGN KEY (medicine_id) REFERENCES Medicine(id);
-ALTER TABLE LabTest ADD FOREIGN KEY (room_id) REFERENCES Room(id);
+-- ALTER TABLE LabTest ADD FOREIGN KEY (room_id) REFERENCES Room(id);
 ALTER TABLE LabTestAppointment ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
 ALTER TABLE LabTestAppointment ADD FOREIGN KEY (lab_test_id) REFERENCES LabTest(id);
 ALTER TABLE MedicalRecord ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);

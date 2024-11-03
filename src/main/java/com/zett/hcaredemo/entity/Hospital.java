@@ -17,10 +17,10 @@ public class Hospital {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String name;
 
-    @Column(name = "address", columnDefinition = "VARCHAR(255)")
+    @Column(name = "address", columnDefinition = "NVARCHAR(255)")
     private String address;
 
     @Column(name = "phone", columnDefinition = "VARCHAR(15)")
@@ -40,6 +40,17 @@ public class Hospital {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @OneToMany(mappedBy = "hospital")
     private Set<Department> departments;

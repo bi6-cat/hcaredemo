@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .service-card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Hover effects */
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        </style>
+</head>
+
+<body>
+    <section layout:fragment="content">
+
+    <!-- Services Hero Section -->
+    <section class="bg-gradient-to-br from-blue-50 to-white py-20 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    Dịch vụ y tế thông minh
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Kết hợp công nghệ hiện đại và chuyên môn y tế để mang đến trải nghiệm chăm sóc sức khỏe tốt nhất
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Services Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-calendar-check text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Đặt lịch trực tuyến</h3>
+                    <p class="text-gray-600 mb-6">
+                        Đặt lịch khám dễ dàng, nhanh chóng với hệ thống trực tuyến 24/7. Chọn bác sĩ và thời gian phù hợp với bạn.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-user-md text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Bác sĩ chuyên môn</h3>
+                    <p class="text-gray-600 mb-6">
+                        Đội ngũ bác sĩ giàu kinh nghiệm, được đào tạo chuyên sâu tại các bệnh viện hàng đầu trong và ngoài nước.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-green-600 hover:text-green-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Chẩn đoán với AI</h3>
+                    <p class="text-gray-600 mb-6">
+                        Ứng dụng trí tuệ nhân tạo trong chẩn đoán, giúp phát hiện sớm các dấu hiệu bệnh lý với độ chính xác cao.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-purple-600 hover:text-purple-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-file-medical text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Hồ sơ điện tử</h3>
+                    <p class="text-gray-600 mb-6">
+                        Quản lý hồ sơ bệnh án điện tử an toàn, bảo mật. Truy cập thông tin y tế mọi lúc, mọi nơi.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-orange-600 hover:text-orange-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 5 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-heartbeat text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Quản lý sức khỏe</h3>
+                    <p class="text-gray-600 mb-6">
+                        Theo dõi chỉ số sức khỏe, nhận thông báo tái khám và lời khuyên từ bác sĩ định kỳ.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-red-600 hover:text-red-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 6 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-comments text-2xl text-teal-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Tư vấn trực tuyến</h3>
+                    <p class="text-gray-600 mb-6">
+                        Kết nối trực tiếp với bác sĩ qua video call hoặc chat để được tư vấn nhanh chóng.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-teal-600 hover:text-teal-700">
+                        Tìm hiểu thêm
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-blue-600 py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+                    Sẵn sàng trải nghiệm dịch vụ của chúng tôi?
+                </h2>
+                <p class="text-blue-100 mb-8">
+                    Đăng ký ngay hôm nay để nhận được ưu đãi đặc biệt dành cho khách hàng mới
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#" class="px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition duration-300">
+                        Đặt lịch ngay
+                    </a>
+                    <a href="#" class="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+                        Tư vấn miễn phí
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-12">Câu hỏi thường gặp</h2>
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-md">
+                        <button class="flex justify-between items-center w-full px-6 py-4 text-left">
+                            <span class="font-semibold">Làm thế nào để đặt lịch khám?</span>
+                            <i class="fas fa-chevron-down text-blue-600"></i>
+                        </button>
+                        <div class="px-6 pb-4">
+                            <p class="text-gray-600">
+                                Bạn có thể đặt lịch trực tuyến thông qua website hoặc ứng dụng di động của chúng tôi. Chỉ cần chọn chuyên khoa, bác sĩ và thời gian phù hợp.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-md">
+                        <button class="flex justify-between items-center w-full px-6 py-4 text-left">
+                            <span class="font-semibold">Chi phí khám bệnh như thế nào?</span>
+                            <i class="fas fa-chevron-down text-blue-600"></i>
+                        </button>
+                        <div class="px-6 pb-4">
+                            <p class="text-gray-600">
+                                Chi phí sẽ được thông báo cụ thể khi bạn đặt lịch và có thể thanh toán trực tuyến hoặc tại quầy.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </section>
+</body>
+</html>
