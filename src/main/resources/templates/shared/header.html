@@ -1,0 +1,24 @@
+<!-- Header -->
+<header class="bg-white shadow-lg fixed w-full z-40" th:fragment="header">
+    <nav class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-3xl mr-2"></i>
+                <span class="text-blue-600 text-2xl font-bold">HealthCare</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a th:href="@{/}" class="text-gray-700 hover:text-blue-600 transition duration-300">Trang chủ</a>
+                <a th:href="@{/services}" class="text-gray-700 hover:text-blue-600 transition duration-300">Dịch vụ</a>
+                <a th:href="@{/hospitals}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bệnh viện</a>
+                <a th:href="@{/doctors}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bác sĩ</a>
+                <a th:href="@{/contact}" class="text-gray-700 hover:text-blue-600 transition duration-300">Liên hệ</a>
+                <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
+                    Đăng nhập
+                </button>
+                <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold">
+                    Đăng ký ngay
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -23,7 +23,7 @@ public class Department {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "head_of_department", columnDefinition = "NVARCHAR(100)")
+    @Column(name = "head_of_department", columnDefinition = "VARCHAR(100)")
     private String headOfDepartment;
 
     @Column(name = "phone", columnDefinition = "VARCHAR(15)")
@@ -34,6 +34,17 @@ public class Department {
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
     
     @ManyToOne
     @JoinColumn(name = "hospital_id")
@@ -44,9 +55,6 @@ public class Department {
 
     @OneToMany(mappedBy = "department")
     private Set<DepartmentService> services;
-
-    @OneToMany(mappedBy = "department")
-    private Set<Room> rooms;
 
     @OneToMany(mappedBy = "department")
     private Set<HealthCheckAppointment> healthCheckAppointments;

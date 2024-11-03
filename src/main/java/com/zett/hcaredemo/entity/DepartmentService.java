@@ -1,10 +1,14 @@
 package com.zett.hcaredemo.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-import jakarta.persistence.*;
-import lombok.*;
 
 @Getter
 @Setter
@@ -32,11 +36,22 @@ public class DepartmentService {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "department_services")
+    @OneToMany(mappedBy = "departmentService")
     private Set<HealthCheckAppointment> healthCheckAppointments;
-    
+
 }

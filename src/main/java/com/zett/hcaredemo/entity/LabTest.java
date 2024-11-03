@@ -24,6 +24,9 @@ public class LabTest {
     
     @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10, 2)")
     private Double price;
+
+    @Column(name = "room", nullable = false, columnDefinition = "VARCHAR(50)")
+    private String room;
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -31,7 +34,14 @@ public class LabTest {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -19,7 +19,7 @@ public class LabTestAppointment {
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
     
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'COMPLETED', 'CANCELLED')")
+    @Column(name = "status", nullable = false)
     private String status;
     
     @Column(name = "created_at", updatable = false)
@@ -27,6 +27,17 @@ public class LabTestAppointment {
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

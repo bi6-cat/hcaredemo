@@ -22,11 +22,16 @@ public class Payment {
     @Column(name = "payment_method", nullable = false, columnDefinition = "VARCHAR(50)")
     private String paymentMethod;
     
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('PENDING', 'COMPLETED', 'FAILED')")
+    @Column(name = "status", nullable = false)
     private String status;
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

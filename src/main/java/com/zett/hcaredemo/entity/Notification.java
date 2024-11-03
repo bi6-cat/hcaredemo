@@ -16,17 +16,31 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     
-    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "message", nullable = false)
     private String message;
     
     @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(50)")
     private String type;
     
-    @Column(name = "status", nullable = false, columnDefinition = "ENUM('SENT', 'READ', 'UNREAD')")
+    @Column(name = "status", nullable = false)
     private String status;
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")
