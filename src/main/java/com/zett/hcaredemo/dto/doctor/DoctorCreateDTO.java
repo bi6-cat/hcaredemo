@@ -26,5 +26,4 @@ public class DoctorCreateDTO {
 
     private String profilePictureUrl;
 
-    private Boolean isActive;
 }

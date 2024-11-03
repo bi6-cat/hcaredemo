@@ -20,7 +20,6 @@ public class DoctorMapper {
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setExperience(doctor.getExperience());
         doctorDTO.setProfilePictureUrl(doctor.getProfilePictureUrl());
-        doctorDTO.setIsActive(doctor.getIsActive());
         doctorDTO.setUserId(doctor.getUser() != null ? doctor.getUser().getId() : null);
         doctorDTO.setDepartmentId(doctor.getDepartment() != null ? doctor.getDepartment().getId() : null);
         return doctorDTO;
@@ -40,7 +39,6 @@ public class DoctorMapper {
         doctor.setEmail(doctorDTO.getEmail());
         doctor.setExperience(doctorDTO.getExperience());
         doctor.setProfilePictureUrl(doctorDTO.getProfilePictureUrl());
-        doctor.setIsActive(doctorDTO.getIsActive());
         // Set User and Department if needed
         return doctor;
     }
@@ -58,7 +56,6 @@ public class DoctorMapper {
         doctor.setEmail(doctorCreateDTO.getEmail());
         doctor.setExperience(doctorCreateDTO.getExperience());
         doctor.setProfilePictureUrl(doctorCreateDTO.getProfilePictureUrl());
-        doctor.setIsActive(doctorCreateDTO.getIsActive());
         // Set other fields as needed
         return doctor;
     }

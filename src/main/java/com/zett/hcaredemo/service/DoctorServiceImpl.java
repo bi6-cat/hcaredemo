@@ -83,6 +83,5 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setEmail(doctorDTO.getEmail());
         doctor.setExperience(doctorDTO.getExperience());
         doctor.setProfilePictureUrl(doctorDTO.getProfilePictureUrl());
-        doctor.setIsActive(doctorDTO.getIsActive());
     }
 }

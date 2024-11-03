@@ -15,7 +15,6 @@ public class DoctorDTO {
     private String email;
     private String experience;
     private String profilePictureUrl;
-    private Boolean isActive;
     private UUID userId;
     private UUID departmentId;
 }
