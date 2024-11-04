@@ -1,0 +1,67 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container mx-auto px-4 py-8 my-10">
+            <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <!-- Header -->
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-edit mr-2"></i>Edit Schedule
+                    </h1>
+                    <p class="text-gray-600 mt-2">
+                        Update availability for 
+                        <span class="font-medium" >
+                            Date
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Edit Form -->
+                <form th:action="@{/doctor/schedules/update/{id}(id=${schedule.id})}" 
+                      method="POST" 
+                      class="space-y-6">
+                    
+                    <!-- Availability Toggle -->
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label class="text-lg font-medium text-gray-700">Availability Status</label>
+                            <p class="text-sm text-gray-500">Set whether you're available on this date</p>
+                        </div>
+                        <div class="relative">
+                            <input type="checkbox" 
+                                   th:field="*{schedule.isAvailable}" 
+                                   class="hidden peer"
+                                   id="availability">
+                            <label for="availability" 
+                                   class="block w-14 h-8 bg-gray-300 peer-checked:bg-green-500 rounded-full cursor-pointer transition-colors duration-300">
+                                <span class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-300 transform peer-checked:translate-x-6"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4">
+                        <a th:href="@{/doctor/schedules/{doctorId}(doctorId=${schedule.doctor.id})}" 
+                           class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
