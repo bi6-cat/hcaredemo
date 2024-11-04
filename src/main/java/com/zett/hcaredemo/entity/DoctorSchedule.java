@@ -21,12 +21,10 @@ public class DoctorSchedule {
     @Column(name = "schedule_date", nullable = false)
     private LocalDate scheduleDate;
     
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "time", nullable = false)
     private LocalTime startTime;
     
-    @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
-    
+    // defaut value = true
     @Column(name = "is_available")
     private Boolean isAvailable;
     

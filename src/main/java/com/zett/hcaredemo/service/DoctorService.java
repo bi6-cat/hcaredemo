@@ -2,6 +2,7 @@ package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,9 +18,12 @@ public interface DoctorService {
 
     DoctorDTO findById(UUID id);
 
+    DoctorDTO getDoctorByUsername(String name);
+
     DoctorDTO create(DoctorCreateDTO doctorCreateDTO);
 
     DoctorDTO update(UUID id, DoctorDTO doctorDTO);
 
     void delete(UUID id);
+
 }

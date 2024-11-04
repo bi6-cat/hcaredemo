@@ -1,4 +1,3 @@
-<!-- Header -->
 <header class="bg-white shadow-lg fixed w-full z-40" th:fragment="header">
     <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
@@ -12,12 +11,29 @@
                 <a th:href="@{/hospitals}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bệnh viện</a>
                 <a th:href="@{/doctors}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bác sĩ</a>
                 <a th:href="@{/contact}" class="text-gray-700 hover:text-blue-600 transition duration-300">Liên hệ</a>
-                <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
-                    Đăng nhập
-                </button>
-                <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold">
-                    Đăng ký ngay
-                </button>
+                
+                <!-- Hiển thị khi chưa đăng nhập -->
+                <div th:if="${#authentication.principal == 'anonymousUser'}" class="flex items-center space-x-4">
+                    <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
+                        <a th:href="@{/auth/login}">Đăng nhập</a>
+                    </button>
+                    <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold">
+                        <a th:href="@{/auth/register}">Đăng ký ngay</a>
+                    </button>
+                </div>
+
+                <!-- Hiển thị khi đã đăng nhập -->
+                <div th:if="${#authentication.principal != 'anonymousUser'}" class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <span class="text-gray-700">Xin chào, </span>
+                        <span class="text-blue-600 font-medium ml-1" th:text="${#authentication.principal.username}"></span>
+                    </div>
+                    <form th:action="@{/auth/logout}" method="post">
+                        <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition duration-300">
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
