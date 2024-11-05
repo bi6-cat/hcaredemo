@@ -42,10 +42,7 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public void create(PatientCreateDTO patientCreateDTO) {
-        User user = userRepository.findById(patientCreateDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Patient patient = patientMapper.toEntity(patientCreateDTO);
-        patient.setUser(user);
         patientRepository.save(patient);
     }
 

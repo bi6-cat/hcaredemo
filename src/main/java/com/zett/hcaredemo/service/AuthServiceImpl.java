@@ -1,8 +1,12 @@
 package com.zett.hcaredemo.service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.zett.hcaredemo.dto.auth.RegisterDTO;
+import com.zett.hcaredemo.dto.auth.UserDTO;
+import com.zett.hcaredemo.entity.Role;
+import com.zett.hcaredemo.entity.User;
+import com.zett.hcaredemo.mapper.UserMapper;
+import com.zett.hcaredemo.repository.RoleRepository;
+import com.zett.hcaredemo.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,13 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zett.hcaredemo.dto.auth.RegisterDTO;
-import com.zett.hcaredemo.dto.auth.UserDTO;
-import com.zett.hcaredemo.entity.Role;
-import com.zett.hcaredemo.entity.User;
-import com.zett.hcaredemo.mapper.UserMapper;
-import com.zett.hcaredemo.repository.RoleRepository;
-import com.zett.hcaredemo.repository.UserRepository;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,7 +26,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -82,13 +81,13 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         // Create a new user
         var user = userMapper.toUser(registerDTO);
-        user.setUsername(registerDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+//        user.setUsername(registerDTO.getUsername());
+//        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         Role patientRole = roleRepository.findByName("DOCTOR");
         user.setRoles(Set.of(patientRole));
         user.setIsActive(true);
-        user.setPhone(registerDTO.getPhone());
-        user.setEmail(registerDTO.getEmail());
+//        user.setPhone(registerDTO.getPhone());
+//        user.setEmail(registerDTO.getEmail());
         // Save user to database
         user = userRepository.save(user);
 

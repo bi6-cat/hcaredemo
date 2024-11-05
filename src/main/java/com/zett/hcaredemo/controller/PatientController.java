@@ -37,17 +37,18 @@ public class PatientController {
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("patient", new PatientCreateDTO());
+        model.addAttribute("patientCreateDTO", new PatientCreateDTO());
         return "patients/create";
     }
 
     @PostMapping("/create")
     public String savePatient(@ModelAttribute @Valid PatientCreateDTO patientCreateDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("patientCreateDTO", patientCreateDTO);
             return "patients/create";
         }
         patientService.create(patientCreateDTO);
-        return "redirect:/patients";
+        return "redirect:/patients/create";
     }
 
     @GetMapping("/edit/{id}")
