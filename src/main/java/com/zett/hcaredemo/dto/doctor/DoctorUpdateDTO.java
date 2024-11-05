@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DoctorCreateDTO {
+public class DoctorUpdateDTO {
     @NotBlank(message = "Full name is required")
     private String fullName;
 
@@ -27,5 +27,4 @@ public class DoctorCreateDTO {
     private String profilePictureUrl;
     @NotBlank(message = "Department is required")
     private String departmentId;
-
 }

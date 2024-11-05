@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Bác Sĩ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+<section layout:fragment="content">
+    <div class="container mx-auto px-4 pt-24 pb-12">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Chi Tiết Bác Sĩ</h1>
+        </div>
+
+        <!-- Doctor Details -->
+        <div class="bg-white p-8 rounded-lg shadow-md">
+            <div class="flex items-center mb-4">
+                <div class="relative w-24 h-24 mr-4">
+                    <img th:if="${doctor.profilePictureUrl}"
+                         th:src="${doctor.profilePictureUrl}"
+                         class="w-24 h-24 rounded-full object-cover"
+                         alt="Doctor profile picture">
+                    <img th:unless="${doctor.profilePictureUrl}"
+                         src="/images/default-avatar.png"
+                         class="w-24 h-24 rounded-full object-cover"
+                         alt="Default profile picture">
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-800" th:text="${doctor.fullName}">Tên bác sĩ</h2>
+                    <p class="text-blue-600 font-medium" th:text="${doctor.degree}">Học vị</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-gray-600">
+                <p class="flex items-center">
+                    <i class="fas fa-venus-mars w-6 text-blue-500"></i>
+                    <span th:text="${doctor.gender}">Giới tính</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-phone w-6 text-blue-500"></i>
+                    <span th:text="${doctor.phoneNumber}">Số điện thoại</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-envelope w-6 text-blue-500"></i>
+                    <span th:text="${doctor.email}">Email</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-briefcase w-6 text-blue-500"></i>
+                    <span th:text="${doctor.experience}">Kinh nghiệm</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-hospital w-6 text-blue-500"></i>
+                    <span th:text="${doctor.department.name}">Khoa</span>
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <a th:href="@{'/doctors/edit/' + ${doctor.id}}"
+                   class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                    Chỉnh Sửa Bác Sĩ
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

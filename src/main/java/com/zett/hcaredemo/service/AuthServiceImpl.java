@@ -61,31 +61,34 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     }
 
     @Override
-    public UserDTO register(RegisterDTO RegisterDTO) {
+    public UserDTO register(RegisterDTO registerDTO) {
         // Validate register request
-        if (RegisterDTO == null) {
+        if (registerDTO == null) {
             throw new IllegalArgumentException("Register request cannot be null");
         }
 
         // Check if username is already taken
-        var existingUser = userRepository.findByUsername(RegisterDTO.getUsername());
+        var existingUser = userRepository.findByUsername(registerDTO.getUsername());
 
         if (existingUser != null) {
             throw new IllegalArgumentException("Username is already taken");
         }
 
         // Compare password and confirm password
-        if (RegisterDTO.getPassword() == null ||
-                !RegisterDTO.getPassword().equals(RegisterDTO.getConfirmPassword())) {
+        if (registerDTO.getPassword() == null ||
+                !registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
         // Create a new user
-        var user = userMapper.toUser(RegisterDTO);
-        user.setPassword(passwordEncoder.encode(RegisterDTO.getPassword()));
+        var user = userMapper.toUser(registerDTO);
+        user.setUsername(registerDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         Role patientRole = roleRepository.findByName("PATIENT");
         user.setRoles(Set.of(patientRole));
         user.setIsActive(true);
+        user.setPhone(registerDTO.getPhone());
+        user.setEmail(registerDTO.getEmail());
         // Save user to database
         user = userRepository.save(user);
 

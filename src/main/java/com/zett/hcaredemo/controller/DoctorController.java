@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import com.zett.hcaredemo.service.DepartmentService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,9 +29,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/doctors")
 public class DoctorController {
     private final DoctorService doctorService;
+    private final DepartmentService departmentService;
 
-    public DoctorController(DoctorService doctorService) {
+    public DoctorController(DoctorService doctorService, DepartmentService departmentService) {
         this.doctorService = doctorService;
+        this.departmentService = departmentService;
     }
 
     @GetMapping
@@ -68,11 +71,18 @@ public class DoctorController {
         model.addAttribute("pageSizes", new Integer[]{6, 12, 24, 60, 100});
         return "doctors/index";
     }
+    @GetMapping("details/{id}")
+    public String viewDetails(@PathVariable UUID id, Model model) {
+        DoctorDTO doctor = doctorService.findById(id);
+        model.addAttribute("doctor", doctor);
+        return "doctors/details";
+    }
 
     @GetMapping("/create")
     public String create(Model model) {
         var doctorCreateDTO = new DoctorCreateDTO();
         model.addAttribute("doctorCreateDTO", doctorCreateDTO);
+        model.addAttribute("departments", departmentService.findAllDepartments());
         return "doctors/create";
     }
 
@@ -115,14 +125,14 @@ public class DoctorController {
         return "redirect:/doctors";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String edit(@PathVariable UUID id, ModelMap model){
         var doctorDTO = doctorService.findById(id);
         model.addAttribute("doctorDTO", doctorDTO);
         return "doctors/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/{id}/edit")
     public String edit(@PathVariable UUID id, @ModelAttribute DoctorDTO doctorDTO,
             @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
 

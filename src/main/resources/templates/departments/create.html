@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Khoa Mới</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mx-auto px-4 pt-24 pb-12">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Thêm Khoa Mới</h1>
+
+    <!-- Sử dụng th:action để truyền hospitalId động vào URL -->
+    <form th:action="@{/hospitals/{hospitalId}/departments/create(hospitalId=${hospital.id})}" method="post" class="space-y-6">
+        <div>
+            <label class="block text-gray-700">Tên Khoa</label>
+            <input type="text" name="name" required
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   placeholder="Nhập tên khoa">
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Mô Tả</label>
+            <textarea name="description" rows="4"
+                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Nhập mô tả"></textarea>
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Trưởng Khoa</label>
+            <input type="text" name="headOfDepartment"
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   placeholder="Nhập tên trưởng khoa">
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Số Điện Thoại</label>
+            <input type="text" name="phone"
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   placeholder="Nhập số điện thoại">
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+            Lưu
+        </button>
+        <!-- Sử dụng th:href để tạo URL động cho nút Quay lại -->
+        <a th:href="@{/hospitals/{hospitalId}/departments(hospitalId=${hospital.id})}"
+           class="ml-4 text-gray-600 hover:underline">Quay lại</a>
+    </form>
+</div>
+</body>
+</html>
