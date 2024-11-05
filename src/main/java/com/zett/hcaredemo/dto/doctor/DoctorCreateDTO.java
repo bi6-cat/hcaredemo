@@ -25,6 +25,7 @@ public class DoctorCreateDTO {
     private String experience;
 
     private String profilePictureUrl;
+
     @NotBlank(message = "Department is required")
     private String departmentId;
 

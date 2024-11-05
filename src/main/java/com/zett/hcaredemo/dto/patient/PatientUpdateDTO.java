@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class PatientCreateDTO {
+public class PatientUpdateDTO {
     private UUID id;
 
     @NotBlank(message = "Full name is required")
@@ -38,5 +38,4 @@ public class PatientCreateDTO {
     private String bloodType;
     private String allergies;
     private String profilePictureUrl;
-    private UUID userId;
 }
