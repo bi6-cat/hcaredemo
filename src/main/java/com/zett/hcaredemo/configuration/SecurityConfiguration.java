@@ -18,16 +18,19 @@ public class SecurityConfiguration {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.csrf().disable();
+                http.headers().frameOptions().disable();
                 http.csrf(csrf -> csrf.disable())
                         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                 // allow access to login/register page
                                 .requestMatchers("/auth/**").permitAll()
                                 // allow access to home page allow access to static resources
-                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/services/**").permitAll()
                                 .requestMatchers("/doctors/**").permitAll()
                                 .requestMatchers("/hospitals/**").permitAll()
                                 .requestMatchers("/contact/**").permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
                                 // allow access to static resources
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                                 // protect admin resources
