@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         var user = userMapper.toUser(registerDTO);
         user.setUsername(registerDTO.getUsername());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        Role patientRole = roleRepository.findByName("PATIENT");
+        Role patientRole = roleRepository.findByName("DOCTOR");
         user.setRoles(Set.of(patientRole));
         user.setIsActive(true);
         user.setPhone(registerDTO.getPhone());

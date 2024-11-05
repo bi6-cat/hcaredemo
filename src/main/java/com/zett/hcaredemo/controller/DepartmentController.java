@@ -63,7 +63,7 @@ public class DepartmentController {
     }
 
     // Handle department creation
-    @PostMapping("/hospitals/{hospitalId}/departments")
+    @PostMapping("/hospitals/{hospitalId}/departments/create")
     public String saveDepartment(@PathVariable UUID hospitalId, @ModelAttribute DepartmentCreateDTO department) {
         DepartmentDTO departmentDTO = departmentService.create(department, hospitalId);
         return "redirect:/hospitals/" + hospitalId + "/departments";
