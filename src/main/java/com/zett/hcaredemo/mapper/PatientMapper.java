@@ -24,7 +24,7 @@ public class PatientMapper {
         patientDTO.setBloodType(patient.getBloodType());
         patientDTO.setAllergies(patient.getAllergies());
         patientDTO.setProfilePictureUrl(patient.getProfilePictureUrl());
-        patientDTO.setUserId(patient.getUser().getId());
+//        patientDTO.setUserId(patient.getUser().getId());
 
         return patientDTO;
     }

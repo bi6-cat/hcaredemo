@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile | Health Care System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50">
+<div class="flex min-h-screen">
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <div class="max-w-7xl mx-auto flex space-x-8 justify-center">
+
+            <!-- Sidebar Content as Card -->
+            <div class="bg-white rounded-xl shadow-sm p-6 max-w-fit">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-hospital-user mr-2 text-blue-600"></i>
+                    Health Care
+                </h2>
+                <nav>
+                    <ul class="space-y-2">
+                        <li>
+                            <a th:href="@{/appointments}" class="nav-link">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                Lịch khám
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/payments}" class="nav-link">
+                                <i class="fas fa-credit-card mr-2"></i>
+                                Lịch sử thanh toán
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/patients}" class="nav-link active">
+                                <i class="fas fa-user-circle mr-2"></i>
+                                Hồ sơ bệnh nhân
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/profile}" class="nav-link">
+                                <i class="fas fa-cog mr-2"></i>
+                                Thông tin cá nhân
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/logout}" class="nav-link text-red-600 hover:text-red-700">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Profile List -->
+            <div class="bg-white rounded-xl shadow-sm p-6 max-w-fit">
+                <h2 class="text-xl font-bold mb-6 text-gray-800">
+                    <i class="fas fa-users mr-2 text-blue-600"></i>
+                    Danh sách hồ sơ
+                </h2>
+                <div class="space-y-4">
+                    <div th:each="patient : ${patients}"
+                         class="profile-card p-4 rounded-lg border hover:border-blue-400 cursor-pointer">
+                        <a th:href="@{/patients(patientId=${patient.id})}" class="block">
+                            <div class="flex items-center space-x-4">
+                                <div class="profile-avatar w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                                     th:text="${patient.gender}">
+                                </div>
+                                <div>
+                                    <p class="text-gray-800 font-semibold" th:text="${patient.fullName}">Tên bệnh nhân</p>
+                                    <p class="text-sm text-gray-500"
+                                       th:text="${#temporals.format(patient.dateOfBirth, 'dd/MM/yyyy')}">Ngày sinh</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="flex justify-center">
+                        <a href="/patients/create"
+                           class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                            + Thêm Hồ Sơ Bệnh Nhân
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Detail Section -->
+            <div class="bg-white rounded-xl shadow-sm p-8 max-w-lg" th:if="${patientDTO != null}">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" th:text="${patientDTO.fullName}">Tên bệnh nhân</h2>
+                        <p class="text-sm text-gray-500" th:text="'Mã BN: ' + ${patientDTO.id}">Mã BN</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <a th:href="@{'/patients/edit/' + ${patientDTO.id}}" class="btn-primary">
+                            <i class="fas fa-edit mr-2"></i>
+                            Chỉnh sửa
+                        </a>
+                        <a th:href="@{'/patients/delete/' + ${patientDTO.id}}"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa hồ sơ này?')"
+                           class="btn-danger">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Xóa
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Patient Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-gray-600">Họ và tên:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.fullName}">Nguyen Quang</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Giới tính:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.gender}">Nam</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Số điện thoại:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.phoneNumber}">0914594613</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Ngày sinh:</label>
+                        <p class="text-gray-800 font-semibold"
+                           th:text="${#temporals.format(patientDTO.dateOfBirth, 'dd/MM/yyyy')}">22/03/2005</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Địa chỉ:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.address}">Số 78 Giải Phóng, Phương Đình, Đống Đa, Hà Nội</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Liên hệ khẩn cấp:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.emergencyContact}">034526987</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Nhóm máu:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.bloodType}">A</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600">Dị ứng:</label>
+                        <p class="text-gray-800 font-semibold" th:text="${patientDTO.allergies}">Không</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
