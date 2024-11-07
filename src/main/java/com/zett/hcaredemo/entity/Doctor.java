@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,6 +40,12 @@ public class Doctor {
 
     @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
     private String profilePictureUrl;
+
+    @Column(name = "rating", columnDefinition = "DECIMAL(2, 1)")
+    private Double rating;
+
+    @Column(name = "review_count")
+    private Integer reviewCount;
 
     @OneToOne
     @JoinColumn(name = "user_id")

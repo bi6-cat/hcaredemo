@@ -21,10 +21,10 @@ public class DepartmentService {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "service_name", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "service_name", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "NVARCHAR(255)")
     private String description;
 
     @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10, 2)")

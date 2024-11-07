@@ -2,6 +2,11 @@ package com.zett.hcaredemo.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zett.hcaredemo.repository.HealthCheckAppointmentRepository;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,12 +20,18 @@ public class HealthCheckAppointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    
+
+    @Column(unique = true)
+    private String code;
+
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
-    
+
     @Column(name = "status", nullable = false)
     private String status;
+
+    @Column(name = "note", columnDefinition = "TEXT")
+    private String note;
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
