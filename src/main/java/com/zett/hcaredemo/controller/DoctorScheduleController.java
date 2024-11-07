@@ -40,7 +40,7 @@ public class DoctorScheduleController {
         doctorScheduleService.updateExpiredSchedules();
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id " + doctorId));
-        List<DoctorSchedule> generate_schedules = doctorScheduleService.generateSchedules(startDate, doctor);
+        doctorScheduleService.generateSchedules(startDate, doctor);
         List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctorId(doctorId);
         model.addAttribute("schedules", schedules);
         return "/doctors/schedule/schedule_list"; // Return the name of the view template

@@ -17,10 +17,6 @@ public class UserDTO {
     @Length(min = 2, max = 50, message = "Username must be between 2 and 50 characters")
     private String username;
 
-    @NotBlank(message = "Display name is required")
-    @Length(min = 2, max = 50, message = "Display name must be between 2 and 50 characters")
-    private String displayName;
-
     @NotBlank(message = "Email is required")
     private String email;
 
