@@ -2,9 +2,12 @@ package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.auth.RegisterDTO;
 import com.zett.hcaredemo.dto.auth.UserDTO;
+import com.zett.hcaredemo.entity.Patient;
 import com.zett.hcaredemo.entity.Role;
 import com.zett.hcaredemo.entity.User;
+import com.zett.hcaredemo.mapper.PatientMapper;
 import com.zett.hcaredemo.mapper.UserMapper;
+import com.zett.hcaredemo.repository.PatientRepository;
 import com.zett.hcaredemo.repository.RoleRepository;
 import com.zett.hcaredemo.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +28,6 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-
     private final RoleRepository roleRepository;
 
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository) {
@@ -81,14 +83,10 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         // Create a new user
         var user = userMapper.toUser(registerDTO);
-//        user.setUsername(registerDTO.getUsername());
-//        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        Role patientRole = roleRepository.findByName("DOCTOR");
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        Role patientRole = roleRepository.findByName("PATIENT");
         user.setRoles(Set.of(patientRole));
         user.setIsActive(true);
-//        user.setPhone(registerDTO.getPhone());
-//        user.setEmail(registerDTO.getEmail());
-        // Save user to database
         user = userRepository.save(user);
 
         // Return user DTO

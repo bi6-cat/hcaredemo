@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.dto.auth;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.List;
 
@@ -23,5 +24,5 @@ public class UserDTO {
 
     public List<UUID> roleIds;
 
-    private List<RoleDTO> roles;
+    private Set<RoleDTO> roles;
 }
