@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -7,17 +9,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMUCLJ5h6ep8E8E+zCtqyyh0/2yY1r8ubqFff3m" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
-<body class="bg-gray-100 p-8">
+
+<body class="bg-gray-100 ">
+<section layout:fragment="content">
 <div class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold text-center mb-8">Thêm Hồ Sơ Bệnh Nhân</h1>
+    <div>hi</div>
+    <div class="text-3xl font-bold text-center mb-8 mt-20 ">Thêm Hồ Sơ Bệnh Nhân</div>
 
     <!-- Form Thêm Hồ Sơ Bệnh Nhân -->
     <form th:action="@{/patients/create}" th:object="${patientCreateDTO}" method="post"
-          class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+          class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 mt-20 mb-10">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Họ và Tên -->
-            <div class="mb-4">
+            <div class="mb-4 ">
                 <label for="fullName" class="form-label">
                     <i class="fas fa-user mr-2 text-blue-600"></i>Họ và Tên
                 </label>
@@ -150,5 +155,6 @@
     </form>
 
 </div>
+</section>
 </body>
 </html>
