@@ -61,6 +61,12 @@ public class HospitalController {
         model.addAttribute("pageSizes", new Integer[]{5, 10, 20, 50, 100});
         return "hospitals/index";
     }
+    @GetMapping("/{id}")
+    public String show(@PathVariable UUID id, Model model) {
+        var hospitalDTO = hospitalService.findById(id);
+        model.addAttribute("hospitalDTO", hospitalDTO);
+        return "hospitals/details";
+    }
 
     @GetMapping("/create")
     public String create(Model model) {
