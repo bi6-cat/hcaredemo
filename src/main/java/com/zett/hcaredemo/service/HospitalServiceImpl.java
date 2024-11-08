@@ -17,39 +17,44 @@ import java.util.UUID;
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
-    @Autowired
-    private HospitalRepository hospitalRepository;
+    private final HospitalRepository hospitalRepository;
+    private final HospitalMapper hospitalMapper;
+
+    public HospitalServiceImpl(HospitalRepository hospitalRepository, HospitalMapper hospitalMapper) {
+        this.hospitalRepository = hospitalRepository;
+        this.hospitalMapper = hospitalMapper;
+    }
 
     @Override
     public List<HospitalDTO> findAll() {
         return hospitalRepository.findAll().stream()
-                .map(HospitalMapper::toDTO)
+                .map(hospitalMapper::toDTO)
                 .toList();
     }
 
     @Override
     public Page<HospitalDTO> findAll(Pageable pageable) {
         return hospitalRepository.findAll(pageable)
-                .map(HospitalMapper::toDTO);
+                .map(hospitalMapper::toDTO);
     }
 
     @Override
     public Page<HospitalDTO> searchHospitals(String keyword, Pageable pageable) {
         return hospitalRepository.findByNameContainingIgnoreCase(keyword, pageable)
-                .map(HospitalMapper::toDTO);
+                .map(hospitalMapper::toDTO);
     }
 
     @Override
     public HospitalDTO findById(UUID id) {
         Optional<Hospital> hospitalOptional = hospitalRepository.findById(id);
-        return hospitalOptional.map(HospitalMapper::toDTO).orElse(null);
+        return hospitalOptional.map(hospitalMapper::toDTO).orElse(null);
     }
 
     @Override
     public HospitalDTO create(HospitalCreateDTO hospitalCreateDTO) {
-        Hospital hospital = HospitalMapper.toEntity(hospitalCreateDTO);
+        Hospital hospital = hospitalMapper.toEntity(hospitalCreateDTO);
         Hospital savedHospital = hospitalRepository.save(hospital);
-        return HospitalMapper.toDTO(savedHospital);
+        return hospitalMapper.toDTO(savedHospital);
     }
 
     @Override
@@ -64,7 +69,7 @@ public class HospitalServiceImpl implements HospitalService {
             hospital.setWebsite(hospitalDTO.getWebsite());
             hospital.setDescription(hospitalDTO.getDescription());
             Hospital updatedHospital = hospitalRepository.save(hospital);
-            return HospitalMapper.toDTO(updatedHospital);
+            return hospitalMapper.toDTO(updatedHospital);
         }
         return null;
     }

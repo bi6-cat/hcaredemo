@@ -1,7 +1,9 @@
 package com.zett.hcaredemo.controller;
 
+import java.util.Set;
 import java.util.UUID;
 
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -63,8 +65,10 @@ public class HospitalController {
     }
     @GetMapping("/{id}")
     public String show(@PathVariable UUID id, Model model) {
-        var hospitalDTO = hospitalService.findById(id);
-        model.addAttribute("hospitalDTO", hospitalDTO);
+        HospitalDTO hospitalDTO = hospitalService.findById(id);
+        Set<DepartmentDTO> departments = hospitalDTO.getDepartments();
+        model.addAttribute("hospital", hospitalDTO);
+        model.addAttribute("departments", departments);
         return "hospitals/details";
     }
 
