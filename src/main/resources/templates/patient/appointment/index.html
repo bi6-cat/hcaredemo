@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div layout:fragment="content" class="container mx-auto px-4 py-8 my-10">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Quản lý lịch khám</h1>
+            <div class="flex space-x-4">
+                <a href="/appointments/create/step1" 
+                   class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center">
+                    <i class="fas fa-calendar-plus mr-2"></i>
+                    Đặt lịch khám
+                </a>
+                <a href="/lab-tests/new"
+                   class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300 flex items-center">
+                    <i class="fas fa-flask mr-2"></i>
+                    Đặt lịch xét nghiệm
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters and Sort -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+            <form th:action="@{/appointments}" method="get" class="flex flex-wrap gap-4">
+                <div class="flex items-center">
+                    <label class="mr-2">Sắp xếp theo:</label>
+                    <select name="sortBy" class="border rounded px-3 py-1">
+                        <option value="appointmentDate" th:selected="${sortBy == 'appointmentDate'}">Ngày khám</option>
+                        <option value="status" th:selected="${sortBy == 'status'}">Trạng thái</option>
+                        <option value="createdAt" th:selected="${sortBy == 'createdAt'}">Ngày tạo</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <label class="mr-2">Thứ tự:</label>
+                    <select name="order" class="border rounded px-3 py-1">
+                        <option value="asc" th:selected="${order == 'asc'}">A - Z</option>
+                        <option value="desc" th:selected="${order == 'desc'}">Z - A</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-gray-100 px-4 py-1 rounded hover:bg-gray-200">
+                    Áp dụng
+                </button>
+            </form>
+        </div>
+
+        <!-- Appointments Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Mã lịch hẹn
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Khoa khám
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Ngày giờ khám
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Bác sĩ
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Dịch vụ
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Trạng thái
+                        </th>
+                        <th class="px-6 py-3 text-left font-bold text-gray-900 uppercase tracking-wider">
+                            Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr th:each="appointment : ${appointments}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-bold text-gray-700" th:text="${appointment.code}">AP001</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-medium text-gray-900" th:text="${appointment.department.name}">Khoa</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900" 
+                                 th:text="${#temporals.format(appointment.appointmentDate, 'dd/MM/yyyy')}">01/01/2024</div>
+                            <div class="text-sm text-gray-500" 
+                                th:text="${#temporals.format(appointment.appointmentDate, 'HH:mm')}">01/01/2024</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900" th:text="${appointment.doctor.fullName}">Bác sĩ A</div>
+                            <div class="text-sm text-gray-500" th:text="${appointment.doctor.phoneNumber}">SDT</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900" th:text="${appointment.departmentService.name}">Khám tổng quát</div>
+                            <div class="text-sm text-gray-500" 
+                                 th:text="${#numbers.formatDecimal(appointment.departmentService.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                500.000 VNĐ
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                  th:classappend="${
+                                    appointment.status == 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                    appointment.status == 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                                    appointment.status == 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                                    'bg-gray-100 text-gray-800'
+                                  }"
+                                  th:text="${appointment.status}">
+                                PENDING
+                            </span>
+                        </td>
+                        <!-- Trong phần td của thao tác -->
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-4">
+                                <div class="flex space-x-4">
+                                    <!-- Nút xem -->
+                                    <a th:href="@{/appointments/{id}(id=${appointment.id})}" 
+                                       class="text-blue-600 hover:text-blue-900 text-xs font-semibold 
+                                              rounded-md py-1 px-3 bg-blue-100 hover:bg-blue-200 
+                                              transition-all duration-300">
+                                        Chi tiết
+                                    </a>
+                                    
+                                    <!-- Nút hủy -->
+                                    <form th:action="@{/appointments/{id}/cancel(id=${appointment.id})}" 
+                                          method="POST" 
+                                          class="inline"
+                                          th:if="${appointment.status == 'PENDING' || appointment.status == 'CONFIRMED'}">
+                                        <button type="submit" 
+                                                class="text-red-600 hover:text-red-900 text-xs font-semibold 
+                                                       rounded-md py-1 px-3 bg-red-100 hover:bg-red-200 
+                                                       transition-all duration-300"
+                                                onclick="return confirm('Bạn có chắc chắn muốn hủy lịch hẹn này?')">
+                                            Hủy lịch
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+      <!-- Pagination Section -->
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4">
+            <!-- Desktop Pagination -->
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <!-- Showing results info -->
+                <!-- Page numbers -->
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <!-- Previous page -->
+                        <a th:if="${currentPage > 0}"
+                        th:href="@{/appointments(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, order=${order})}"
+                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                        <!-- Page numbers -->
+                        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a th:href="@{/appointments(page=${i}, size=${size}, sortBy=${sortBy}, order=${order})}"
+                            th:text="${i + 1}"
+                            th:class="${currentPage == i ? 
+                                        'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' : 
+                                        'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium'}">
+                            </a>
+                        </th:block>
+
+                        <!-- Next page -->
+                        <a th:if="${currentPage < totalPages - 1}"
+                        th:href="@{/appointments(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, order=${order})}"
+                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

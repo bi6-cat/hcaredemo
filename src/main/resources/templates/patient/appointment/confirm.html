@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đặt lịch khám</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .confirmation-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .info-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .confirm-btn {
+            margin-top: 20px;
+        }
+        .back-btn {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container confirmation-container">
+        <h2 class="text-center mb-4">Xác nhận thông tin đặt lịch khám</h2>
+
+        <div class="info-group">
+            <h4>Thông tin bệnh viện</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span class="info-label">Bệnh viện:</span> <span th:text="${session.selectedHospital.name}"></span></p>
+                    <p><span class="info-label">Khoa:</span> <span th:text="${session.selectedDepartment.name}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><span class="info-label">Dịch vụ:</span> <span th:text="${session.selectedService.name}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-group">
+            <h4>Thông tin bác sĩ và lịch khám</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span class="info-label">Bác sĩ:</span> <span th:text="${session.selectedDoctor.name}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><span class="info-label">Thời gian khám:</span> 
+                        <span th:text="${#temporals.format(schedule.scheduleDate, 'dd/MM/yyyy')}"></span>
+                        <span th:text="${schedule.startTime}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center confirm-btn">
+            <a href="#" onclick="history.back()" class="btn btn-secondary back-btn">Quay lại</a>
+            <form th:action="@{/appointment/create/save}" method="post" style="display: inline;">
+                <input type="hidden" name="scheduleId" th:value="${schedule.id}">
+                <button type="submit" class="btn btn-primary">Xác nhận đặt lịch</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
