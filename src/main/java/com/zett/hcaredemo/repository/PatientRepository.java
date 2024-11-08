@@ -8,4 +8,6 @@ import com.zett.hcaredemo.entity.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, UUID>{
 
+    Patient findByUser_Username(String username);
+
 }

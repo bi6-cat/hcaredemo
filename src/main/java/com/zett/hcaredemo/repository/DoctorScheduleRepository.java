@@ -22,4 +22,19 @@ public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, 
         @Param("currentDate") String currentDate,
         @Param("currentTime") String currentTime
     );
+
+    @Query("SELECT DISTINCT ds.scheduleDate FROM DoctorSchedule ds WHERE ds.doctor.id = :doctorId AND ds.isAvailable = true")
+    List<LocalDate> findDistinctScheduleDatesByDoctorId(UUID doctorId);
+
+    List<DoctorSchedule> findByDoctorIdAndIsAvailableTrue(UUID doctorId);
+
+    List<DoctorSchedule> findByDoctorIdAndScheduleDateAndIsAvailableTrue(UUID doctorId, LocalDate date);
+
+    List<LocalDate> findDistinctScheduleDateByDoctorIdAndIsAvailableTrueOrderByScheduleDate(UUID doctorId);
+
+    List<DoctorSchedule> findByDoctorIdAndIsAvailableTrueOrderByScheduleDateAsc(UUID doctorId);
+
+    List<DoctorSchedule> findByDoctorIdAndIsAvailableTrueOrderByScheduleDateAscStartTimeAsc(UUID doctorId);
+
+
 }
