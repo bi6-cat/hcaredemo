@@ -1,14 +1,12 @@
 package com.zett.hcaredemo.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
 import com.zett.hcaredemo.service.DepartmentService;
+import com.zett.hcaredemo.service.DoctorService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,11 +17,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
-import com.zett.hcaredemo.dto.doctor.DoctorDTO;
-import com.zett.hcaredemo.service.DoctorService;
-
-import jakarta.validation.Valid;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/doctors")
@@ -44,9 +43,9 @@ public class DoctorController {
             @RequestParam(required = false, defaultValue = "asc") String order,
             @RequestParam(required = false, defaultValue = "") String keyword,
             Model model) {
-        
+
         Pageable pageable = null;
-        if(order.equals("asc")){
+        if (order.equals("asc")) {
             pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         } else {
             pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
@@ -59,7 +58,7 @@ public class DoctorController {
         model.addAttribute("sortBy", sortBy);
 
         model.addAttribute("order", order);
- 
+
         model.addAttribute("totalPages", doctors.getTotalPages());
 
         model.addAttribute("totalElements", doctors.getTotalElements());
@@ -71,10 +70,13 @@ public class DoctorController {
         model.addAttribute("pageSizes", new Integer[]{6, 12, 24, 60, 100});
         return "doctors/index";
     }
+
     @GetMapping("details/{id}")
     public String viewDetails(@PathVariable UUID id, Model model) {
         DoctorDTO doctor = doctorService.findById(id);
+        DepartmentDTO department = departmentService.findById(doctor.getDepartmentId());
         model.addAttribute("doctor", doctor);
+        model.addAttribute("department", department);
         return "doctors/details";
     }
 
@@ -88,8 +90,8 @@ public class DoctorController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,
-            @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
-            BindingResult bindingResult, Model model) {
+                         @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
+                         BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "doctors/create";
         }
@@ -107,7 +109,7 @@ public class DoctorController {
                 if (!Files.exists(directoryPath)) {
                     Files.createDirectories(directoryPath);
                 }
-                
+
                 Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
 
                 Files.write(filePath, bytes);
@@ -126,15 +128,15 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable UUID id, ModelMap model){
+    public String edit(@PathVariable UUID id, ModelMap model) {
         var doctorDTO = doctorService.findById(id);
         model.addAttribute("doctorDTO", doctorDTO);
         return "doctors/edit";
     }
 
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable UUID id, @ModelAttribute DoctorDTO doctorDTO,
-            @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
+    public String edit(@PathVariable UUID id, @ModelAttribute DoctorUpdateDTO doctorDTO,
+                       @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
 
         var oldDoctor = doctorService.findById(id);
 
@@ -155,7 +157,7 @@ public class DoctorController {
                     if (!Files.exists(directoryPath)) {
                         Files.createDirectories(directoryPath);
                     }
-                    
+
                     Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
 
                     Files.write(filePath, bytes);
@@ -174,7 +176,7 @@ public class DoctorController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id){
+    public String delete(@PathVariable UUID id) {
         doctorService.delete(id);
         return "redirect:/doctors";
     }

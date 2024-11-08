@@ -2,11 +2,17 @@ package com.zett.hcaredemo.mapper;
 
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
+import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Doctor;
+import com.zett.hcaredemo.entity.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DoctorMapper {
 
-    public static DoctorDTO toDTO(Doctor doctor) {
+    // Phương thức để chuyển đổi từ Doctor sang DoctorDTO
+    public DoctorDTO toDTO(Doctor doctor) {
         if (doctor == null) {
             return null;
         }
@@ -20,30 +26,22 @@ public class DoctorMapper {
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setExperience(doctor.getExperience());
         doctorDTO.setProfilePictureUrl(doctor.getProfilePictureUrl());
-        doctorDTO.setUserId(doctor.getUser() != null ? doctor.getUser().getId() : null);
-        doctorDTO.setDepartmentId(doctor.getDepartment() != null ? doctor.getDepartment().getId() : null);
+
+        // Lấy ID từ đối tượng User nếu tồn tại
+        if (doctor.getUser() != null) {
+            doctorDTO.setUserId(doctor.getUser().getId());
+        }
+
+        // Lấy ID từ đối tượng Department nếu tồn tại
+        if (doctor.getDepartment() != null) {
+            doctorDTO.setDepartmentId(doctor.getDepartment().getId());
+        }
+
         return doctorDTO;
     }
 
-    public static Doctor toEntity(DoctorDTO doctorDTO) {
-        if (doctorDTO == null) {
-            return null;
-        }
-
-        Doctor doctor = new Doctor();
-        doctor.setId(doctorDTO.getId());
-        doctor.setFullName(doctorDTO.getFullName());
-        doctor.setDegree(doctorDTO.getDegree());
-        doctor.setGender(doctorDTO.getGender());
-        doctor.setPhoneNumber(doctorDTO.getPhoneNumber());
-        doctor.setEmail(doctorDTO.getEmail());
-        doctor.setExperience(doctorDTO.getExperience());
-        doctor.setProfilePictureUrl(doctorDTO.getProfilePictureUrl());
-        // Set User and Department if needed
-        return doctor;
-    }
-
-    public static Doctor toEntity(DoctorCreateDTO doctorCreateDTO) {
+    // Phương thức để chuyển đổi từ DoctorCreateDTO sang Doctor
+    public Doctor toEntity(DoctorCreateDTO doctorCreateDTO) {
         if (doctorCreateDTO == null) {
             return null;
         }
@@ -56,7 +54,46 @@ public class DoctorMapper {
         doctor.setEmail(doctorCreateDTO.getEmail());
         doctor.setExperience(doctorCreateDTO.getExperience());
         doctor.setProfilePictureUrl(doctorCreateDTO.getProfilePictureUrl());
-        // Set other fields as needed
+
+        // Thiết lập user và department dựa trên ID trong DTO
+        if (doctorCreateDTO.getUserId() != null) {
+            User user = new User();
+            user.setId(doctorCreateDTO.getUserId());
+            doctor.setUser(user);
+        }
+
+        if (doctorCreateDTO.getDepartmentId() != null) {
+            Department department = new Department();
+            department.setId(doctorCreateDTO.getDepartmentId());
+            doctor.setDepartment(department);
+        }
+
         return doctor;
+    }
+
+    // Phương thức để cập nhật thông tin từ DoctorUpdateDTO vào Doctor
+    public Doctor updateEntity(Doctor existingDoctor, DoctorUpdateDTO doctorUpdateDTO) {
+        if (existingDoctor == null) {
+            return null;
+        }
+
+        existingDoctor.setFullName(doctorUpdateDTO.getFullName());
+        existingDoctor.setDegree(doctorUpdateDTO.getDegree());
+        existingDoctor.setGender(doctorUpdateDTO.getGender());
+        existingDoctor.setPhoneNumber(doctorUpdateDTO.getPhoneNumber());
+        existingDoctor.setEmail(doctorUpdateDTO.getEmail());
+        existingDoctor.setExperience(doctorUpdateDTO.getExperience());
+        existingDoctor.setProfilePictureUrl(doctorUpdateDTO.getProfilePictureUrl());
+        if(doctorUpdateDTO.getDepartmentId() != null){
+            Department department = new Department();
+            department.setId(doctorUpdateDTO.getDepartmentId());
+            existingDoctor.setDepartment(department);
+        }
+        if(doctorUpdateDTO.getUserId() !=null){
+            User user = new User();
+            user.setId(doctorUpdateDTO.getUserId());
+            existingDoctor.setUser(user);
+        }
+        return existingDoctor;
     }
 }
