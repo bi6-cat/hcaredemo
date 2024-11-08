@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 
 <head>
@@ -8,63 +8,114 @@
     <title>Chi Tiết Bác Sĩ</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .doctor-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .warning-box {
+            background: #FFF7ED;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .specialty-tag {
+            color: #2563EB;
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-50">
 <section layout:fragment="content">
-    <div class="container mx-auto px-4 pt-24 pb-12">
-        <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Chi Tiết Bác Sĩ</h1>
+    <div class="">hi</div>
+    <div class="container mx-auto px-4 py-4 mt-20">
+        <!-- Breadcrumb -->
+        <div class="flex items-center space-x-2 text-sm mb-4 ml-80">
+            <a href="/" class="text-gray-600 hover:text-blue-600">Trang chủ</a>
+            <span class="text-gray-400">/</span>
+            <a href="/doctors" class="text-gray-600">Bác sĩ</a>
         </div>
 
-        <!-- Doctor Details -->
-        <div class="bg-white p-8 rounded-lg shadow-md">
-            <div class="flex items-center mb-4">
-                <div class="relative w-24 h-24 mr-4">
+        <div class="doctor-card p-6">
+            <div class="flex gap-6">
+                <!-- Doctor Image -->
+                <div class="w-32 h-32 flex-shrink-0">
                     <img th:if="${doctor.profilePictureUrl}"
                          th:src="${doctor.profilePictureUrl}"
-                         class="w-24 h-24 rounded-full object-cover"
-                         alt="Doctor profile picture">
+                         class="w-full h-full rounded-full object-cover"
+                         alt="Doctor profile">
                     <img th:unless="${doctor.profilePictureUrl}"
                          src="/images/default-avatar.png"
-                         class="w-24 h-24 rounded-full object-cover"
-                         alt="Default profile picture">
+                         class="w-full h-full rounded-full object-cover"
+                         alt="Default profile">
                 </div>
-                <div>
-                    <h2 class="text-2xl font-semibold text-gray-800" th:text="${doctor.fullName}">Tên bác sĩ</h2>
-                    <p class="text-blue-600 font-medium" th:text="${doctor.degree}">Học vị</p>
+
+                <!-- Doctor Info -->
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-2">
+                        <h1 class="text-xl font-bold" th:text="${doctor.fullName}">Bác sĩ</h1>
+                        <button class="text-blue-600 hover:text-blue-700">
+                            <i class="far fa-bookmark"></i> Yêu thích
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                            <i class="fas fa-user-md"></i> Bác sĩ
+                        </span>
+                        <span class="text-gray-600">
+                            <span th:text="${doctor.experience}">29</span> năm kinh nghiệm
+                        </span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-gray-600">Chuyên khoa:</span>
+                        <span class="specialty-tag" th:text="${doctor.degree}"></span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-gray-600">Chức vụ:</span>
+                        <span th:text="${doctor.degree}">Chuc vu</span>
+                    </div>
+
+                    <div>
+                        <span class="text-gray-600">Nơi công tác:</span>
+                        <span>Bệnh viện FV</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-3 text-gray-600">
-                <p class="flex items-center">
-                    <i class="fas fa-venus-mars w-6 text-blue-500"></i>
-                    <span th:text="${doctor.gender}">Giới tính</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-phone w-6 text-blue-500"></i>
-                    <span th:text="${doctor.phoneNumber}">Số điện thoại</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-envelope w-6 text-blue-500"></i>
-                    <span th:text="${doctor.email}">Email</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-briefcase w-6 text-blue-500"></i>
-                    <span th:text="${doctor.experience}">Kinh nghiệm</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-hospital w-6 text-blue-500"></i>
-                    <span th:text="${doctor.department.name}">Khoa</span>
-                </p>
+            <!-- Warning Box -->
+            <div class="warning-box mt-6">
+                <div class="font-medium text-orange-800 mb-2">
+                    <i class="fas fa-exclamation-circle mr-2"></i>Lưu ý
+                </div>
+                <ul class="space-y-2 text-sm text-orange-700">
+                    <li>Phòng khám Nam khoa BacsiXmen sẽ mở theo lịch khám: Thứ Hai đến thứ Năm (17:30-19:30) và sáng thứ Bảy (10:00-12:00)</li>
+                    <li>Tại 23 Nguyễn Văn Đậu P5 Phú Nhuận</li>
+                    <li>Phí tư vấn 500.000đ/lượt</li>
+                    <li>Phòng khám không có dịch vụ tư vấn online</li>
+                    <li>Quý khách đến khám và gửi xe máy tại cổng sau Trung Tâm Y tế (ngã ba Nguyễn Thượng Hiền và Nguyễn Văn Đậu), nếu đi xe hơi xin gửi tại Chung cư Botanic 312 Nguyễn Thượng Hiền, P.5, Phú Nhuận</li>
+                </ul>
             </div>
 
-            <div class="mt-6">
-                <a th:href="@{'/doctors/edit/' + ${doctor.id}}"
-                   class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
-                    Chỉnh Sửa Bác Sĩ
-                </a>
+            <!-- Booking Button -->
+            <div class="mt-6 flex items-center justify-between">
+                <div class="text-gray-600">
+                    <i class="fas fa-phone-alt mr-2"></i>
+                    Hỗ trợ đặt khám: 1900-1234
+                </div>
+                <button class="bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                    ĐẶT KHÁM NGAY
+                </button>
             </div>
         </div>
     </div>
