@@ -118,4 +118,10 @@ public class HealthCheckAppointmentServiceImpl implements HealthCheckAppointment
         return code;
     }
 
+    @Override
+    public HealthCheckAppointment getByCode(String code) {
+        return healthCheckAppointmentRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with code: " + code));
+    }
+
 }

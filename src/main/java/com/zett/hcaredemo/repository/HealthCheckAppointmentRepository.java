@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface HealthCheckAppointmentRepository extends JpaRepository<HealthCheckAppointment, UUID> {
@@ -14,4 +15,5 @@ public interface HealthCheckAppointmentRepository extends JpaRepository<HealthCh
     Page<HealthCheckAppointment> findByPatientFullNameContainingIgnoreCase(String keyword, Pageable pageable);
     boolean existsByDoctorIdAndAppointmentDateAndStatusNot(UUID doctorId, LocalDateTime appointmentDate, String status);
     boolean existsByCode(String code);
+    Optional<HealthCheckAppointment> findByCode(String code);
 }

@@ -3,10 +3,6 @@ package com.zett.hcaredemo.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.zett.hcaredemo.repository.HealthCheckAppointmentRepository;
-
 import jakarta.persistence.*;
 import lombok.*;
 

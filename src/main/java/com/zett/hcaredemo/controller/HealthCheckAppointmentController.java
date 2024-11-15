@@ -17,7 +17,6 @@ import com.zett.hcaredemo.repository.PatientRepository;
 import com.zett.hcaredemo.service.DoctorScheduleService;
 import com.zett.hcaredemo.service.HealthCheckAppointmentService;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,12 +27,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -215,14 +213,6 @@ public class HealthCheckAppointmentController {
         return "redirect:/appointments";
     }
 
-    @GetMapping("/{id}")
-    public String viewAppointment(@PathVariable UUID id, Model model) {
-        HealthCheckAppointment appointment = appointmentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id " + id));
-        model.addAttribute("appointment", appointment);
-        return "appointment/view";
-    }
-
     @GetMapping("/{id}/edit")
     public String editAppointment(@PathVariable UUID id, Model model) {
         HealthCheckAppointment appointment = appointmentRepository.findById(id)
@@ -239,6 +229,21 @@ public class HealthCheckAppointmentController {
         appointment.setUpdatedAt(LocalDateTime.now());
         appointmentRepository.save(appointment);
         return "redirect:/appointments";
+    }
+
+    @GetMapping("/{id}")
+    public String viewAppointmentDetail(@PathVariable UUID id, Model model, Principal principal) {
+        HealthCheckAppointment appointment = appointmentRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy lịch hẹn với ID: " + id));
+
+        model.addAttribute("appointment", appointment);
+        model.addAttribute("patient", appointment.getPatient());
+        model.addAttribute("doctor", appointment.getDoctor());
+        model.addAttribute("service", appointment.getDepartmentService());
+        model.addAttribute("department", appointment.getDepartment());
+        model.addAttribute("hospital", appointment.getHospital());
+
+        return "patient/appointment/appointment_detail";
     }
 
 }
