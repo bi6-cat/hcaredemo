@@ -18,8 +18,8 @@
     <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-3xl mr-2"></i>
-                <span class="text-blue-600 text-2xl font-bold">HealthCare</span>
+                
+                <a th:href="@{/}" class="text-blue-600 text-2xl font-bold"><i class="fas fa-heartbeat text-blue-600 text-3xl mr-2"></i>HealthCare</a>
             </div>
             <div class="hidden md:flex items-center space-x-8">
                 <a th:href="@{/}" class="text-gray-700 hover:text-blue-600 transition duration-300">Trang chủ</a>
@@ -63,7 +63,7 @@
                             <a th:href="@{/appointments}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <i class="fas fa-calendar-alt mr-2"></i>Lịch khám
                             </a>
-                            <a th:href="@{/payment-history}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                            <a th:href="@{payments/payment-history}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <i class="fas fa-history mr-2"></i>Lịch sử thanh toán
                             </a>
                             <a th:href="@{/profile}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">

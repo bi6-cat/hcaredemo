@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Process</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .payment-method-card {
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .payment-method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .payment-method-card.selected {
+            border: 2px solid #0d6efd;
+            background-color: #f8f9fa;
+        }
+        .payment-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Payment Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h5>Amount to Pay</h5>
+                            <div class="payment-amount" th:text="${#numbers.formatDecimal(amount, 0, 'COMMA', 0, 'POINT')} + ' VND'"></div>
+                        </div>
+
+                        <form id="paymentForm">
+                            <input type="hidden" id="appointmentCode" th:value="${appointmentCode}">
+                            <input type="hidden" id="amount" th:value="${amount}">
+                            
+                            <div class="mb-4">
+                                <h5>Select Payment Method</h5>
+                                <div class="payment-methods">
+                                    <div class="payment-method-card" data-method="VNPAY">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/img/vnpay.png" alt="VNPAY" style="height: 40px; margin-right: 15px;">
+                                            <div>
+                                                <h6 class="mb-0">VNPAY</h6>
+                                                <small class="text-muted">Pay with VNPAY e-wallet</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="payment-method-card" data-method="MOMO">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/img/momo.png" alt="MOMO" style="height: 40px; margin-right: 15px;">
+                                            <div>
+                                                <h6 class="mb-0">MOMO</h6>
+                                                <small class="text-muted">Pay with MOMO e-wallet</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Demo Payment Button -->
+                                    <div class="payment-method-card" data-method="DEMO">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-success text-white rounded-circle p-2 me-3">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">Demo Payment</h6>
+                                                <small class="text-muted">Simulate successful payment</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg" id="payButton" disabled>
+                                    Proceed to Payment
+                                </button>
+                                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                    Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let selectedMethod = null;
+
+            $('.payment-method-card').click(function() {
+                $('.payment-method-card').removeClass('selected');
+                $(this).addClass('selected');
+                selectedMethod = $(this).data('method');
+                $('#payButton').prop('disabled', false);
+            });
+
+            $('#paymentForm').submit(function(e) {
+                e.preventDefault();
+                if (!selectedMethod) {
+                    alert('Please select a payment method');
+                    return;
+                }
+
+                $('#loadingOverlay').show();
+
+                // Demo payment data
+                const paymentData = {
+                    appointmentCode: $('#appointmentCode').val(),
+                    amount: $('#amount').val(),
+                    paymentMethod: selectedMethod
+                };
+
+                // Simulate API call
+                setTimeout(function() {
+                    if (selectedMethod === 'DEMO') {
+                        window.location.href = '/payments/success';
+                    } else {
+                        // Handle real payment methods here
+                        alert('This is a demo. Only Demo Payment is implemented.');
+                        $('#loadingOverlay').hide();
+                    }
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
