@@ -5,13 +5,33 @@ import com.zett.hcaredemo.dto.patient.PatientDTO;
 import com.zett.hcaredemo.dto.patient.PatientUpdateDTO;
 import com.zett.hcaredemo.entity.Patient;
 import org.springframework.stereotype.Component;
+
 @Component
 public class PatientMapper {
 
-    public PatientDTO toDTO(Patient patient) {
-        if (patient == null) {
-            return null;
-        }
+    public static Patient toEntity(PatientDTO patient) {
+        if (patient == null) return null;
+
+        Patient patientEntity = new Patient();
+        patientEntity.setId(patient.getId());
+        patientEntity.setFullName(patient.getFullName());
+        patientEntity.setDateOfBirth(patient.getDateOfBirth());
+        patientEntity.setGender(patient.getGender());
+        patientEntity.setAddress(patient.getAddress());
+        patientEntity.setPhoneNumber(patient.getPhoneNumber());
+        patientEntity.setEmergencyContact(patient.getEmergencyContact());
+        patientEntity.setBloodType(patient.getBloodType());
+        patientEntity.setAllergies(patient.getAllergies());
+        patientEntity.setProfilePictureUrl(patient.getProfilePictureUrl());
+        patientEntity.setHealthInsuranceNumber(patient.getHealthInsuranceNumber());
+        patientEntity.setEthnicity(patient.getEthnicity());
+        patientEntity.setUser(UserMapper.toUser(patient.getUser()));
+
+        return patientEntity;
+    }
+
+    public static PatientDTO toDTO(Patient patient) {
+        if (patient == null) return null;
 
         PatientDTO patientDTO = new PatientDTO();
         patientDTO.setId(patient.getId());
@@ -24,54 +44,15 @@ public class PatientMapper {
         patientDTO.setBloodType(patient.getBloodType());
         patientDTO.setAllergies(patient.getAllergies());
         patientDTO.setProfilePictureUrl(patient.getProfilePictureUrl());
-//        patientDTO.setUserId(patient.getUser().getId());
+        patientDTO.setHealthInsuranceNumber(patient.getHealthInsuranceNumber());
+        patientDTO.setEthnicity(patient.getEthnicity());
+        patientDTO.setUser(UserMapper.toUserDTO(patient.getUser()));
 
         return patientDTO;
     }
 
-    Patient toEntity(PatientDTO patientDTO) {
-        if (patientDTO == null) {
-            return null;
-        }
-
-        Patient patient = new Patient();
-        patient.setId(patientDTO.getId());
-        patient.setFullName(patientDTO.getFullName());
-        patient.setDateOfBirth(patientDTO.getDateOfBirth());
-        patient.setGender(patientDTO.getGender());
-        patient.setAddress(patientDTO.getAddress());
-        patient.setPhoneNumber(patientDTO.getPhoneNumber());
-        patient.setEmergencyContact(patientDTO.getEmergencyContact());
-        patient.setBloodType(patientDTO.getBloodType());
-        patient.setAllergies(patientDTO.getAllergies());
-        patient.setProfilePictureUrl(patientDTO.getProfilePictureUrl());
-
-        return patient;
-    }
-
-    public Patient toEntity(PatientUpdateDTO patientUpdateDTO) {
-        if (patientUpdateDTO == null) {
-            return null;
-        }
-
-        Patient patient = new Patient();
-        patient.setFullName(patientUpdateDTO.getFullName());
-        patient.setDateOfBirth(patientUpdateDTO.getDateOfBirth());
-        patient.setGender(patientUpdateDTO.getGender());
-        patient.setAddress(patientUpdateDTO.getAddress());
-        patient.setPhoneNumber(patientUpdateDTO.getPhoneNumber());
-        patient.setEmergencyContact(patientUpdateDTO.getEmergencyContact());
-        patient.setBloodType(patientUpdateDTO.getBloodType());
-        patient.setAllergies(patientUpdateDTO.getAllergies());
-        patient.setProfilePictureUrl(patientUpdateDTO.getProfilePictureUrl());
-
-        return patient;
-    }
-
-    public Patient toEntity(PatientCreateDTO patientCreateDTO) {
-        if (patientCreateDTO == null) {
-            return null;
-        }
+    public static Patient toEntity(PatientCreateDTO patientCreateDTO) {
+        if (patientCreateDTO == null) return null;
 
         Patient patient = new Patient();
         patient.setFullName(patientCreateDTO.getFullName());
@@ -83,6 +64,25 @@ public class PatientMapper {
         patient.setBloodType(patientCreateDTO.getBloodType());
         patient.setAllergies(patientCreateDTO.getAllergies());
         patient.setProfilePictureUrl(patientCreateDTO.getProfilePictureUrl());
+        patient.setHealthInsuranceNumber(patientCreateDTO.getHealthInsuranceNumber());
+        patient.setEthnicity(patientCreateDTO.getEthnicity());
+        return patient;
+    }
+
+    public Patient toEntity(Patient patient, PatientUpdateDTO patientUpdateDTO) {
+        if (patientUpdateDTO == null) return null;
+
+        patient.setFullName(patientUpdateDTO.getFullName());
+        patient.setDateOfBirth(patientUpdateDTO.getDateOfBirth());
+        patient.setGender(patientUpdateDTO.getGender());
+        patient.setAddress(patientUpdateDTO.getAddress());
+        patient.setPhoneNumber(patientUpdateDTO.getPhoneNumber());
+        patient.setEmergencyContact(patientUpdateDTO.getEmergencyContact());
+        patient.setBloodType(patientUpdateDTO.getBloodType());
+        patient.setAllergies(patientUpdateDTO.getAllergies());
+        patient.setProfilePictureUrl(patientUpdateDTO.getProfilePictureUrl());
+        patient.setHealthInsuranceNumber(patientUpdateDTO.getHealthInsuranceNumber());
+        patient.setEthnicity(patientUpdateDTO.getEthnicity());
 
         return patient;
     }

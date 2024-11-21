@@ -1,11 +1,15 @@
 package com.zett.hcaredemo.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
-import jakarta.persistence.*;
-import lombok.*;
 
 @Getter
 @Setter
@@ -17,22 +21,24 @@ public class DoctorSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    
+
     @Column(name = "schedule_date", nullable = false)
     private LocalDate scheduleDate;
-    
+
     @Column(name = "time", nullable = false)
     private LocalTime startTime;
-    
-    // defaut value = true
+
     @Column(name = "is_available")
     private Boolean isAvailable;
-    
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     @PrePersist
     protected void onCreate() {
@@ -44,8 +50,4 @@ public class DoctorSchedule {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
 }

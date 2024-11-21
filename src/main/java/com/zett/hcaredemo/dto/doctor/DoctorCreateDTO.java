@@ -1,11 +1,10 @@
 package com.zett.hcaredemo.dto.doctor;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -25,14 +24,9 @@ public class DoctorCreateDTO {
 
     @NotBlank(message = "Email is required")
     private String email;
-
     private String experience;
-
     private String profilePictureUrl;
-
-    @NotNull(message = "Department is required")
     private UUID departmentId;
-
     private UUID userId;
-
+    private Set<UUID> doctorScheduleIds;
 }

@@ -50,3 +50,4 @@ public class Medicine {
     @JoinColumn(name = "medicine_id")  
     private Set<PrescriptionMedicine> prescriptionMedicines;
 }
+// todo: thêm các dơn thuoc, 1 thuoc tham gia nhieu don, 1 don nhieu loai thuoc

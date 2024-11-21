@@ -1,6 +1,5 @@
 package com.zett.hcaredemo.dto.patient;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -25,10 +24,6 @@ public class PatientCreateDTO {
     @Size(max = 15, message = "Phone number must be less than 15 characters")
     private String phoneNumber;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    private String email;
-
     @NotBlank(message = "Address is required")
     @Size(max = 255, message = "Address must be less than 255 characters")
     private String address;
@@ -38,5 +33,7 @@ public class PatientCreateDTO {
     private String bloodType;
     private String allergies;
     private String profilePictureUrl;
-    private UUID userId;
+    private String healthInsuranceNumber;
+    private String ethnicity;
+    private UUID user;
 }

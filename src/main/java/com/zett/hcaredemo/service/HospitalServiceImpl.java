@@ -1,60 +1,81 @@
 package com.zett.hcaredemo.service;
 
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
+import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Hospital;
 import com.zett.hcaredemo.mapper.HospitalMapper;
 import com.zett.hcaredemo.repository.HospitalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+@Slf4j
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
     private final HospitalRepository hospitalRepository;
-    private final HospitalMapper hospitalMapper;
+    private final DepartmentService departmentService;
 
-    public HospitalServiceImpl(HospitalRepository hospitalRepository, HospitalMapper hospitalMapper) {
+    public HospitalServiceImpl(HospitalRepository hospitalRepository, DepartmentService departmentService) {
         this.hospitalRepository = hospitalRepository;
-        this.hospitalMapper = hospitalMapper;
+        this.departmentService = departmentService;
+    }
+
+
+    @Override
+    public List<DepartmentDTO> getAllDepartments() {
+        return departmentService.findAllDepartments();
     }
 
     @Override
     public List<HospitalDTO> findAll() {
         return hospitalRepository.findAll().stream()
-                .map(hospitalMapper::toDTO)
+                .map(HospitalMapper::toDTO)
                 .toList();
     }
 
     @Override
     public Page<HospitalDTO> findAll(Pageable pageable) {
         return hospitalRepository.findAll(pageable)
-                .map(hospitalMapper::toDTO);
+                .map(HospitalMapper::toDTO);
     }
 
     @Override
     public Page<HospitalDTO> searchHospitals(String keyword, Pageable pageable) {
         return hospitalRepository.findByNameContainingIgnoreCase(keyword, pageable)
-                .map(hospitalMapper::toDTO);
+                .map(HospitalMapper::toDTO);
     }
 
     @Override
     public HospitalDTO findById(UUID id) {
         Optional<Hospital> hospitalOptional = hospitalRepository.findById(id);
-        return hospitalOptional.map(hospitalMapper::toDTO).orElse(null);
+        return hospitalOptional.map(HospitalMapper::toDTO).orElse(null);
     }
 
     @Override
     public HospitalDTO create(HospitalCreateDTO hospitalCreateDTO) {
-        Hospital hospital = hospitalMapper.toEntity(hospitalCreateDTO);
-        Hospital savedHospital = hospitalRepository.save(hospital);
-        return hospitalMapper.toDTO(savedHospital);
+        // Lấy danh sách Department từ departmentIds
+        Set<Department> departments = new HashSet<>();
+        if (hospitalCreateDTO.getDepartmentIds() != null) {
+            departments = departmentService.findAllByIds(hospitalCreateDTO.getDepartmentIds());
+            if (departments.size() != hospitalCreateDTO.getDepartmentIds().size()) {
+                throw new IllegalArgumentException("One or more Department IDs are invalid");
+            }
+        }
+        // Ánh xạ DTO sang Entity
+        Hospital hospital = HospitalMapper.toEntity(hospitalCreateDTO, departments);
+        // Ánh xạ hospital cho các department
+        for (Department department : departments) {
+            department.setHospital(hospital);
+        }
+        // Lưu hospital vào cơ sở dữ liệu
+        hospitalRepository.save(hospital);
+        return HospitalMapper.toDTO(hospital);
     }
 
     @Override
@@ -69,7 +90,7 @@ public class HospitalServiceImpl implements HospitalService {
             hospital.setWebsite(hospitalDTO.getWebsite());
             hospital.setDescription(hospitalDTO.getDescription());
             Hospital updatedHospital = hospitalRepository.save(hospital);
-            return hospitalMapper.toDTO(updatedHospital);
+            return HospitalMapper.toDTO(updatedHospital);
         }
         return null;
     }

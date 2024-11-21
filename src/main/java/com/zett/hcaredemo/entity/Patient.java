@@ -48,6 +48,12 @@ public class Patient {
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;
 
+    @Column(name = "health_insurance_number", columnDefinition = "NVARCHAR(50)")
+    private String healthInsuranceNumber;
+
+    @Column(name ="ethnicity", columnDefinition = "NVARCHAR(50)")
+    private String ethnicity;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

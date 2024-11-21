@@ -4,7 +4,9 @@ import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
+import com.zett.hcaredemo.dto.doctorschedule.DoctorScheduleDTO;
 import com.zett.hcaredemo.service.DepartmentService;
+import com.zett.hcaredemo.service.DoctorScheduleService;
 import com.zett.hcaredemo.service.DoctorService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -29,10 +33,12 @@ import java.util.UUID;
 public class DoctorController {
     private final DoctorService doctorService;
     private final DepartmentService departmentService;
+    private final DoctorScheduleService doctorScheduleService;
 
-    public DoctorController(DoctorService doctorService, DepartmentService departmentService) {
+    public DoctorController(DoctorService doctorService, DepartmentService departmentService, DoctorScheduleService doctorScheduleService) {
         this.doctorService = doctorService;
         this.departmentService = departmentService;
+        this.doctorScheduleService = doctorScheduleService;
     }
 
     @GetMapping
@@ -52,21 +58,13 @@ public class DoctorController {
         }
         var doctors = doctorService.findAll(keyword, pageable);
         model.addAttribute("doctors", doctors);
-
         model.addAttribute("keyword", keyword);
-
         model.addAttribute("sortBy", sortBy);
-
         model.addAttribute("order", order);
-
         model.addAttribute("totalPages", doctors.getTotalPages());
-
         model.addAttribute("totalElements", doctors.getTotalElements());
-
         model.addAttribute("page", page);
-
         model.addAttribute("pageSize", size);
-
         model.addAttribute("pageSizes", new Integer[]{6, 12, 24, 60, 100});
         return "doctors/index";
     }
@@ -74,7 +72,9 @@ public class DoctorController {
     @GetMapping("details/{id}")
     public String viewDetails(@PathVariable UUID id, Model model) {
         DoctorDTO doctor = doctorService.findById(id);
-        DepartmentDTO department = departmentService.findById(doctor.getDepartmentId());
+        DepartmentDTO department = doctor.getDepartment();
+        Set<DoctorScheduleDTO> doctorSchedules = doctor.getDoctorSchedules();
+        model.addAttribute("doctorSchedules", doctorSchedules);
         model.addAttribute("doctor", doctor);
         model.addAttribute("department", department);
         return "doctors/details";
@@ -84,9 +84,19 @@ public class DoctorController {
     public String create(Model model) {
         var doctorCreateDTO = new DoctorCreateDTO();
         model.addAttribute("doctorCreateDTO", doctorCreateDTO);
-        model.addAttribute("departments", departmentService.findAllDepartments());
+
+
+        List<DepartmentDTO> departments = departmentService.findAllDepartments();
+        if (departments == null || departments.isEmpty()) {
+            throw new RuntimeException("No departments found");
+        }
+        List<DoctorScheduleDTO> schedules = doctorScheduleService.findAll();
+        model.addAttribute("schedules", schedules);
+        model.addAttribute("departments", departments);
+
         return "doctors/create";
     }
+
 
     @PostMapping("/create")
     public String create(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,

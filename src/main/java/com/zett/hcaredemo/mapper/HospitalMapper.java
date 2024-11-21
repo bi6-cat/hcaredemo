@@ -3,29 +3,20 @@ package com.zett.hcaredemo.mapper;
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
+import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Hospital;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 public class HospitalMapper {
-    private final DepartmentMapper departmentMapper;
-
-    @Autowired
-    public HospitalMapper(DepartmentMapper departmentMapper) {
-        this.departmentMapper = departmentMapper;
-    }
-
-    public  HospitalDTO toDTO(Hospital hospital) {
+    public static HospitalDTO toDTO(Hospital hospital) {
         if (hospital == null) {
             return null;
         }
         Set<DepartmentDTO> departmentDTOs = hospital.getDepartments()
                 .stream()
-                .map(departmentMapper::toDTO)
+                .map(DepartmentMapper::toDTO)
                 .collect(Collectors.toSet());
 
         HospitalDTO hospitalDTO = new HospitalDTO();
@@ -42,7 +33,7 @@ public class HospitalMapper {
         return hospitalDTO;
     }
 
-    public  Hospital toEntity(HospitalDTO hospitalDTO) {
+    public Hospital toEntity(HospitalDTO hospitalDTO) {
         if (hospitalDTO == null) {
             return null;
         }
@@ -57,23 +48,23 @@ public class HospitalMapper {
         hospital.setDescription(hospitalDTO.getDescription());
         hospital.setCreatedAt(hospitalDTO.getCreatedAt());
         hospital.setUpdatedAt(hospitalDTO.getUpdatedAt());
-
+        hospital.setDepartments(hospitalDTO.getDepartments()
+                .stream()
+                .map(DepartmentMapper::toEntity)
+                .collect(Collectors.toSet()));
         return hospital;
     }
 
-    public  Hospital toEntity(HospitalCreateDTO hospitalCreateDTO) {
-        if (hospitalCreateDTO == null) {
-            return null;
-        }
-
+    public static Hospital toEntity(HospitalCreateDTO dto, Set<Department> departments) {
         Hospital hospital = new Hospital();
-        hospital.setName(hospitalCreateDTO.getName());
-        hospital.setAddress(hospitalCreateDTO.getAddress());
-        hospital.setPhone(hospitalCreateDTO.getPhone());
-        hospital.setEmail(hospitalCreateDTO.getEmail());
-        hospital.setWebsite(hospitalCreateDTO.getWebsite());
-        hospital.setDescription(hospitalCreateDTO.getDescription());
-        // Set other fields as needed
+        hospital.setName(dto.getName());
+        hospital.setAddress(dto.getAddress());
+        hospital.setPhone(dto.getPhone());
+        hospital.setEmail(dto.getEmail());
+        hospital.setWebsite(dto.getWebsite());
+        hospital.setDescription(dto.getDescription());
+        hospital.setDepartments(departments);
+        hospital.setHealthCheckAppointments(null);
         return hospital;
     }
 }

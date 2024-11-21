@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 public class DepartmentMapper {
 
-    public Department toEntity(DepartmentCreateDTO dto, Hospital hospital) {
+    public static Department toEntity(DepartmentCreateDTO dto, Hospital hospital) {
         if (dto == null) {
             return null;
         }
@@ -25,7 +25,20 @@ public class DepartmentMapper {
         return department;
     }
 
-    public DepartmentDTO toDTO(Department department) {
+    public static Department toEntity(DepartmentDTO department) {
+        if (department == null) {
+            return null;
+        }
+        Department departmentEntity = new Department();
+        departmentEntity.setId(department.getId());
+        departmentEntity.setName(department.getName());
+        departmentEntity.setDescription(department.getDescription());
+        departmentEntity.setHeadOfDepartment(department.getHeadOfDepartment());
+        departmentEntity.setPhone(department.getPhone());
+        return departmentEntity;
+    }
+
+    public static DepartmentDTO toDTO(Department department) {
         if (department == null) {
             return null;
         }
@@ -38,7 +51,7 @@ public class DepartmentMapper {
         return dto;
     }
 
-    public Department updateEntity(Department existingDepartment, DepartmentUpdateDTO dto) {
+    public static Department updateEntity(Department existingDepartment, DepartmentUpdateDTO dto) {
         if (existingDepartment == null) {
             return null;
         }

@@ -3,20 +3,45 @@ package com.zett.hcaredemo.mapper;
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
-import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Doctor;
-import com.zett.hcaredemo.entity.User;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class DoctorMapper {
 
-    // Phương thức để chuyển đổi từ Doctor sang DoctorDTO
-    public DoctorDTO toDTO(Doctor doctor) {
+    public static Doctor toEntity(DoctorDTO doctor) {
         if (doctor == null) {
             return null;
         }
+        Doctor doctorEntity = new Doctor();
+        doctorEntity.setId(doctor.getId());
+        doctorEntity.setFullName(doctor.getFullName());
+        doctorEntity.setDegree(doctor.getDegree());
+        doctorEntity.setGender(doctor.getGender());
+        doctorEntity.setPhoneNumber(doctor.getPhoneNumber());
+        doctorEntity.setEmail(doctor.getEmail());
+        doctorEntity.setExperience(doctor.getExperience());
+        doctorEntity.setProfilePictureUrl(doctor.getProfilePictureUrl());
+        doctorEntity.setUser(UserMapper.toUser(doctor.getUser()));
+        doctorEntity.setDepartment(DepartmentMapper.toEntity(doctor.getDepartment()));
+        doctorEntity.setDoctorSchedules(doctor.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()));
+        doctorEntity.setMedicalRecords(doctor.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()));
+        doctorEntity.setPrescriptions(doctor.getPrescriptions().stream()
+                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()));
+        doctorEntity.setHealthCheckAppointments(doctor.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()));
 
+        return doctorEntity;
+    }
+
+    public static DoctorDTO toDTO(Doctor doctor) {
+        if (doctor == null) {
+            return null;
+        }
         DoctorDTO doctorDTO = new DoctorDTO();
         doctorDTO.setId(doctor.getId());
         doctorDTO.setFullName(doctor.getFullName());
@@ -26,26 +51,23 @@ public class DoctorMapper {
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setExperience(doctor.getExperience());
         doctorDTO.setProfilePictureUrl(doctor.getProfilePictureUrl());
-
-        // Lấy ID từ đối tượng User nếu tồn tại
-        if (doctor.getUser() != null) {
-            doctorDTO.setUserId(doctor.getUser().getId());
-        }
-
-        // Lấy ID từ đối tượng Department nếu tồn tại
-        if (doctor.getDepartment() != null) {
-            doctorDTO.setDepartmentId(doctor.getDepartment().getId());
-        }
-
+        doctorDTO.setUser(UserMapper.toDTO(doctor.getUser()));
+        doctorDTO.setDepartment(DepartmentMapper.toDTO(doctor.getDepartment()));
+        doctorDTO.setDoctorSchedules(doctor.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toDTO).collect(Collectors.toSet()));
+        doctorDTO.setMedicalRecords(doctor.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toDTO).collect(Collectors.toSet()));
+        doctorDTO.setPrescriptions(doctor.getPrescriptions().stream()
+                .map(PrescriptionMapper::toDTO).collect(Collectors.toSet()));
+        doctorDTO.setHealthCheckAppointments(doctor.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toDTO).collect(Collectors.toSet()));
         return doctorDTO;
     }
 
-    // Phương thức để chuyển đổi từ DoctorCreateDTO sang Doctor
-    public Doctor toEntity(DoctorCreateDTO doctorCreateDTO) {
+    public static Doctor toEntity(DoctorCreateDTO doctorCreateDTO) {
         if (doctorCreateDTO == null) {
             return null;
         }
-
         Doctor doctor = new Doctor();
         doctor.setFullName(doctorCreateDTO.getFullName());
         doctor.setDegree(doctorCreateDTO.getDegree());
@@ -54,46 +76,33 @@ public class DoctorMapper {
         doctor.setEmail(doctorCreateDTO.getEmail());
         doctor.setExperience(doctorCreateDTO.getExperience());
         doctor.setProfilePictureUrl(doctorCreateDTO.getProfilePictureUrl());
-
-        // Thiết lập user và department dựa trên ID trong DTO
-        if (doctorCreateDTO.getUserId() != null) {
-            User user = new User();
-            user.setId(doctorCreateDTO.getUserId());
-            doctor.setUser(user);
-        }
-
-        if (doctorCreateDTO.getDepartmentId() != null) {
-            Department department = new Department();
-            department.setId(doctorCreateDTO.getDepartmentId());
-            doctor.setDepartment(department);
-        }
-
+        doctor.setMedicalRecords(null);
+        doctor.setPrescriptions(null);
+        doctor.setHealthCheckAppointments(null);
         return doctor;
     }
 
-    // Phương thức để cập nhật thông tin từ DoctorUpdateDTO vào Doctor
-    public Doctor updateEntity(Doctor existingDoctor, DoctorUpdateDTO doctorUpdateDTO) {
-        if (existingDoctor == null) {
+    public Doctor updateEntity(Doctor doctor, DoctorUpdateDTO doctorUpdateDTO) {
+        if (doctor == null) {
             return null;
         }
-
-        existingDoctor.setFullName(doctorUpdateDTO.getFullName());
-        existingDoctor.setDegree(doctorUpdateDTO.getDegree());
-        existingDoctor.setGender(doctorUpdateDTO.getGender());
-        existingDoctor.setPhoneNumber(doctorUpdateDTO.getPhoneNumber());
-        existingDoctor.setEmail(doctorUpdateDTO.getEmail());
-        existingDoctor.setExperience(doctorUpdateDTO.getExperience());
-        existingDoctor.setProfilePictureUrl(doctorUpdateDTO.getProfilePictureUrl());
-        if(doctorUpdateDTO.getDepartmentId() != null){
-            Department department = new Department();
-            department.setId(doctorUpdateDTO.getDepartmentId());
-            existingDoctor.setDepartment(department);
-        }
-        if(doctorUpdateDTO.getUserId() !=null){
-            User user = new User();
-            user.setId(doctorUpdateDTO.getUserId());
-            existingDoctor.setUser(user);
-        }
-        return existingDoctor;
+        doctor.setFullName(doctorUpdateDTO.getFullName());
+        doctor.setDegree(doctorUpdateDTO.getDegree());
+        doctor.setGender(doctorUpdateDTO.getGender());
+        doctor.setPhoneNumber(doctorUpdateDTO.getPhoneNumber());
+        doctor.setEmail(doctorUpdateDTO.getEmail());
+        doctor.setExperience(doctorUpdateDTO.getExperience());
+        doctor.setProfilePictureUrl(doctorUpdateDTO.getProfilePictureUrl());
+        doctor.setDepartment(DepartmentMapper.toEntity(doctorUpdateDTO.getDepartment()));
+        doctor.setUser(UserMapper.toUser(doctorUpdateDTO.getUser()));
+        doctor.setDoctorSchedules(doctorUpdateDTO.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()));
+        doctor.setMedicalRecords(doctorUpdateDTO.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()));
+        doctor.setPrescriptions(doctorUpdateDTO.getPrescriptions().stream()
+                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()));
+        doctor.setHealthCheckAppointments(doctorUpdateDTO.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()));
+        return doctor;
     }
 }

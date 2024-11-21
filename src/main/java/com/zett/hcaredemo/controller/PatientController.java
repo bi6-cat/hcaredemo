@@ -1,19 +1,16 @@
 package com.zett.hcaredemo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
 import com.zett.hcaredemo.dto.patient.PatientCreateDTO;
 import com.zett.hcaredemo.dto.patient.PatientDTO;
 import com.zett.hcaredemo.dto.patient.PatientUpdateDTO;
 import com.zett.hcaredemo.service.PatientService;
-
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -23,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/patients")
 public class PatientController {
@@ -35,33 +33,10 @@ public class PatientController {
     }
 
     @GetMapping
-    public String index(@RequestParam(required = false, defaultValue = "") String keyword, Pageable pageable,
-                        Model model,@RequestParam(required = false, defaultValue = "") UUID patientId) {
-        Page<PatientDTO> patients = patientService.findAll(keyword, pageable);
-        model.addAttribute("patients", patients);
-        model.addAttribute("keyword", keyword);
-        if(patientId != null){
-            PatientDTO patientDTO = patientService.findById(patientId);
-            model.addAttribute("patientDTO", patientDTO);
-        }
-        return "patients/index";
-    }
-//    @GetMapping
-//    public String demo(@RequestParam(required = false, defaultValue = "") String keyword, Pageable pageable, Model model,
-//                       @RequestParam(required = false) String patientId) {
-//        Page<PatientDTO> patients = patientService.findAll(keyword, pageable);
-//        model.addAttribute("patients", patients);
-//        if(patientId != null){
-//            PatientDTO patientDTO = patientService.findById(UUID.fromString(patientId));
-//            model.addAttribute("patientDTO", patientDTO);
-//        }
-//        return "shared/demo";
-//    }
-    @GetMapping("/details/{id}")
-    public String view(@PathVariable UUID id, Model model) {
-        PatientDTO patientDTO = patientService.findById(id);
+    public String index(Model model) {
+        PatientDTO patientDTO = patientService.findByUser();
         model.addAttribute("patientDTO", patientDTO);
-        return "patients/details";
+        return "patients/index";
     }
 
     @GetMapping("/create")
@@ -71,8 +46,9 @@ public class PatientController {
     }
 
     @PostMapping("/create")
-    public String savePatient(@ModelAttribute @Valid PatientCreateDTO patientCreateDTO, BindingResult bindingResult, Model model,
-                              @RequestParam(value = "profilePicture",required = false) MultipartFile profilePicture) {
+    public String savePatient(@ModelAttribute @Valid PatientCreateDTO patientCreateDTO, BindingResult bindingResult,
+                              Model model,
+                              @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture) {
         if (bindingResult.hasErrors()) {
             return "patients/create";
         }
@@ -81,8 +57,8 @@ public class PatientController {
                 byte[] bytes = profilePicture.getBytes();
                 String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH-mm-ss"));
-                Path path = Paths.get("src/main/resources/static/images/patients/" + uploadDate + "/" );
-                if (!Files.exists(path)){
+                Path path = Paths.get("src/main/resources/static/images/patients/" + uploadDate + "/");
+                if (!Files.exists(path)) {
                     Files.createDirectories(path);
                 }
                 Path filePath = Paths.get(path + uploadTime + profilePicture.getOriginalFilename());
@@ -98,17 +74,17 @@ public class PatientController {
         return "redirect:/patients";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable UUID id, Model model) {
-        PatientDTO patientDTO = patientService.findById(id);
-        model.addAttribute("patientUpdateDTO", new PatientUpdateDTO());
+    @GetMapping("/edit")
+    public String editForm(Model model) {
+        PatientDTO patientDTO = patientService.findByUser();
+//        model.addAttribute("patientUpdateDTO", new PatientUpdateDTO());
         model.addAttribute("patientDTO", patientDTO);
         return "patients/edit";
     }
 
-    @PostMapping("/edit/{id}")
-    public String update(@PathVariable UUID id, @ModelAttribute @Valid PatientUpdateDTO patientUpdateDTO,
-                         BindingResult bindingResult, Model model,@RequestParam(name = "profilePicture",required = false) MultipartFile profilePicture) {
+    @PostMapping("/edit")
+    public String update(@ModelAttribute @Valid PatientUpdateDTO patientUpdateDTO,
+                         BindingResult bindingResult, Model model, @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture) {
         if (bindingResult.hasErrors()) {
             return "shared/demo";
         }
@@ -117,8 +93,8 @@ public class PatientController {
                 byte[] bytes = profilePicture.getBytes();
                 String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH-mm-ss"));
-                Path path = Paths.get("src/main/resources/static/images/patients/" + uploadDate + "/" );
-                if (!Files.exists(path)){
+                Path path = Paths.get("src/main/resources/static/images/patients/" + uploadDate + "/");
+                if (!Files.exists(path)) {
                     Files.createDirectories(path);
                 }
                 Path filePath = Paths.get(path + uploadTime + profilePicture.getOriginalFilename());
@@ -130,8 +106,8 @@ public class PatientController {
                 return "patients/create";
             }
         }
-        patientService.update(id, patientUpdateDTO);
-        return "redirect:/patients/index";
+        patientService.update(patientUpdateDTO);
+        return "redirect:/patients";
     }
 
     @GetMapping("/delete/{id}")

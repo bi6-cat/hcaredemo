@@ -12,58 +12,84 @@
         .gradient-bg {
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
+
         .card-hover {
             transform: translateY(0);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .card-hover:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+
         .custom-shadow {
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
+
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .input-focus:focus {
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
             border-color: #3b82f6;
         }
+
         .page-transition {
             transition: all 0.3s ease-in-out;
         }
+
         .hover-scale:hover {
             transform: scale(1.05);
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .animate-fade-in {
             animation: fadeIn 0.6s ease-out forwards;
         }
+
         .status-dot {
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+            }
         }
     </style>
 </head>
 
 <body class="bg-gray-50">
 <section layout:fragment="content">
-    <div class="container mx-auto px-4 pt-24 pb-12 animate-fade-in">
+    <div class="container mx-auto px-20 pt-24 pb-12 animate-fade-in">
         <!-- Enhanced Header Section -->
         <div class="gradient-bg rounded-3xl p-10 mb-12 text-white custom-shadow">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
                 <div class="text-center md:text-left">
-                    <h1 class="text-5xl font-bold mb-3">Đội ngũ Bác sĩ</h1>
+                    <h1 class="text-4xl font-bold mb-3">Đội ngũ Bác sĩ</h1>
                     <p class="text-blue-100 text-lg">Đội ngũ chuyên gia y tế tận tâm của chúng tôi</p>
                 </div>
 
@@ -109,13 +135,16 @@
 
 
                         <a href="/doctors/create"
-                       class="bg-white text-blue-600 py-3 px-8 rounded-2xl hover:bg-blue-50
-                                  transition-all duration-300 font-bold shadow-lg hover:shadow-xl
+                           class="bg-white text-blue-600 py-3 px-8 rounded-2xl hover:bg-blue-50
+transition-all duration-300 font-bold shadow-lg hover:shadow-xl
                                   transform hover:scale-105">
-                        <i class="fas fa-plus-circle mr-2"></i>
-                        Thêm Bác Sĩ
-                    </a>
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Thêm Bác Sĩ
+
+                        </a>
+                    </form>
                 </div>
+
             </div>
         </div>
 
@@ -140,7 +169,8 @@
                             <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-green-400 rounded-full border-4 border-white status-dot"></div>
                         </div>
                         <div class="ml-6">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-1" th:text="${doctor.fullName}">Tên bác sĩ</h3>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-1" th:text="${doctor.fullName}">Tên bác
+                                sĩ</h3>
                             <span class="inline-block bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-semibold"
                                   th:text="${doctor.degree}">Học vị</span>
                         </div>
@@ -236,7 +266,7 @@
     });
 
     // Add loading animation
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         document.body.classList.add('loaded');
     });
 </script>

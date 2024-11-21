@@ -76,70 +76,22 @@
                     </nav>
                 </div>
             </div>
-
-            <!-- Profile List -->
-            <div class="col-span-3">
-                <div class="bg-white rounded-xl shadow-md p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold">Hồ sơ</h2>
-                        <button class="text-sm text-blue-600" onclick="location.href='/patients/create'">
-                            Thêm hồ sơ
-                        </button>
-                    </div>
-
-                    <div class="relative">
-                        <input type="text" id="searchInput" placeholder="Tìm nhanh hồ sơ" class="w-full px-4 py-2 border rounded-lg mb-4" oninput="filterPatients()">
-                    </div>
-
-                    <div class="space-y-2" id="patientList">
-                        <a th:each="patient : ${patients}"
-                           th:href="@{/patients(patientId=${patient.id})}"
-                           class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer patient-item">
-                            <img th:src="${patient.profilePictureUrl}"
-                                 th:alt="${patient.fullName}"
-                                 class="profile-avatar"
-                                 onerror="this.src='path/to/default/avatar.png'"/>
-                            <div class="ml-3">
-                                <p class="text-gray-900 font-medium patient-name" th:text="${patient.fullName}">Tên bệnh nhân</p>
-                                <p class="text-sm text-gray-500" th:text="${#temporals.format(patient.dateOfBirth, 'dd/MM/yyyy')}">Ngày sinh</p>
-                            </div>
-                        </a>
-                    </div>
-
-                    <script>
-                        function filterPatients() {
-                            const input = document.getElementById('searchInput').value.toLowerCase();
-                            const patientItems = document.querySelectorAll('.patient-item');
-
-                            patientItems.forEach(item => {
-                                const patientName = item.querySelector('.patient-name').textContent.toLowerCase();
-                                if (patientName.includes(input)) {
-                                    item.style.display = "flex";
-                                } else {
-                                    item.style.display = "none";
-                                }
-                            });
-                        }
-                    </script>
-                </div>
-            </div>
-
             <!-- Profile Details -->
             <div class="col-span-7" th:if="${patientDTO != null}">
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="border-b pb-4 mb-6">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center">
-                                <img th:src="${patientDTO.profilePictureUrl}"
-                                     th:alt="${patientDTO.fullName}"
-                                     class="profile-avatar-lg"
-                                     onerror="this.src='path/to/default/avatar.png'"/>
+<!--                                <img th:src="${patientDTO.profilePictureUrl}"-->
+<!--                                     th:alt="${patientDTO.fullName}"-->
+<!--                                     class="profile-avatar-lg"-->
+<!--                                     onerror="this.src='path/to/default/avatar.png'"/>-->
                                 <div class="ml-4">
                                     <h2 class="text-xl font-bold" th:text="${patientDTO.fullName}">Tên bệnh nhân</h2>
                                 </div>
                             </div>
                             <div class="flex space-x-3">
-                                <a th:href="@{'/patients/edit/' + ${patientDTO.id}}" class="btn-primary">
+                                <a th:href="@{'/patients/edit'}" class="btn-primary">
                                     Chỉnh sửa
                                 </a>
                                 <a th:href="@{'/patients/delete/' + ${patientDTO.id}}"
@@ -216,10 +168,6 @@
                                 <div>
                                     <label class="block text-sm text-gray-600 mb-1">Liên hệ khác</label>
                                     <p class="font-medium" th:text="${patientDTO.emergencyContact}"></p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-600 mb-1">Email</label>
-                                    <p class="font-medium" th:text="${patientDTO.email}"></p>
                                 </div>
                             </div>
                         </div>

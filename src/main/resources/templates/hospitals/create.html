@@ -12,12 +12,14 @@
             border-color: #3B82F6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
+
         .form-label {
             font-size: 0.95rem;
             margin-bottom: 0.5rem;
             color: #374151;
             font-weight: 500;
         }
+
         .transition-all {
             transition: all 0.3s ease;
         }
@@ -112,7 +114,21 @@
                          class="text-red-600 text-sm mt-1"></div>
                 </div>
             </div>
-
+            <!-- Danh sách các khoa -->
+            <div class="mb-6 md:col-span-2">
+                <label class="form-label">Chọn Các Khoa</label>
+                <div>
+                    <ul>
+                        <li th:each="department : ${departments}" class="flex items-center mb-2">
+                            <input type="checkbox" th:field="*{departmentIds}" th:value="${department.id}"
+                                   class="form-checkbox h-4 w-4 text-blue-600 rounded">
+                            <span th:text="${department.name}" class="ml-2"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div th:if="${#fields.hasErrors('departmentIds')}" th:errors="*{departmentIds}"
+                     class="text-red-600 text-sm mt-1"></div>
+            </div>
             <!-- Nút Lưu và Hủy -->
             <div class="flex justify-end gap-4 mt-6">
                 <a href="/hospitals"

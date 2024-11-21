@@ -1,11 +1,16 @@
 package com.zett.hcaredemo.dto.doctor;
 
+import com.zett.hcaredemo.dto.auth.UserDTO;
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
+import com.zett.hcaredemo.dto.doctorschedule.DoctorScheduleDTO;
+import com.zett.hcaredemo.dto.heathcheckappointment.HealthCheckAppointmentDTO;
+import com.zett.hcaredemo.dto.medicine.MedicalRecordDTO;
+import com.zett.hcaredemo.dto.prescription.PrescriptionDTO;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,13 +29,12 @@ public class DoctorUpdateDTO {
 
     @NotBlank(message = "Email is required")
     private String email;
-
     private String experience;
-
     private String profilePictureUrl;
-
-    @NotNull(message = "Department is required")
-    private UUID departmentId;
-
-    private UUID userId;
+    private DepartmentDTO department;
+    private UserDTO user;
+    private Set<DoctorScheduleDTO> doctorSchedules;
+    private Set<HealthCheckAppointmentDTO> healthCheckAppointments;
+    private Set<PrescriptionDTO> prescriptions;
+    private Set<MedicalRecordDTO> medicalRecords;
 }

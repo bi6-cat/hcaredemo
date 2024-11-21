@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -14,4 +15,5 @@ public class RoleDTO {
     private UUID id;
     @NotBlank(message = "Role name is required")
     private String name;
+    private Set<UserDTO> users;
 }
