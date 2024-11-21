@@ -2,12 +2,9 @@ package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.auth.RegisterDTO;
 import com.zett.hcaredemo.dto.auth.UserDTO;
-import com.zett.hcaredemo.entity.Patient;
 import com.zett.hcaredemo.entity.Role;
 import com.zett.hcaredemo.entity.User;
-import com.zett.hcaredemo.mapper.PatientMapper;
 import com.zett.hcaredemo.mapper.UserMapper;
-import com.zett.hcaredemo.repository.PatientRepository;
 import com.zett.hcaredemo.repository.RoleRepository;
 import com.zett.hcaredemo.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -90,8 +87,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         user = userRepository.save(user);
 
         // Return user DTO
-        var userDTO = userMapper.toUserDTO(user);
 
-        return userDTO;
+        return UserMapper.toUserDTO(user);
     }
 }
