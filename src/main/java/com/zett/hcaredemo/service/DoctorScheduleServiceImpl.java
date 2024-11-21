@@ -1,27 +1,34 @@
 package com.zett.hcaredemo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
+import com.zett.hcaredemo.dto.doctorschedule.DoctorScheduleDTO;
 import com.zett.hcaredemo.entity.Doctor;
 import com.zett.hcaredemo.entity.DoctorSchedule;
+import com.zett.hcaredemo.mapper.DoctorScheduleMapper;
 import com.zett.hcaredemo.repository.DoctorScheduleRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
-    @Autowired
-    private DoctorScheduleRepository doctorScheduleRepository;
+    private final DoctorScheduleRepository doctorScheduleRepository;
 
+    public DoctorScheduleServiceImpl(DoctorScheduleRepository doctorScheduleRepository) {
+        this.doctorScheduleRepository = doctorScheduleRepository;
+    }
+    @Override
+    public List<DoctorScheduleDTO> findAll() {
+        return doctorScheduleRepository.findAll().stream()
+                .map(DoctorScheduleMapper::toDTO)
+                .collect(Collectors.toList());
+    }
     @Override
     public List<DoctorSchedule> generateSchedules(LocalDate startDate, Doctor doctor) {
         List<DoctorSchedule> schedules = new ArrayList<>();
@@ -55,27 +62,32 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
     }
 
     @Override
-    @Scheduled(fixedRate = 3600000) // Runs every hour
-    public void updateExpiredSchedules() {
-    LocalDateTime now = LocalDateTime.now();
-    
-    // Format the current date and time as strings
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-    String currentDate = now.format(dateFormatter);
-    String currentTime = now.format(timeFormatter);
-
-    // Fetch expired schedules
-    List<DoctorSchedule> expiredSchedules = doctorScheduleRepository
-        .findExpiredSchedules(currentDate, currentTime);
-
-    for (DoctorSchedule schedule : expiredSchedules) {
-        schedule.setIsAvailable(false);
-        schedule.setUpdatedAt(now);
+    public Set<DoctorSchedule> findAllByIds(Set<UUID> ids) {
+        return new HashSet<>(doctorScheduleRepository.findAllById(ids));
     }
 
-    // Save all updated schedules
-    doctorScheduleRepository.saveAll(expiredSchedules);
-}
+    @Override
+    @Scheduled(fixedRate = 3600000) // Runs every hour
+    public void updateExpiredSchedules() {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Format the current date and time as strings
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String currentDate = now.format(dateFormatter);
+        String currentTime = now.format(timeFormatter);
+
+        // Fetch expired schedules
+        List<DoctorSchedule> expiredSchedules = doctorScheduleRepository
+                .findExpiredSchedules(currentDate, currentTime);
+
+        for (DoctorSchedule schedule : expiredSchedules) {
+            schedule.setIsAvailable(false);
+            schedule.setUpdatedAt(now);
+        }
+
+        // Save all updated schedules
+        doctorScheduleRepository.saveAll(expiredSchedules);
+    }
 }

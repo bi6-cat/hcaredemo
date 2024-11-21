@@ -1,6 +1,8 @@
 package com.zett.hcaredemo.dto.auth;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -23,4 +25,8 @@ public class UserDTO {
     @NotBlank(message = "Phone number is required")
     @Length(min = 10, max = 10, message = "Phone number must be 10 characters")
     private String phone;
+
+    public List<UUID> roleIds;
+
+    private Set<RoleDTO> roles;
 }

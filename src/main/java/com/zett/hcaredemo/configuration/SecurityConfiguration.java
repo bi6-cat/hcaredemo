@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/services/**").permitAll()
                                 .requestMatchers("/doctors/**").permitAll()
                                 .requestMatchers("/hospitals/**").permitAll()
+//                                .requestMatchers("/hospitals/**/departments/**").hasAnyRole("ADMIN", "DOCTOR", "PATIENT")
                                 .requestMatchers("/contact/**").permitAll()
                                 .requestMatchers("/appointments/**").hasRole("PATIENT")
 

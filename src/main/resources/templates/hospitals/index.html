@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/layout}">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,28 +16,32 @@
             <!-- Header Section -->
             <div class="flex flex-col md:flex-row justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-800">Danh sách Bệnh viện</h1>
-                
+
                 <div class="flex flex-wrap gap-4 mt-4 md:mt-0">
                     <form method="get" class="flex gap-4">
                         <input type="text" name="keyword" th:value="${keyword}"
                                class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600"
                                placeholder="Tìm kiếm bệnh viện...">
-                               
+
                         <select name="pageSize" onchange="this.form.submit()"
                                 class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600">
-                            <option th:each="s : ${pageSizes}" 
-                                    th:value="${s}" 
+                            <option th:each="s : ${pageSizes}"
+                                    th:value="${s}"
                                     th:text="${s + ' / trang'}"
                                     th:selected="${s == pageSize}">
                             </option>
                         </select>
                     </form>
+                    <a href="/hospitals/create"
+                       class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                        + Thêm Bệnh Viện
+                    </a>
                 </div>
             </div>
-        
+
             <!-- Hospital Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div th:each="hospital : ${hospitals}" 
+                <div th:each="hospital : ${hospitals}"
                      class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
                     <div class="p-6">
                         <!-- Hospital Header -->
@@ -48,7 +52,7 @@
                                 <span th:text="${#temporals.format(hospital.createdAt, 'dd/MM/yyyy')}">Ngày thành lập</span>
                             </div>
                         </div>
-                        
+
                         <!-- Hospital Info -->
                         <div class="space-y-3 text-gray-600">
                             <p class="flex items-center">
@@ -65,32 +69,32 @@
                             </p>
                             <p class="flex items-center">
                                 <i class="fas fa-globe w-6 text-blue-500"></i>
-                                <a th:href="${hospital.website}" class="text-blue-600 hover:underline" target="_blank" 
+                                <a th:href="${hospital.website}" class="text-blue-600 hover:underline" target="_blank"
                                    th:text="${hospital.website}">Website</a>
                             </p>
                         </div>
-        
+
                         <!-- Departments Badge -->
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span th:each="dept : ${hospital.departments}" 
+                            <span th:each="dept : ${hospital.departments}"
                                   class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                 <i class="fas fa-hospital-alt mr-1"></i>
                                 <span th:text="${dept.name}">Khoa</span>
                             </span>
                         </div>
-                        
+
                         <!-- Description -->
                         <p class="mt-4 text-gray-600 line-clamp-3" th:text="${hospital.description}">
                             Mô tả bệnh viện
                         </p>
-                        
+
                         <!-- Action Button -->
                         <div class="mt-6 flex gap-4">
                             <a th:href="@{'/hospitals/' + ${hospital.id}}"
                                class="flex-1 text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
                                 Xem chi tiết
                             </a>
-                            <a th:href="@{'/hospitals/' + ${hospital.id} + '/departments'}"
+                            <a th:href="@{|/hospitals/${hospital.id}/departments|}"
                                class="flex-1 text-center border border-blue-600 text-blue-600 py-2 px-4 rounded-lg hover:bg-blue-50 transition duration-300">
                                 Danh sách khoa
                             </a>
@@ -98,7 +102,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Pagination -->
             <div class="mt-8 flex justify-center" th:if="${totalPages > 1}">
                 <nav class="relative z-0 inline-flex rounded-lg shadow-sm">
@@ -107,7 +111,7 @@
                        class="relative inline-flex items-center px-4 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">
                         <i class="fas fa-chevron-left"></i>
                     </a>
-                    
+
                     <span th:each="i: ${#numbers.sequence(0, totalPages - 1)}">
                         <a th:href="@{/hospitals(page=${i}, size=${pageSize}, keyword=${keyword})}"
                            th:text="${i + 1}"
@@ -115,7 +119,7 @@
                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium hover:bg-gray-50">
                         </a>
                     </span>
-                    
+
                     <a th:href="@{/hospitals(page=${page + 1}, size=${pageSize}, keyword=${keyword})}"
                        th:class="${page >= totalPages - 1 ? 'pointer-events-none bg-gray-100' : ''}"
                        class="relative inline-flex items-center px-4 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">

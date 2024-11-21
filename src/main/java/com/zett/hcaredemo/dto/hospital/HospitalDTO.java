@@ -1,12 +1,14 @@
 package com.zett.hcaredemo.dto.hospital;
 
-import lombok.*;
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-
-import com.zett.hcaredemo.dto.department.DepartmentDTO;
 
 @Getter
 @Setter
@@ -22,5 +24,5 @@ public class HospitalDTO {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<DepartmentDTO> departments; 
+    private Set<DepartmentDTO> departments;
 }
