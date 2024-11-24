@@ -1,0 +1,193 @@
+<div class="dashboard-section">
+    <style>
+        .dashboard-section {
+            font-family: 'Roboto', Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-section .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .dashboard-section .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-section .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-section .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-section .card-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #636e72;
+        }
+
+        .dashboard-section .card-content {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+
+        .dashboard-section .card:hover .card-content {
+            color: #2980b9;
+        }
+
+        .dashboard-section .table-wrapper {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        .dashboard-section .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .dashboard-section .table thead tr {
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-section .table th,
+        .dashboard-section .table td {
+            padding: 15px;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dashboard-section .table th {
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .dashboard-section .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Loading animation */
+        .loading-row td {
+            position: relative;
+            height: 100px;
+        }
+
+        .loading-row td::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .dashboard-section {
+                padding: 15px;
+            }
+
+            .dashboard-section .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-section .card {
+                padding: 15px;
+            }
+
+            .dashboard-section .card-content {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-section .table th,
+            .dashboard-section .table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="dashboard-title">Tổng quan hệ thống</h2>
+    </div>
+
+    <div class="content">
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Bệnh viện</div>
+                <div class="card-content" th:text="${totalHospitals}">--</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Đội ngũ bác sĩ</div>
+                <div class="card-content" th:text="${totalDoctors}">--</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Chuyên khoa</div>
+                <div class="card-content" th:text="${totalDepartments}">--</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Danh mục thuốc</div>
+                <div class="card-content" th:text="${totalMedicines}">--</div>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Hoạt động gần đây</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="activity : ${activities}">
+                    <td th:text="${activity.action}">Tên hoạt động</td>
+                    <td th:text="${#temporals.format(activity.getTimestamp(), 'dd/MM/yyyy HH:mm')}">Thời gian</td>
+
+                    <td th:text="${activity.status}"
+                        th:classappend="'status-' + ${activity.status.toLowerCase()}">Trạng thái</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

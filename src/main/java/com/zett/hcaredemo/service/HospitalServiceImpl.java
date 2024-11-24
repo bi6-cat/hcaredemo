@@ -99,4 +99,9 @@ public class HospitalServiceImpl implements HospitalService {
     public void delete(UUID id) {
         hospitalRepository.deleteById(id);
     }
+
+    @Override
+    public long countHospital() {
+        return hospitalRepository.count();
+    }
 }

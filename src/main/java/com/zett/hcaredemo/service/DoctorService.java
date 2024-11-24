@@ -26,4 +26,6 @@ public interface DoctorService {
 
     void delete(UUID id);
 
+    long countDoctor();
+
 }

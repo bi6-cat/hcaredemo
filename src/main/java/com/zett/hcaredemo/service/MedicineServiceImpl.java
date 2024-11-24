@@ -6,6 +6,8 @@ import com.zett.hcaredemo.entity.Medicine;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 import com.zett.hcaredemo.mapper.MedicineMapper;
 import com.zett.hcaredemo.repository.MedicineRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,13 @@ public class MedicineServiceImpl implements MedicineService {
 
     public MedicineServiceImpl(MedicineRepository medicineRepository) {
         this.medicineRepository = medicineRepository;
+    }
+
+
+    @Override
+    public Page<MedicineDTO> searchMedicine(String keyword, Pageable pageable) {
+        return medicineRepository.findByNameContainingIgnoreCase(keyword, pageable)
+                .map(MedicineMapper::toDTO);
     }
 
     @Override
@@ -61,5 +70,9 @@ public class MedicineServiceImpl implements MedicineService {
         Medicine medicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Medicine not found with id " + id));
         return MedicineMapper.toDTO(medicine);
+    }
+    @Override
+    public long countMedicine() {
+        return medicineRepository.count();
     }
 }

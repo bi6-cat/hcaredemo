@@ -1,0 +1,25 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Quản lý Khoa</h2>
+    <a href="/admin/departments/create" class="btn btn-primary">Thêm Khoa</a>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Khoa</th>
+            <th>Thao Tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department : ${departments}">
+            <td th:text="${department.id}"></td>
+            <td th:text="${department.name}"></td>
+            <td>
+                <a th:href="@{/admin/departments/edit/{id}(id=${department.id})}" class="btn btn-primary">Sửa</a>
+                <a th:href="@{/admin/departments/delete/{id}(id=${department.id})}" class="btn btn-danger">Xóa</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

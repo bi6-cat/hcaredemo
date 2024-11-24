@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCare Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet">
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        #wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            flex-shrink: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, .8);
+            padding: 15px 25px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            transition: all 0.3s ease;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .table-responsive {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+        }
+
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        .fade-enter {
+            opacity: 0;
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            #wrapper {
+                flex-direction: column;
+            }
+        }
+
+        .error-message {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-3">
+            <h4>HCare Admin</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/admin/dashboard" data-section="dashboard">📊 Tổng quan</a>
+            <a class="nav-link" href="/admin/departments" data-section="departments">🏥 Quản lý khoa</a>
+            <a class="nav-link" href="/admin/doctors" data-section="doctors">👨‍⚕️ Quản lý bác sĩ</a>
+            <a class="nav-link" href="/admin/hospitals" data-section="hospitals">🏥 Quản lý bệnh viện</a>
+            <a class="nav-link" href="/admin/medicines" data-section="medicines">💊 Quản lý thuốc</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div id="loading-spinner" class="loading-spinner hidden">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+        </div>
+        <div id="error-container"></div>
+        <div id="content-container">
+            <div id="dashboard" class="section"></div>
+            <div id="departments" class="section hidden"></div>
+            <div id="hospitals" class="section hidden"></div>
+            <div id="doctors" class="section hidden"></div>
+            <div id="medicines" class="section hidden"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    class AdminDashboard {
+        constructor() {
+            this.initializeCurrentSection();
+            this.cache = new Map();
+            this.initializeEventListeners();
+            this.loadSection(this.currentSection);
+        }
+
+        initializeCurrentSection() {
+            const path = window.location.pathname;
+            this.currentSection = path.split('/').pop() || 'dashboard';
+            this.updateActiveNav(this.currentSection);
+        }
+
+        initializeEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = e.target.dataset.section;
+                    this.handleNavigation(section);
+                });
+            });
+
+            window.addEventListener('popstate', (e) => {
+                const section = window.location.pathname.split('/').pop() || 'dashboard';
+                this.loadSection(section, false);
+            });
+        }
+
+        handleNavigation(section) {
+            if (this.currentSection === section) return;
+            const url = `/admin/${section}`;
+            history.pushState({ section }, '', url);
+            this.loadSection(section);
+        }
+
+        async loadSection(section, updateHistory = true) {
+            try {
+                this.showLoading();
+                this.updateActiveNav(section);
+
+                if (this.cache.has(section) && !this.shouldInvalidateCache(section)) {
+                    this.updateContent(section, this.cache.get(section));
+                    this.hideLoading();
+                    return;
+                }
+
+                const response = await this.fetchSectionData(section);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const html = await response.text();
+                this.cache.set(section, {
+                    content: html,
+                    timestamp: Date.now()
+                });
+
+                this.updateContent(section, {content: html});
+            } catch (error) {
+                this.handleError(error);
+            } finally {
+                this.hideLoading();
+            }
+        }
+
+        shouldInvalidateCache(section) {
+            const cacheData = this.cache.get(section);
+            if (!cacheData) return true;
+            return Date.now() - cacheData.timestamp > 5 * 60 * 1000;
+        }
+
+        async fetchSectionData(section) {
+            NProgress.start();
+            const response = await fetch(`/admin/${section}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            NProgress.done();
+            return response;
+        }
+
+        updateContent(section, data) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            const sectionElement = document.getElementById(section);
+            sectionElement.innerHTML = data.content;
+            sectionElement.classList.remove('hidden');
+            this.currentSection = section;
+        }
+
+        updateActiveNav(section) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === section) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        showLoading() {
+            document.getElementById('loading-spinner').classList.remove('hidden');
+        }
+
+        hideLoading() {
+            document.getElementById('loading-spinner').classList.add('hidden');
+        }
+
+        handleError(error) {
+            console.error('Error:', error);
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `
+                <div class="error-message">
+                    <strong>Lỗi:</strong> Không thể tải nội dung. Vui lòng thử lại sau.
+                    <button class="btn btn-light btn-sm ms-2" onclick="adminDashboard.loadSection('${this.currentSection}')">
+                        Thử lại
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    // Khởi tạo dashboard sau khi DOM đã load
+    document.addEventListener('DOMContentLoaded', () => {
+        window.adminDashboard = new AdminDashboard();
+    });
+</script>
+</body>
+</html>

@@ -124,4 +124,9 @@ public class DoctorServiceImpl implements DoctorService {
         // Chuyển đổi Doctor sang DoctorDTO trước khi trả về
         return DoctorMapper.toDTO(doctor);
     }
+
+    @Override
+    public long countDoctor() {
+        return doctorRepository.count();
+    }
 }

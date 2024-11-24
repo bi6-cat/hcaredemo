@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface DepartmentService {
+    DepartmentDTO createByAdmin(DepartmentCreateDTO departmentCreateDTO);
+
     Set<Department> findAllByIds(Set<UUID> ids);
 
     Page<DepartmentDTO> findAll(String keyword, Pageable pageable);
@@ -29,4 +31,8 @@ public interface DepartmentService {
     void delete(UUID id);
 
     Page<DepartmentDTO> findAllByHospitalId(UUID hospitalId, String keyword, Pageable pageable);
+
+    Page<DepartmentDTO> searchDepartments(String keyword, Pageable pageable);
+
+    long countDepartment();
 }

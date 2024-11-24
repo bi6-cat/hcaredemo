@@ -1,20 +1,18 @@
 package com.zett.hcaredemo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.zett.hcaredemo.entity.Doctor;
 import com.zett.hcaredemo.entity.DoctorSchedule;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 import com.zett.hcaredemo.repository.DoctorRepository;
 import com.zett.hcaredemo.repository.DoctorScheduleRepository;
 import com.zett.hcaredemo.service.DoctorScheduleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,8 +43,6 @@ public class DoctorScheduleController {
         model.addAttribute("schedules", schedules);
         return "/doctors/schedule/schedule_list"; // Return the name of the view template
     }
-
-    
 
     @PostMapping("/toggle/{id}")
     public String toggleScheduleAvailability(@PathVariable UUID id) {
