@@ -54,12 +54,12 @@ public class Admin {
         this.activityService = activityService;
     }
 
-    @GetMapping("")
-    public String adminHomePage() {
-        return "admin/index"; // Trả về file admin/index.html
-    }
+//    @GetMapping("")
+//    public String adminHomePage() {
+//        return "admin/index"; // Trả về file admin/index.html
+//    }
 
-    @GetMapping("/dashboard")
+    @GetMapping("")
     public String dashboard(Model model) {
         List<Activity> activities = activityService.getRecentActivities();
         model.addAttribute("activities", activities);

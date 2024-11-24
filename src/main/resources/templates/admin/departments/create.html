@@ -1,10 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCare Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            overflow-x: hidden;
+            background: #f8f9fa;
+        }
+
+        #wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            flex-shrink: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, .8);
+            padding: 15px 25px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 40px;
+            width: calc(100% - 250px);
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+        }
+
+        .form-label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            border: none;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .page-title {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            #wrapper {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-3">
+            <h4>HCare Admin</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/admin">📊 Tổng quan</a>
+            <a class="nav-link" href="/admin/departments">🏥 Quản lý khoa</a>
+            <a class="nav-link" href="/admin/doctors">👨‍⚕️ Quản lý bác sĩ</a>
+            <a class="nav-link" href="/admin/hospitals">🏥 Quản lý bệnh viện</a>
+            <a class="nav-link" href="/admin/medicines">💊 Quản lý thuốc</a>
+        </nav>
+    </div>
 
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Thêm Khoa Mới</h1>
+            <p class="page-subtitle">Vui lòng điền đầy đủ thông tin khoa mới</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-5">
+                <form th:action="@{/admin/departments/create}" method="post">
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-clinic-medical me-2 text-primary"></i>
+                            Tên Khoa
+                        </label>
+                        <input type="text" name="name" required class="form-control" placeholder="Nhập tên khoa">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-user-md me-2 text-primary"></i>
+                            Trưởng Khoa
+                        </label>
+                        <input type="text" name="headOfDepartment" class="form-control" placeholder="Nhập tên trưởng khoa">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>
+                            Mô Tả
+                        </label>
+                        <textarea name="description" rows="4" class="form-control" placeholder="Nhập mô tả"></textarea>
+                    </div>
+
+
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-phone me-2 text-primary"></i>
+                            Số Điện Thoại
+                        </label>
+                        <input type="text" name="phone" class="form-control" placeholder="Nhập số điện thoại">
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 mt-5">
+                        <a th:href="@{/admin/departments}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    class AdminDashboard {
+        constructor() {
+            this.initializeEventListeners();
+        }
+
+        initializeEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const url = link.href;
+                    this.handleNavigation(url);
+                });
+            });
+        }
+
+        handleNavigation(url) {
+            window.location.href = url;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.adminDashboard = new AdminDashboard();
+    });
+</script>
 </body>
 </html>
