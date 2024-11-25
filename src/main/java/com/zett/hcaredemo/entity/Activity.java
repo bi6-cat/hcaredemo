@@ -17,11 +17,14 @@ public class Activity {
 
     @Column(name = "action")
     private String action;
-    @Column(name = "adminName")// Nội dung hoạt động (VD: "Thêm bác sĩ mới")
-    private String adminName;// Tên admin thực hiện
+
+    @Column(name = "adminName")
+    private String adminName;
+
     @Column(name = "timestamp")
-    private LocalDateTime timestamp; // Thời gian hoạt động
+    private LocalDateTime timestamp;
+
     @Column(name = "status")
-    private String status; // Trạng thái: Thành công, Thất bại
+    private String status;
 
 }
