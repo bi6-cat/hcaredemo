@@ -279,20 +279,20 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-clinic-medical"></i>
-                                Chọn Các Khoa
-                            </label>
-                            <div class="departments-grid">
-                                <div class="department-item" th:each="department : ${departments}">
-                                    <input type="checkbox" th:field="*{departmentIds}" th:value="${department.id}" class="me-2">
-                                    <label th:text="${department.name}"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="col-12">-->
+<!--                        <div class="form-group">-->
+<!--                            <label class="form-label">-->
+<!--                                <i class="fas fa-clinic-medical"></i>-->
+<!--                                Chọn Các Khoa-->
+<!--                            </label>-->
+<!--                            <div class="departments-grid">-->
+<!--                                <div class="department-item" th:each="department : ${departments}">-->
+<!--                                    <input type="checkbox" th:field="*{departmentIds}" th:value="${department.id}" class="me-2">-->
+<!--                                    <label th:text="${department.name}"></label>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
 
                 <div class="btn-group">

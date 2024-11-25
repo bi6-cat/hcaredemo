@@ -74,7 +74,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO create(DepartmentCreateDTO departmentDTO, UUID hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow();
-        Department department = DepartmentMapper.toEntity(departmentDTO, hospital);
+        Department department = DepartmentMapper.toEntity(departmentDTO);
+        department.setHospital(hospital);
+        hospital.getDepartments().add(department);
         department = departmentRepository.save(department);
         return DepartmentMapper.toDTO(department);
     }
@@ -107,5 +109,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public long countDepartment() {
         return departmentRepository.count();
+    }
+    @Override
+    public void deleteByAdmin(UUID hospitalId, UUID departmentId) {
+        Department department = departmentRepository.findById(departmentId).orElseThrow();
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow();
+        hospital.getDepartments().remove(department);
+        departmentRepository.deleteById(departmentId);
     }
 }

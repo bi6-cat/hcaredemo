@@ -4,16 +4,23 @@ import com.zett.hcaredemo.dto.department.DepartmentCreateDTO;
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.department.DepartmentUpdateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
-import com.zett.hcaredemo.dto.doctorschedule.DoctorScheduleDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
 import com.zett.hcaredemo.dto.medicine.MedicineCreateDTO;
 import com.zett.hcaredemo.dto.medicine.MedicineDTO;
 import com.zett.hcaredemo.entity.Activity;
+import com.zett.hcaredemo.entity.Doctor;
+import com.zett.hcaredemo.entity.DoctorSchedule;
+import com.zett.hcaredemo.exception.ResourceNotFoundException;
+import com.zett.hcaredemo.repository.DoctorRepository;
+import com.zett.hcaredemo.repository.DoctorScheduleRepository;
 import com.zett.hcaredemo.service.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +34,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -43,6 +52,10 @@ public class Admin {
     private final DoctorService doctorService;
     private final DoctorScheduleService doctorScheduleService;
     private final ActivityService activityService;
+    @Autowired
+    private DoctorScheduleRepository doctorScheduleRepository;
+    @Autowired
+    private DoctorRepository doctorRepository;
 
 
     public Admin(MedicineService medicineService, HospitalService hospitalService, DepartmentService departmentService, DoctorService doctorService, DoctorScheduleService doctorScheduleService, ActivityService activityService) {
@@ -53,11 +66,6 @@ public class Admin {
         this.doctorScheduleService = doctorScheduleService;
         this.activityService = activityService;
     }
-
-//    @GetMapping("")
-//    public String adminHomePage() {
-//        return "admin/index"; // Trả về file admin/index.html
-//    }
 
     @GetMapping("")
     public String dashboard(Model model) {
@@ -102,150 +110,88 @@ public class Admin {
         return "admin/departments/index";
     }
 
-    // Show create form
-    @GetMapping("/departments/create")
-    public String createDepartment(Model model) {
-        log.info("Accessing Department Creation Form");
-        model.addAttribute("department", new DepartmentCreateDTO());
-        log.info("Successfully loaded Department Creation Form");
-        return "admin/departments/create";
-    }
+//    @GetMapping("/departments/create")
+//    public String createDepartment(Model model) {
+//        log.info("Accessing Department Creation Form");
+//        model.addAttribute("department", new DepartmentCreateDTO());
+//        log.info("Successfully loaded Department Creation Form");
+//        return "admin/departments/create";
+//    }
 
-    // Handle department creation
-    @PostMapping("/departments/create")
-    public String saveDepartment(@ModelAttribute @Valid DepartmentCreateDTO department, BindingResult bindingResult, Model model) {
-        log.info("Starting Department Creation Process");
+//    @PostMapping("/departments/create")
+//    public String saveDepartment(@ModelAttribute @Valid DepartmentCreateDTO department, BindingResult bindingResult, Model model) {
+//        log.info("Starting Department Creation Process");
+//
+//        if (bindingResult.hasErrors()) {
+//            log.warn("Validation errors while creating department: {}", bindingResult.getAllErrors());
+//            return "admin/departments/create";
+//        }
+//
+//        try {
+//            DepartmentDTO departmentDTO = departmentService.createByAdmin(department);
+//            log.info("Successfully created Department: {}", departmentDTO.getName());
+//        } catch (Exception e) {
+//            log.error("Error occurred while creating department: {}", e.getMessage(), e);
+//            model.addAttribute("message", "Failed to create department");
+//            return "admin/departments/create";
+//        }
+//
+//        return "redirect:/admin/departments";
+//    }
 
-        if (bindingResult.hasErrors()) {
-            log.warn("Validation errors while creating department: {}", bindingResult.getAllErrors());
-            return "admin/departments/create";
-        }
+//    @GetMapping("/departments/edit/{id}")
+//    public String editDepartment(@PathVariable UUID id, Model model) {
+//        log.info("Accessing Edit Form for Department with ID: {}", id);
+//
+//        try {
+//            DepartmentDTO departmentDTO = departmentService.findById(id);
+//            model.addAttribute("departmentUpdateDTO", new DepartmentUpdateDTO());
+//            model.addAttribute("departmentDTO", departmentDTO);
+//            log.info("Successfully loaded Edit Form for Department: {}", departmentDTO.getName());
+//        } catch (Exception e) {
+//            log.error("Error occurred while loading department for editing: {}", e.getMessage(), e);
+//            throw new RuntimeException("Failed to load department for editing", e);
+//        }
+//
+//        return "admin/departments/edit";
+//    }
 
-        try {
-            DepartmentDTO departmentDTO = departmentService.createByAdmin(department);
-            activityService.logActivity("Thêm khoa mới: " + department.getName(), "Admin", "Thành công");
-            log.info("Successfully created Department: {}", departmentDTO.getName());
-        } catch (Exception e) {
-            log.error("Error occurred while creating department: {}", e.getMessage(), e);
-            model.addAttribute("message", "Failed to create department");
-            activityService.logActivity("Thêm khoa mới: " + department.getName(), "Admin", "Thất bại");
-            return "admin/departments/create";
-        }
+//    @PostMapping("/departments/edit/{id}")
+//    public String updateDepartment(@PathVariable UUID id, @ModelAttribute @Valid DepartmentUpdateDTO departmentUpdateDTO,
+//                                   BindingResult bindingResult, Model model) {
+//        log.info("Starting Update Process for Department with ID: {}", id);
+//        if (bindingResult.hasErrors()) {
+//            log.warn("Validation errors while updating department with ID {}: {}", id, bindingResult.getAllErrors());
+//            model.addAttribute("departmentDTO", departmentService.findById(id));
+//            return "admin/departments/edit";
+//        }
+//        try {
+//            departmentService.update(id, departmentUpdateDTO);
+//            log.info("Successfully updated Department with ID: {}", id);
+//        } catch (Exception e) {
+//            log.error("Error occurred while updating department with ID: {}", id, e);
+//            model.addAttribute("message", "Failed to update department");
+//            return "admin/departments/edit";
+//        }
+//        return "redirect:/admin/departments";
+//    }
 
-        return "redirect:/admin/departments";
-    }
-
-    // Show edit form
-    @GetMapping("/departments/edit/{id}")
-    public String editDepartment(@PathVariable UUID id, Model model) {
-        log.info("Accessing Edit Form for Department with ID: {}", id);
-
-        try {
-            DepartmentDTO departmentDTO = departmentService.findById(id);
-            model.addAttribute("departmentUpdateDTO", new DepartmentUpdateDTO());
-            model.addAttribute("departmentDTO", departmentDTO);
-            log.info("Successfully loaded Edit Form for Department: {}", departmentDTO.getName());
-        } catch (Exception e) {
-            log.error("Error occurred while loading department for editing: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to load department for editing", e);
-        }
-
-        return "admin/departments/edit";
-    }
-
-    // Handle department update
-    @PostMapping("/departments/edit/{id}")
-    public String updateDepartment(@PathVariable UUID id, @ModelAttribute @Valid DepartmentUpdateDTO departmentUpdateDTO,
-                                   BindingResult bindingResult, Model model) {
-        log.info("Starting Update Process for Department with ID: {}", id);
-        if (bindingResult.hasErrors()) {
-            log.warn("Validation errors while updating department with ID {}: {}", id, bindingResult.getAllErrors());
-            model.addAttribute("departmentDTO", departmentService.findById(id));
-            return "admin/departments/edit";
-        }
-        try {
-            departmentService.update(id, departmentUpdateDTO);
-            log.info("Successfully updated Department with ID: {}", id);
-            activityService.logActivity("Cập nhật thông tin khoa: " + departmentUpdateDTO.getName(), "Admin", "Thành công");
-        } catch (Exception e) {
-            log.error("Error occurred while updating department with ID: {}", id, e);
-            model.addAttribute("message", "Failed to update department");
-            activityService.logActivity("Cập nhật thông tin khoa: " + departmentUpdateDTO.getName(), "Admin", "Thất bại");
-            return "admin/departments/edit";
-        }
-        return "redirect:/admin/departments";
-    }
-
-    // Handle department deletion
-    @GetMapping("/departments/delete/{id}")
-    public String deleteDepartment(@PathVariable UUID id) {
-        log.info("Starting Delete Process for Department with ID: {}", id);
-
-        try {
-            departmentService.delete(id);
-            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thành công");
-            log.info("Successfully deleted Department with ID: {}", id);
-        } catch (Exception e) {
-            log.error("Error occurred while deleting department with ID: {}", id, e);
-            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thất bại");
-            throw new RuntimeException("Failed to delete department", e);
-        }
-
-        return "redirect:/admin/departments";
-    }
-
-    @GetMapping("/doctors")
-    public String indexDoctor(
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "12") Integer size,
-            @RequestParam(required = false, defaultValue = "fullName") String sortBy,
-            @RequestParam(required = false, defaultValue = "asc") String order,
-            @RequestParam(required = false, defaultValue = "") String keyword,
-            Model model) {
-
-        Pageable pageable = null;
-        if (order.equals("asc")) {
-            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        } else {
-            pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        }
-        var doctors = doctorService.findAll(keyword, pageable);
-        model.addAttribute("doctors", doctors);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("order", order);
-        model.addAttribute("totalPages", doctors.getTotalPages());
-        model.addAttribute("totalElements", doctors.getTotalElements());
-        model.addAttribute("page", page);
-        model.addAttribute("pageSize", size);
-        model.addAttribute("pageSizes", new Integer[]{6, 12, 24, 60, 100});
-        return "admin/doctors/index";
-    }
-
-    @GetMapping("/doctors/create")
-    public String createDoctor(Model model) {
-        log.info("Accessing Doctor Create Page");
-
-        var doctorCreateDTO = new DoctorCreateDTO();
-        model.addAttribute("doctorCreateDTO", doctorCreateDTO);
-
-        try {
-            List<DepartmentDTO> departments = departmentService.findAllDepartments();
-            if (departments == null || departments.isEmpty()) {
-                log.warn("No departments found while accessing doctor create page");
-                throw new RuntimeException("No departments found");
-            }
-            List<DoctorScheduleDTO> schedules = doctorScheduleService.findAll();
-            model.addAttribute("schedules", schedules);
-            model.addAttribute("departments", departments);
-        } catch (Exception e) {
-            log.error("Failed to load data for doctor creation: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to load necessary data for doctor creation", e);
-        }
-
-        log.info("Successfully loaded data for Doctor Create Page");
-        return "admin/doctors/create";
-    }
+//    @GetMapping("/departments/delete/{id}")
+//    public String deleteDepartment(@PathVariable UUID id) {
+//        log.info("Starting Delete Process for Department with ID: {}", id);
+//
+//        try {
+//            departmentService.delete(id);
+//            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thành công");
+//            log.info("Successfully deleted Department with ID: {}", id);
+//        } catch (Exception e) {
+//            log.error("Error occurred while deleting department with ID: {}", id, e);
+//            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thất bại");
+//            throw new RuntimeException("Failed to delete department", e);
+//        }
+//
+//        return "redirect:/admin/departments";
+//    }
 
     @PostMapping("/doctors/create")
     public String createDoctor(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,
@@ -258,7 +204,6 @@ public class Admin {
             return "admin/doctors/create";
         }
 
-        // Handle file upload
         if (profilePicture != null && !profilePicture.isEmpty()) {
             try {
                 byte[] bytes = profilePicture.getBytes();
@@ -286,6 +231,18 @@ public class Admin {
         activityService.logActivity("Thêm bác sĩ mới: " + doctorCreateDTO.getFullName(), "Admin", "Thành công");
         log.info("Successfully created new doctor with name: {}", doctorCreateDTO.getFullName());
         return "redirect:/admin/doctors";
+    }
+
+    @GetMapping("/doctors/{doctorId}/schedules")
+    public String getDoctorSchedule(@PathVariable UUID doctorId, Model model) {
+        LocalDate startDate = LocalDate.now();
+        doctorScheduleService.updateExpiredSchedules();
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id " + doctorId));
+        doctorScheduleService.generateSchedules(startDate, doctor);
+        List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctorId(doctorId);
+        model.addAttribute("schedules", schedules);
+        return "/doctors/schedule/schedule_list"; // Return the name of the view template
     }
 
     @GetMapping("/doctors/{id}/edit")
@@ -368,7 +325,7 @@ public class Admin {
     @GetMapping("/hospitals")
     public String indexHospital(
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "5") Integer size,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
             @RequestParam(required = false, defaultValue = "name") String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String order,
             @RequestParam(required = false, defaultValue = "") String keyword,
@@ -393,6 +350,81 @@ public class Admin {
         return "admin/hospitals/index";
     }
 
+    @GetMapping("hospitals/{hospitalId}/departments")
+    public String getDepartmentsByHospitalId(@PathVariable UUID hospitalId,
+                                             @RequestParam(required = false, defaultValue = "") String keyword,
+                                             Pageable pageable, Model model) {
+        Page<DepartmentDTO> departments = departmentService.findAllByHospitalId(hospitalId, keyword, pageable);
+        model.addAttribute("departments", departments);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("hospitalId", hospitalId);
+        HospitalDTO hospital = hospitalService.findById(hospitalId);
+        model.addAttribute("hospital", hospital);
+        return "admin/hospitals/departments";
+    }
+
+    @GetMapping("hospitals/{hospitalId}/departments/detail/{id}")
+    public String getDepartmentDetails(@PathVariable UUID hospitalId, @PathVariable UUID id, Model model) {
+        HospitalDTO hospital = hospitalService.findById(hospitalId);
+        DepartmentDTO department = hospital.getDepartments().stream().filter(d -> d.getId().equals(id)).findFirst().orElseThrow(() ->
+                new ResourceNotFoundException("Department not found with id: " + id));
+        model.addAttribute("department", department);
+        model.addAttribute("hospitalId", hospitalId);
+        return "admin/departments/details";
+    }
+
+    @GetMapping("hospitals/{hospitalId}/departments/{id}/doctors")
+    public String getDoctorsByDepartmentId(@PathVariable UUID hospitalId, @PathVariable UUID id, Model model) {
+        HospitalDTO hospital = hospitalService.findById(hospitalId);
+        DepartmentDTO department = hospital.getDepartments().stream().filter(d -> d.getId().equals(id)).findFirst().orElseThrow(() ->
+                new ResourceNotFoundException("Department not found with id: " + id));
+        Set<DoctorDTO> doctors = doctorService.getDoctorsByDepartment(department.getId());
+        model.addAttribute("doctors", doctors);
+        return "admin/doctors/index";
+    }
+
+    // Show create form
+    @GetMapping("/hospitals/{hospitalId}/departments/create")
+    public String createForm(Model model, @PathVariable UUID hospitalId) {
+        HospitalDTO hospital = hospitalService.findById(hospitalId);
+        model.addAttribute("department", new DepartmentCreateDTO());
+        model.addAttribute("hospital", hospital);
+        return "admin/departments/create";
+    }
+
+    @PostMapping("/hospitals/{hospitalId}/departments/create")
+    public String saveDepartment(@PathVariable UUID hospitalId, @ModelAttribute DepartmentCreateDTO department, Model model) {
+        DepartmentDTO departmentDTO = departmentService.create(department, hospitalId);
+        model.addAttribute("hospitalId", hospitalId);
+        return "redirect:/admin/hospitals/{hospitalId}/departments";
+    }
+
+    @GetMapping("/hospitals/{hospitalId}/departments/edit/{id}")
+    public String editForm(@PathVariable UUID id, @PathVariable UUID hospitalId, Model model) {
+        DepartmentDTO departmentDTO = departmentService.findById(id);
+        model.addAttribute("hospitalId", hospitalId);
+        model.addAttribute("departmentUpdateDTO", new DepartmentUpdateDTO());
+        model.addAttribute("department", departmentDTO);
+        return "admin/departments/edit";
+    }
+
+    @PostMapping("/hospitals/{hospitalId}/departments/edit/{id}")
+    public String updateDpofHos(@PathVariable UUID id, @PathVariable UUID hospitalId, @ModelAttribute @Valid DepartmentUpdateDTO departmentUpdateDTO,
+                                BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "admin/departments/edit";
+        }
+        model.addAttribute("hospitalId", hospitalId);
+        departmentService.update(id, departmentUpdateDTO);
+        return "redirect:/admin/hospitals/{hospitalId}/departments";
+    }
+
+    @GetMapping("hospitals/{hospitalId}/departments/delete/{id}")
+    public String deleteByHospitalId(@PathVariable UUID hospitalId, @PathVariable UUID id) {
+        departmentService.deleteByAdmin(hospitalId, id);
+        return "redirect:/admin/hospitals/{hospitalId}/departments";
+    }
+
     @GetMapping("/hospitals/{id}")
     public String showHospital(@PathVariable UUID id, Model model) {
         HospitalDTO hospitalDTO = hospitalService.findById(id);
@@ -404,8 +436,6 @@ public class Admin {
     public String createHospital(Model model) {
         log.info("Accessing Hospital Creation Page");
         var hospitalCreateDTO = new HospitalCreateDTO();
-        var departments = hospitalService.getAllDepartments();
-        model.addAttribute("departments", departments);
         model.addAttribute("hospitalCreateDTO", hospitalCreateDTO);
         return "admin/hospitals/create";
     }
@@ -417,7 +447,6 @@ public class Admin {
         if (bindingResult.hasErrors()) {
             return "admin/hospitals/create";
         }
-        System.out.println(hospitalCreateDTO.getDepartmentIds());
         hospitalService.create(hospitalCreateDTO);
         log.info("Successfully created Hospital: {}", hospitalCreateDTO.getName());
         activityService.logActivity("Thêm bệnh viện mới: " + hospitalCreateDTO.getName(), "Admin", "Thành công");

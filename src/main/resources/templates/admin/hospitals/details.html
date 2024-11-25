@@ -1,10 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Bệnh Viện</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hospital-card {
+            transition: transform 0.3s ease;
+        }
+        .hospital-card:hover {
+            transform: translateY(-5px);
+        }
+        .info-item {
+            transition: background-color 0.3s ease;
+        }
+        .info-item:hover {
+            background-color: #f8fafc;
+        }
+        .department-item {
+            transition: all 0.3s ease;
+        }
+        .department-item:hover {
+            transform: translateX(10px);
+            color: #2563eb;
+        }
+    </style>
 </head>
-<body>
 
+<body class="bg-gray-50">
+<section layout:fragment="content">
+    <div class="container mx-auto px-4 pt-24 pb-12 max-w-5xl">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-8 text-gray-600 text-sm">
+            <a href="/hospitals" class="hover:text-blue-600">Trang chủ</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-800 font-medium">Chi tiết bệnh viện</span>
+        </nav>
+
+        <!-- Hospital Card -->
+        <div class="hospital-card bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-8 text-white">
+                <h1 class="text-3xl font-bold mb-2" th:text="${hospital.name}">Tên Bệnh Viện</h1>
+                <p class="opacity-80" th:text="'Được thành lập: ' + ${hospital.createdAt}">Ngày tạo</p>
+            </div>
+
+            <!-- Content -->
+            <div class="p-8">
+                <!-- Main Info -->
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="space-y-4">
+                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-map-marker-alt w-6 text-blue-500"></i>
+                            <span class="ml-3" th:text="${hospital.address}">Địa chỉ</span>
+                        </div>
+                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-phone w-6 text-blue-500"></i>
+                            <a th:href="'tel:' + ${hospital.phone}" class="ml-3 hover:text-blue-600" th:text="${hospital.phone}">Số điện thoại</a>
+                        </div>
+                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-envelope w-6 text-blue-500"></i>
+                            <a th:href="'mailto:' + ${hospital.email}" class="ml-3 hover:text-blue-600" th:text="${hospital.email}">Email</a>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-globe w-6 text-blue-500"></i>
+                            <a th:href="${hospital.website}" class="ml-3 text-blue-600 hover:underline" target="_blank" th:text="${hospital.website}">Website</a>
+                        </div>
+                        <div class="info-item flex items-start p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-info-circle w-6 text-blue-500 mt-1"></i>
+                            <span class="ml-3" th:text="${hospital.description}">Mô tả</span>
+                        </div>
+                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
+                            <i class="fas fa-calendar-alt w-6 text-blue-500"></i>
+                            <span class="ml-3" th:text="'Cập nhật: ' + ${hospital.updatedAt}">Ngày cập nhật</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Departments -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-hospital-alt mr-2 text-blue-500"></i>
+                        Các Khoa
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div th:each="department : ${hospital.departments}"
+                             class="department-item flex items-center p-3 bg-white rounded-lg shadow-sm">
+                            <i class="fas fa-stethoscope text-blue-500 mr-3"></i>
+                            <span th:text="${department.name}">Tên khoa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-8 flex justify-end space-x-4">
+                    <a href="/hospitals"
+                       class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Quay lại
+                    </a>
+                    <a th:href="@{'/hospitals/edit/' + ${hospital.id}}"
+                       class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                        <i class="fas fa-edit mr-2"></i>
+                        Chỉnh sửa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

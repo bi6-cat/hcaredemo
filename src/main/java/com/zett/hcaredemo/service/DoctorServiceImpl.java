@@ -2,6 +2,7 @@ package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorIndexDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
 import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Doctor;
@@ -12,6 +13,7 @@ import com.zett.hcaredemo.mapper.DoctorMapper;
 import com.zett.hcaredemo.repository.DoctorRepository;
 import com.zett.hcaredemo.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
@@ -35,7 +37,9 @@ public class DoctorServiceImpl implements DoctorService {
 
 
     @Autowired
-    public DoctorServiceImpl(DoctorRepository doctorRepository, UserRepository userRepository, DoctorMapper doctorMapper, UserService userService, DepartmentService departmentService, DoctorScheduleService doctorScheduleService) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, UserRepository userRepository,
+                             DoctorMapper doctorMapper, UserService userService,
+                             DepartmentService departmentService, DoctorScheduleService doctorScheduleService) {
         this.doctorRepository = doctorRepository;
         this.userRepository = userRepository;
         this.doctorMapper = doctorMapper;
@@ -59,9 +63,10 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Page<DoctorDTO> findAll(String keyword, Pageable pageable) {
+    public Page<DoctorIndexDTO> findAll(String keyword, Pageable pageable) {
+        log.info("Finding doctors by keyword: {}", keyword);
         return doctorRepository.findByKeyword(keyword, pageable)
-                .map(DoctorMapper::toDTO);
+                .map(DoctorMapper::doctorIndexDTO);
     }
 
     @Override
@@ -128,5 +133,12 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public long countDoctor() {
         return doctorRepository.count();
+    }
+
+    @Override
+    public Set<DoctorDTO> getDoctorsByDepartment(UUID departmentId) {
+        return doctorRepository.findByDepartmentId(departmentId).stream()
+                .map(DoctorMapper::toDTO)
+                .collect(Collectors.toSet());
     }
 }

@@ -30,6 +30,8 @@ public interface DepartmentService {
 
     void delete(UUID id);
 
+    void deleteByAdmin(UUID hospitalId, UUID departmentId);
+
     Page<DepartmentDTO> findAllByHospitalId(UUID hospitalId, String keyword, Pageable pageable);
 
     Page<DepartmentDTO> searchDepartments(String keyword, Pageable pageable);
