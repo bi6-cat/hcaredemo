@@ -425,7 +425,7 @@ public class Admin {
         return "redirect:/admin/hospitals/{hospitalId}/departments";
     }
 
-    @GetMapping("/hospitals/{id}")
+    @GetMapping("/hospitals/details/{id}")
     public String showHospital(@PathVariable UUID id, Model model) {
         HospitalDTO hospitalDTO = hospitalService.findById(id);
         model.addAttribute("hospital", hospitalDTO);
