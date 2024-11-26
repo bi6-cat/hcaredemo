@@ -150,8 +150,6 @@
         </div>
         <nav class="nav flex-column">
             <a class="nav-link" href="/admin">📊 Tổng quan</a>
-            <a class="nav-link" href="/admin/departments">🏥 Quản lý khoa</a>
-            <a class="nav-link" href="/admin/doctors">👨‍⚕️ Quản lý bác sĩ</a>
             <a class="nav-link" href="/admin/hospitals">🏥 Quản lý bệnh viện</a>
             <a class="nav-link" href="/admin/medicines">💊 Quản lý thuốc</a>
         </nav>
@@ -160,7 +158,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="page-header">
-            <h1 class="page-title">Sua thong tin khoa</h1>
+            <h1 class="page-title">Sửa thông tin khoa</h1>
             <p class="page-subtitle">Vui lòng điền đầy đủ thông tin khoa</p>
         </div>
 
@@ -209,7 +207,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-3 mt-5">
-                        <a th:href="@{/admin/hospitals/{hospitalId}/departments}" class="btn btn-secondary">
+                        <a th:href="@{/admin/hospitals/{hospitalId}/departments(hospitalId=${hospitalId})}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-2"></i>
                             Quay lại
                         </a>

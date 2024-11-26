@@ -1,188 +1,302 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Departments of Hospital</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>HCare Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
-        .department-table {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid #e5e7eb;
+        body {
+            overflow-x: hidden;
+            background-color: #f4f4f9;
         }
 
-        .department-table thead {
-            background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
-        }
-
-        .department-table th {
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            padding: 1.25rem 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        .department-table tbody tr {
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-
-        .department-table td {
-            padding: 1.25rem 1rem;
-            font-size: 0.95rem;
-            color: #374151;
-        }
-
-        .add-button {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .add-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 12px -1px rgba(59, 130, 246, 0.5);
-        }
-
-        .hospital-title {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-        }
-
-        .hospital-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            border-radius: 4px;
-        }
-
-        .page-container {
-            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        #wrapper {
+            display: flex;
+            width: 100%;
             min-height: 100vh;
         }
 
-        .department-icon {
-            width: 40px;
-            height: 40px;
-            background: #e0e7ff;
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            flex-shrink: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, .8);
+            padding: 15px 25px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+            background-color: #eef2f7;
+            transition: all 0.3s ease;
+        }
+
+        .main-content h2 {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .table-responsive {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            margin-bottom: 0;
             border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background: #3498db;
+            color: white;
+            font-size: 1em;
+            text-align: center;
+            border: none;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            font-size: 0.9em;
+            border-radius: 5px;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            border: none;
+        }
+
+        .btn-info:hover {
+            background-color: #46b8da;
+        }
+
+        .btn-warning {
+            background-color: #f0ad4e;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #ec971f;
+        }
+
+        /* Cố định độ rộng của cột Thao tác */
+        .action-column {
+            width: 300px; /* Độ rộng vừa đủ để hiển thị các nút */
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            #wrapper {
+                flex-direction: column;
+            }
+        }
+        .actions {
             display: flex;
+            justify-content: flex-end;
+        }
+        .actions a.back {
+
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            color: #343a40;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            color: #3b82f6;
+            gap: 0.5rem;
+
         }
 
-        @media (max-width: 640px) {
-            .department-table {
-                display: block;
-                overflow-x: auto;
-                border-radius: 12px;
-            }
-
-            .hospital-title {
-                font-size: 1.5rem;
-            }
-
-            .page-container {
-                padding: 1rem;
-            }
+        .actions a.back:hover {
+            background-color: #ced4da;
+            color: #212529;
         }
+
     </style>
 </head>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-3">
+            <h4>HCare Admin</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/admin">📊 Tổng quan</a>
+            <a class="nav-link active" href="/admin/hospitals">🏥 Quản lý bệnh viện</a>
+            <a class="nav-link" href="/admin/medicines">💊 Quản lý thuốc</a>
+        </nav>
+    </div>
 
-<body class="bg-gray-50">
-<section layout:fragment="content">
-    <div class="page-container">
-        <div class="container mx-auto px-4 pt-24 pb-12">
-            <!-- Hospital Name Header -->
-            <div class="flex items-center gap-4 mb-12">
-                <div class="department-icon">
-                    <i class="fas fa-hospital-alt"></i>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Danh sách Khoa</h2>
+            <a th:href="@{/admin/hospitals/{hospitalId}/departments/create(hospitalId=${hospital.id})}" class="btn btn-primary">Thêm Khoa</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Tên Khoa</th>
+                    <th>Mô tả</th>
+                    <th>Trưởng Khoa</th>
+                    <th>Số điện thoại</th>
+                    <th class="action-column">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="department : ${departments}">
+                    <td th:text="${department.name}">Tên Khoa</td>
+                    <td th:text="${department.description}">Mô tả</td>
+                    <td th:text="${department.headOfDepartment}">Trưởng Khoa</td>
+                    <td th:text="${department.phone}">Số điện thoại</td>
+                    <td class="">
+                        <a th:href="@{/admin/hospitals/{hospitalId}/departments/{departmentId}/doctors(hospitalId=${hospital.id}, departmentId=${department.id})}"
+                           class="btn btn-info">DS bác sĩ</a>
+                        <a th:href="@{/admin/hospitals/{hospitalId}/departments/{departmentId}/services(hospitalId=${hospital.id}, departmentId=${department.id})}"
+                           class="btn btn-info">DS dịch vụ</a>
+                        <a th:href="@{/admin/hospitals/{hospitalId}/departments/edit/{id}(hospitalId=${hospital.id}, id=${department.id})}"
+                           class="btn btn-primary">Sửa</a>
+                        <a th:href="@{/admin/hospitals/{hospitalId}/departments/delete/{id}(hospitalId=${hospital.id}, id=${department.id})}"
+                           class="btn btn-danger delete-link">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="actions ">
+                <a href="/admin/hospitals" class="back">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+                <!--                    <a th:href="'/admin/hospitals/edit/' + ${hospital.id}" class="edit">-->
+                <!--                        <i class="bi bi-pencil-square"></i> Chỉnh sửa-->
+                <!--                    </a>-->
+            </div>
+        </div>
+
+    </div>
+    <!-- Modal Xác nhận xóa -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold" id="confirmDeleteLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Xác nhận xóa
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <h1 class="text-4xl font-bold hospital-title">
-                    Các khoa của bệnh viện <span th:text="${hospital.name}">Tên bệnh viện</span>
-                </h1>
+                <div class="modal-body text-center">
+                    <i class="bi bi-trash text-danger display-4 mb-3"></i>
+                    <p class="fw-semibold">Bạn có chắc chắn muốn xóa mục này không?</p>
+                    <p class="text-muted">Hành động này không thể hoàn tác. Hãy cân nhắc trước khi thực hiện.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Hủy
+                    </button>
+                    <a id="confirmDeleteButton" href="#" class="btn btn-danger">
+                        <i class="bi bi-trash-fill me-1"></i> Xóa
+                    </a>
+                </div>
             </div>
-
-            <!-- Departments Table -->
-            <div class="department-table bg-white">
-                <table class="min-w-full">
-                    <thead>
-                    <tr>
-                        <th class="text-left">Tên Khoa</th>
-                        <th class="text-left">Mô tả</th>
-                        <th class="text-left">Trưởng Khoa</th>
-                        <th class="text-left">Số điện thoại</th>
-                        <th class="text-left">Thao tác</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="department : ${departments}">
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-stethoscope text-blue-600"></i>
-                                <span th:text="${department.name}">Tên Khoa</span>
-                            </div>
-                        </td>
-                        <td th:text="${department.description}">Mô tả</td>
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-user-md text-blue-600"></i>
-                                <span th:text="${department.headOfDepartment}">Trưởng Khoa</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-phone text-blue-600"></i>
-                                <span th:text="${department.phone}">Số điện thoại</span>
-                            </div>
-                        </td>
-                        <td>
-                            <a th:href="@{/admin/hospitals/{hospitalId}/departments/edit/{id}(hospitalId=${hospital.id}, id=${department.id})}"
-                               class="btn btn-primary">Sửa</a>
-
-                            <a th:href="@{/admin/hospitals/{hospitalId}/departments/delete/{id}(hospitalId=${hospital.id}, id=${department.id})}"
-                               class="btn btn-danger delete-link">Xóa</a>
-
-                            <a th:href="@{/admin/hospitals/{hospitalId}/departments/{departmentId}/doctors(hospitalId=${hospital.id}, departmentId=${department.id})}"
-                               class="btn btn-info">Danh sách bác sĩ</a>
-
-                            <a th:href="@{/admin/hospitals/{hospitalId}/departments/{departmentId}/services(hospitalId=${hospital.id}, departmentId=${department.id})}"
-                                 class="btn btn-info">Danh sách dịch vụ</a>
-
-                            <a th:href="@{/admin/hospitals/{hospitalId}/departments/detail/{id}(hospitalId=${hospital.id}, id=${department.id})}"
-                                 class="btn btn-info">Chi tiết</a>
-
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <a th:href="@{/admin/hospitals/{hospitalId}/departments/create(hospitalId=${hospital.id})}"
-               class="mt-8 inline-block text-white py-3 px-6 rounded-lg add-button">
-                <i class="fas fa-plus"></i>
-                Thêm Khoa Mới
-            </a>
         </div>
     </div>
-</section>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".delete-link");
+        const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+        const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault(); // Ngăn chặn hành động mặc định
+                const deleteUrl = button.getAttribute("href"); // Lấy URL xóa
+                confirmDeleteButton.setAttribute("href", deleteUrl); // Đặt URL cho nút Xóa trong modal
+                confirmDeleteModal.show(); // Hiển thị modal
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

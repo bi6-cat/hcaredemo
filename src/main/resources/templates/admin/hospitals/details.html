@@ -1,119 +1,256 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Bệnh Viện</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>HCare Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        .hospital-card {
-            transition: transform 0.3s ease;
+        body {
+            overflow-x: hidden;
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .hospital-card:hover {
-            transform: translateY(-5px);
+
+        #wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
         }
-        .info-item {
-            transition: background-color 0.3s ease;
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            flex-shrink: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
-        .info-item:hover {
-            background-color: #f8fafc;
-        }
-        .department-item {
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, .8);
+            padding: 15px 25px;
+            font-size: 1.1em;
             transition: all 0.3s ease;
         }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .hospital-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hospital-card .header {
+            background: linear-gradient(90deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px;
+        }
+
+        .hospital-card .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .hospital-card .header p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+        }
+
+        .info-item i {
+            font-size: 1.2rem;
+            color: #3498db;
+            margin-right: 10px;
+        }
+
+        .departments-section {
+            background-color: #f4f6f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .department-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
         .department-item:hover {
-            transform: translateX(10px);
-            color: #2563eb;
+            transform: translateY(-5px);
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .actions a {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .actions a.back {
+            background-color: #e9ecef;
+            color: #343a40;
+            margin-right: 10px;
+        }
+
+        .actions a.back:hover {
+            background-color: #ced4da;
+            color: #212529;
+        }
+
+        .actions a.edit {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .actions a.edit:hover {
+            background-color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            #wrapper {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
-
-<body class="bg-gray-50">
-<section layout:fragment="content">
-    <div class="container mx-auto px-4 pt-24 pb-12 max-w-5xl">
-        <!-- Breadcrumb -->
-        <nav class="flex mb-8 text-gray-600 text-sm">
-            <a href="/hospitals" class="hover:text-blue-600">Trang chủ</a>
-            <span class="mx-2">/</span>
-            <span class="text-gray-800 font-medium">Chi tiết bệnh viện</span>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-3">
+            <h4>HCare Admin</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/admin">📊 Tổng quan</a>
+            <a class="nav-link" href="/admin/hospitals">🏥 Quản lý bệnh viện</a>
+            <a class="nav-link" href="/admin/medicines">💊 Quản lý thuốc</a>
         </nav>
+    </div>
 
-        <!-- Hospital Card -->
-        <div class="hospital-card bg-white rounded-xl shadow-lg overflow-hidden">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-8 text-white">
-                <h1 class="text-3xl font-bold mb-2" th:text="${hospital.name}">Tên Bệnh Viện</h1>
-                <p class="opacity-80" th:text="'Được thành lập: ' + ${hospital.createdAt}">Ngày tạo</p>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="hospital-card">
+            <div class="header">
+                <h1 th:text="${hospital.name}">Tên Bệnh Viện</h1>
             </div>
-
-            <!-- Content -->
-            <div class="p-8">
-                <!-- Main Info -->
-                <div class="grid md:grid-cols-2 gap-8 mb-8">
-                    <div class="space-y-4">
-                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-map-marker-alt w-6 text-blue-500"></i>
-                            <span class="ml-3" th:text="${hospital.address}">Địa chỉ</span>
+            <div class="content p-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <span th:text="${hospital.address}">Địa chỉ</span>
                         </div>
-                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-phone w-6 text-blue-500"></i>
-                            <a th:href="'tel:' + ${hospital.phone}" class="ml-3 hover:text-blue-600" th:text="${hospital.phone}">Số điện thoại</a>
+                        <div class="info-item">
+                            <i class="bi bi-telephone"></i>
+                            <span th:href="'tel:' + ${hospital.phone}" th:text="${hospital.phone}">Số điện thoại</span>
                         </div>
-                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-envelope w-6 text-blue-500"></i>
-                            <a th:href="'mailto:' + ${hospital.email}" class="ml-3 hover:text-blue-600" th:text="${hospital.email}">Email</a>
+                        <div class="info-item">
+                            <i class="bi bi-envelope"></i>
+                            <span th:href="'mailto:' + ${hospital.email}" th:text="${hospital.email}">Email</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-globe"></i>
+                            <span th:href="${hospital.website}" target="_blank" th:text="${hospital.website}">Website</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-info-circle"></i>
+                            <span th:text="${hospital.description}">Mô tả</span>
                         </div>
                     </div>
-                    <div class="space-y-4">
-                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-globe w-6 text-blue-500"></i>
-                            <a th:href="${hospital.website}" class="ml-3 text-blue-600 hover:underline" target="_blank" th:text="${hospital.website}">Website</a>
-                        </div>
-                        <div class="info-item flex items-start p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-info-circle w-6 text-blue-500 mt-1"></i>
-                            <span class="ml-3" th:text="${hospital.description}">Mô tả</span>
-                        </div>
-                        <div class="info-item flex items-center p-3 rounded-lg border border-gray-100">
-                            <i class="fas fa-calendar-alt w-6 text-blue-500"></i>
-                            <span class="ml-3" th:text="'Cập nhật: ' + ${hospital.updatedAt}">Ngày cập nhật</span>
+                    <div class="col-md-6">
+
+                    </div>
+                </div>
+
+                <div class="departments-section">
+                    <h3 class="mb-3">Các Khoa</h3>
+                    <div class="row">
+                        <div th:each="department : ${hospital.departments}" class="col-md-6">
+                            <div class="department-item p-3">
+                                <i class="bi bi-stethoscope mr-2"></i>
+                                <span th:text="${department.name}">Tên khoa</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Departments -->
-                <div class="bg-gray-50 rounded-xl p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-hospital-alt mr-2 text-blue-500"></i>
-                        Các Khoa
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div th:each="department : ${hospital.departments}"
-                             class="department-item flex items-center p-3 bg-white rounded-lg shadow-sm">
-                            <i class="fas fa-stethoscope text-blue-500 mr-3"></i>
-                            <span th:text="${department.name}">Tên khoa</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="mt-8 flex justify-end space-x-4">
-                    <a href="/hospitals"
-                       class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-300">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Quay lại
+                <div class="actions">
+                    <a href="/admin/hospitals" class="back">
+                        <i class="bi bi-arrow-left"></i> Quay lại
                     </a>
-                    <a th:href="@{'/hospitals/edit/' + ${hospital.id}}"
-                       class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
-                        <i class="fas fa-edit mr-2"></i>
-                        Chỉnh sửa
-                    </a>
+<!--                    <a th:href="'/admin/hospitals/edit/' + ${hospital.id}" class="edit">-->
+<!--                        <i class="bi bi-pencil-square"></i> Chỉnh sửa-->
+<!--                    </a>-->
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

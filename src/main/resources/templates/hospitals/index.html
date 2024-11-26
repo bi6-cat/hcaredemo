@@ -8,53 +8,131 @@
     <title>HealthCare Management System</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+
+        .card-hover {
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .custom-shadow {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-focus:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+        }
+
+        .page-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .status-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+            }
+        }
+    </style>
 </head>
 
 <body>
     <section layout:fragment="content">
-        <div class="container mx-auto px-4 pt-24 pb-12">
+        <div class="container mx-auto px-24 pt-8 pb-12 animate-fade-in">
             <!-- Header Section -->
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800">Danh sách Bệnh viện</h1>
-
-                <div class="flex flex-wrap gap-4 mt-4 md:mt-0">
-                    <form method="get" class="flex gap-4">
-                        <input type="text" name="keyword" th:value="${keyword}"
-                               class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600"
-                               placeholder="Tìm kiếm bệnh viện...">
-
-                        <select name="pageSize" onchange="this.form.submit()"
-                                class="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600">
-                            <option th:each="s : ${pageSizes}"
-                                    th:value="${s}"
-                                    th:text="${s + ' / trang'}"
-                                    th:selected="${s == pageSize}">
-                            </option>
-                        </select>
-                    </form>
-<!--                    <a href="/hospitals/create"-->
-<!--                       class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">-->
-<!--                        + Thêm Bệnh Viện-->
-<!--                    </a>-->
+            <div class="gradient-bg rounded-3xl p-10 mb-12 text-white custom-shadow">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+                    <!-- Title -->
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl font-bold mb-3">Danh sách Bệnh viện</h1>
+                        <p class="text-blue-100 text-lg">Quản lý danh sách bệnh viện hiệu quả</p>
+                    </div>
+                    <!-- Search and Filter -->
+                    <div class="flex flex-wrap gap-6">
+                        <form method="get" class="flex items-center gap-4">
+                            <!-- Search Input -->
+                            <div class="relative group">
+                                <input type="text" name="keyword" th:value="${keyword}"
+                                       class="pl-12 pr-4 py-3 rounded-2xl bg-blue-50 border-2 border-gray-300 focus:outline-none
+                                        focus:border-blue-500 text-gray-800 placeholder-gray-500 w-64 transition-all duration-300"
+                                       placeholder="Tìm kiếm bác sĩ...">
+                                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400
+                                        group-hover:text-blue-500 transition-colors duration-300"></i>
+                            </div>
+                            <!-- Page Size Dropdown -->
+                            <select name="size" onchange="this.form.submit()"
+                                    class="px-4 py-3 rounded-2xl bg-blue-50 text-gray-800 border border-gray-300
+                   focus:outline-none hover:bg-blue-100 transition-all duration-300">
+                                <option th:each="s : ${pageSizes}"
+                                        th:value="${s}"
+                                        th:text="${s + ' / trang'}"
+                                        th:selected="${s == pageSize}">
+                                </option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Hospital Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div th:each="hospital : ${hospitals}"
-                     class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-                    <div class="p-6">
+                     class="bg-white rounded-3xl custom-shadow card-hover p-1">
+                    <div class="p-8">
                         <!-- Hospital Header -->
-                        <div class="mb-4">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2" th:text="${hospital.name}">Tên bệnh viện</h3>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="fas fa-clock mr-2"></i>
-                                <span th:text="${#temporals.format(hospital.createdAt, 'dd/MM/yyyy')}">Ngày thành lập</span>
-                            </div>
+                        <div class="ml-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-1 " th:text="${hospital.name}">Tên bệnh viện</h3>
+
                         </div>
 
                         <!-- Hospital Info -->
-                        <div class="space-y-3 text-gray-600">
+                        <div class="space-y-4 text-gray-600">
                             <p class="flex items-center">
                                 <i class="fas fa-map-marker-alt w-6 text-blue-500"></i>
                                 <span th:text="${hospital.address}">Địa chỉ</span>
@@ -84,9 +162,9 @@
                         </div>
 
                         <!-- Description -->
-                        <p class="mt-4 text-gray-600 line-clamp-3" th:text="${hospital.description}">
-                            Mô tả bệnh viện
-                        </p>
+<!--                        <p class="mt-4 text-gray-600 line-clamp-3" th:text="${hospital.description}">-->
+<!--                            Mô tả bệnh viện-->
+<!--                        </p>-->
 
                         <!-- Action Button -->
                         <div class="mt-6 flex gap-4">

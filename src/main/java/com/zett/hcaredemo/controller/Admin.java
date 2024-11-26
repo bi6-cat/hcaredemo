@@ -572,7 +572,7 @@ public class Admin {
     }
 
     // Handle medicine deletion
-    @PostMapping("/medicines/delete/{id}")
+    @GetMapping("/medicines/delete/{id}")
     public String deleteMedicine(@PathVariable UUID id) {
         log.info("Starting Delete Process for Medicine with ID: {}", id);
         try {
