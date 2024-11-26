@@ -71,9 +71,6 @@ public class PatientServiceImpl implements PatientService {
             throw new ResourceNotFoundException("User not found");
         }
         Patient patient = user.getPatient();
-        if (patient == null) {
-            throw new ResourceNotFoundException("Patient not found");
-        }
-        return patientMapper.toDTO(patient);
+        return PatientMapper.toDTO(patient);
     }
 }
