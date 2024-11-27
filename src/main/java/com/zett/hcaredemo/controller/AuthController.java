@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zett.hcaredemo.dto.auth.ChangePasswordDTO;
 import com.zett.hcaredemo.dto.auth.RegisterDTO;
 import com.zett.hcaredemo.service.AuthService;
 
@@ -34,7 +35,6 @@ public class AuthController {
         return "auth/register";
     }
 
-    // Post Mapping for register form submission is handled by Spring Security
     @PostMapping("/register")
     public String registerUser(@ModelAttribute @Valid RegisterDTO registerDTO,
             BindingResult bindingResult,
@@ -43,7 +43,6 @@ public class AuthController {
             return "auth/register";
         }
 
-        // Register user
         var user = authService.register(registerDTO);
         
         if(user == null) {
@@ -57,5 +56,29 @@ public class AuthController {
     @RequestMapping("/access-denied")
     public String accessDenied() {
         return "auth/403";
+    }
+
+    @GetMapping("/change-password")
+    public String showChangePasswordForm(Model model) {
+        model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
+        return "auth/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@ModelAttribute @Valid ChangePasswordDTO changePasswordDTO,
+                                 BindingResult bindingResult,
+                                 Model model) {
+        if (bindingResult.hasErrors()) {
+            return "auth/change-password";
+        }
+
+        try {
+            authService.changePassword(changePasswordDTO);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "auth/change-password";
+        }
+
+        return "redirect:/auth/login";
     }
 }
