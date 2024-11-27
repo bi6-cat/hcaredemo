@@ -122,7 +122,7 @@
             </div>
 
             <!-- Form -->
-            <form th:action="@{/doctors/create}" th:object="${doctorCreateDTO}" method="post" class="form-card p-8">
+            <form th:action="@{/admin/doctors/create}" th:object="${doctorCreateDTO}" method="post" class="form-card p-8">
                 <div class="form-group">
                     <label class="form-label" for="fullName">Họ và Tên</label>
                     <input type="text" id="fullName" th:field="*{fullName}"

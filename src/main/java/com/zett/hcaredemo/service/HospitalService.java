@@ -25,4 +25,7 @@ public interface HospitalService {
     HospitalDTO update(UUID id, HospitalDTO hospitalDTO);
 
     void delete(UUID id);
+
+    long countHospital();
+
 }

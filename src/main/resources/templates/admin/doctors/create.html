@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Bác Sĩ Mới</title>
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 70%);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+        .input-field:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            outline: none;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+        }
+
+        .cancel-button {
+            transition: all 0.3s ease;
+        }
+
+        .cancel-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            position: absolute;
+            top: -0.75rem;
+            left: 0.75rem;
+            background: white;
+            padding: 0 0.5rem;
+            color: #4b5563;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+<section layout:fragment="content">
+    <div class="container mx-auto px-4 pt-24 pb-12">
+        <div class="form-container">
+            <!-- Header -->
+            <div class="mb-12 text-center">
+                <h1 class="text-4xl font-bold form-header mb-4">Thêm Bác Sĩ Mới</h1>
+                <p class="text-gray-600">Nhập thông tin chi tiết của bác sĩ bên dưới</p>
+            </div>
+
+            <!-- Form -->
+            <form th:action="@{/admin/doctors/create}" th:object="${doctorCreateDTO}" method="post" class="form-card p-8">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Họ và Tên</label>
+                    <input type="text" id="fullName" th:field="*{fullName}"
+                           class="input-field w-full px-4 py-3 rounded-lg"
+                           placeholder="Nhập tên bác sĩ" required/>
+                    <div th:if="${#fields.hasErrors('fullName')}" class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span th:errors="*{fullName}"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label class="form-label" for="degree">Học Vị</label>
+                        <input type="text" id="degree" th:field="*{degree}"
+                               class="input-field w-full px-4 py-3 rounded-lg"
+                               placeholder="Nhập học vị" required/>
+                        <div th:if="${#fields.hasErrors('degree')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span th:errors="*{degree}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="gender">Giới Tính</label>
+                        <select id="gender" th:field="*{gender}"
+                                class="input-field w-full px-4 py-3 rounded-lg" required>
+                            <option value="" selected disabled>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('gender')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span th:errors="*{gender}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
+                        <input type="tel" id="phoneNumber" th:field="*{phoneNumber}"
+                               class="input-field w-full px-4 py-3 rounded-lg"
+                               placeholder="Nhập số điện thoại" required/>
+                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span th:errors="*{phoneNumber}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" th:field="*{email}"
+                               class="input-field w-full px-4 py-3 rounded-lg"
+                               placeholder="Nhập email" required/>
+                        <div th:if="${#fields.hasErrors('email')}" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span th:errors="*{email}"></span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Thêm phần khác -->
+
+
+
+                <div class="flex justify-end gap-4 mt-8">
+                    <a href="/admin/hospitals"
+                       class="cancel-button px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium">
+                        Hủy
+                    </a>
+                    <button type="submit"
+                            class="submit-button px-6 py-3 text-white rounded-lg font-medium">
+                        Lưu thông tin
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

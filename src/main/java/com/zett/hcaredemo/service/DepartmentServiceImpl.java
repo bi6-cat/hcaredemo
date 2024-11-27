@@ -29,10 +29,23 @@ public class DepartmentServiceImpl implements DepartmentService {
         this.departmentRepository = departmentRepository;
         this.hospitalRepository = hospitalRepository;
     }
+
+    @Override
+    public DepartmentDTO createByAdmin(DepartmentCreateDTO departmentCreateDTO) {
+        Department department = new Department();
+        department.setName(departmentCreateDTO.getName());
+        department.setDescription(departmentCreateDTO.getDescription());
+        department.setHeadOfDepartment(departmentCreateDTO.getHeadOfDepartment());
+        department.setPhone(departmentCreateDTO.getPhone());
+        department = departmentRepository.save(department);
+        return DepartmentMapper.toDTO(department);
+    }
+
     @Override
     public Set<Department> findAllByIds(Set<UUID> ids) {
         return new HashSet<>(departmentRepository.findAllById(ids));
     }
+
     @Override
     public Page<DepartmentDTO> findAll(String keyword, Pageable pageable) {
         return departmentRepository.findAllByKeyword(keyword, pageable)
@@ -52,6 +65,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findById(id).orElseThrow();
         return DepartmentMapper.toDTO(department);
     }
+
     @Override
     public Department findByIdEntity(UUID id) {
         return departmentRepository.findById(id).orElseThrow();
@@ -60,7 +74,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO create(DepartmentCreateDTO departmentDTO, UUID hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow();
-        Department department = DepartmentMapper.toEntity(departmentDTO, hospital);
+        Department department = DepartmentMapper.toEntity(departmentDTO);
+        department.setHospital(hospital);
+        hospital.getDepartments().add(department);
         department = departmentRepository.save(department);
         return DepartmentMapper.toDTO(department);
     }
@@ -82,5 +98,23 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Page<DepartmentDTO> findAllByHospitalId(UUID hospitalId, String keyword, Pageable pageable) {
         return departmentRepository.findByHospitalIdAndKeyword(hospitalId, keyword, pageable)
                 .map(DepartmentMapper::toDTO);
+    }
+
+    @Override
+    public Page<DepartmentDTO> searchDepartments(String keyword, Pageable pageable) {
+        return departmentRepository.findByNameContainingIgnoreCase(keyword, pageable)
+                .map(DepartmentMapper::toDTO);
+    }
+
+    @Override
+    public long countDepartment() {
+        return departmentRepository.count();
+    }
+    @Override
+    public void deleteByAdmin(UUID hospitalId, UUID departmentId) {
+        Department department = departmentRepository.findById(departmentId).orElseThrow();
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow();
+        hospital.getDepartments().remove(department);
+        departmentRepository.deleteById(departmentId);
     }
 }

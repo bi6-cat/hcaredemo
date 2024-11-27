@@ -17,4 +17,6 @@ public interface DepartmentRepository extends JpaRepository<Department, UUID> {
     Page<Department> findByHospitalIdAndKeyword(UUID hospitalId, String keyword, Pageable pageable);
 
     List<Department> findByHospitalId(UUID hospitalId);
+
+    Page<Department> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 }

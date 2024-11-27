@@ -1,30 +1,19 @@
 package com.zett.hcaredemo.controller;
 
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
-import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
-import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
 import com.zett.hcaredemo.dto.doctorschedule.DoctorScheduleDTO;
-import com.zett.hcaredemo.service.DepartmentService;
-import com.zett.hcaredemo.service.DoctorScheduleService;
 import com.zett.hcaredemo.service.DoctorService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,13 +21,9 @@ import java.util.UUID;
 @RequestMapping("/doctors")
 public class DoctorController {
     private final DoctorService doctorService;
-    private final DepartmentService departmentService;
-    private final DoctorScheduleService doctorScheduleService;
 
-    public DoctorController(DoctorService doctorService, DepartmentService departmentService, DoctorScheduleService doctorScheduleService) {
+    public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
-        this.departmentService = departmentService;
-        this.doctorScheduleService = doctorScheduleService;
     }
 
     @GetMapping
@@ -78,116 +63,5 @@ public class DoctorController {
         model.addAttribute("doctor", doctor);
         model.addAttribute("department", department);
         return "doctors/details";
-    }
-
-    @GetMapping("/create")
-    public String create(Model model) {
-        var doctorCreateDTO = new DoctorCreateDTO();
-        model.addAttribute("doctorCreateDTO", doctorCreateDTO);
-
-
-        List<DepartmentDTO> departments = departmentService.findAllDepartments();
-        if (departments == null || departments.isEmpty()) {
-            throw new RuntimeException("No departments found");
-        }
-        List<DoctorScheduleDTO> schedules = doctorScheduleService.findAll();
-        model.addAttribute("schedules", schedules);
-        model.addAttribute("departments", departments);
-
-        return "doctors/create";
-    }
-
-
-    @PostMapping("/create")
-    public String create(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,
-                         @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
-                         BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "doctors/create";
-        }
-
-        // Handle file upload
-        if (profilePicture != null && !profilePicture.isEmpty()) {
-            try {
-                byte[] bytes = profilePicture.getBytes();
-
-                String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
-
-                Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
-
-                if (!Files.exists(directoryPath)) {
-                    Files.createDirectories(directoryPath);
-                }
-
-                Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
-
-                Files.write(filePath, bytes);
-
-                doctorCreateDTO.setProfilePictureUrl("/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
-            } catch (Exception e) {
-                e.printStackTrace();
-                model.addAttribute("message", "Failed to upload image");
-                return "doctors/create";
-            }
-        }
-
-        doctorService.create(doctorCreateDTO);
-
-        return "redirect:/doctors";
-    }
-
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable UUID id, ModelMap model) {
-        var doctorDTO = doctorService.findById(id);
-        model.addAttribute("doctorDTO", doctorDTO);
-        return "doctors/edit";
-    }
-
-    @PostMapping("/{id}/edit")
-    public String edit(@PathVariable UUID id, @ModelAttribute DoctorUpdateDTO doctorDTO,
-                       @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
-
-        var oldDoctor = doctorService.findById(id);
-
-        // Case 1: User does not select a new image
-        if (profilePicture.getOriginalFilename().isEmpty()) {
-            doctorDTO.setProfilePictureUrl(oldDoctor.getProfilePictureUrl());
-        } else {
-            // Case 2: User selects a new image
-            if (profilePicture.getOriginalFilename() != null && !profilePicture.getOriginalFilename().isEmpty()) {
-                try {
-                    byte[] bytes = profilePicture.getBytes();
-
-                    String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
-
-                    Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
-
-                    if (!Files.exists(directoryPath)) {
-                        Files.createDirectories(directoryPath);
-                    }
-
-                    Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
-
-                    Files.write(filePath, bytes);
-
-                    doctorDTO.setProfilePictureUrl("/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    model.addAttribute("message", "Failed to upload image");
-                    return "doctors/edit";
-                }
-            }
-        }
-
-        doctorService.update(id, doctorDTO);
-        return "redirect:/doctors";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id) {
-        doctorService.delete(id);
-        return "redirect:/doctors";
     }
 }
