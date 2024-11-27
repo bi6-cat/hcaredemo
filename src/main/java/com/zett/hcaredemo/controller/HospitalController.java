@@ -1,17 +1,16 @@
 package com.zett.hcaredemo.controller;
 
-import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
 import com.zett.hcaredemo.service.HospitalService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
@@ -41,21 +40,13 @@ public class HospitalController {
         }
         var hospitals = hospitalService.searchHospitals(keyword, pageable);
         model.addAttribute("hospitals", hospitals);
-
         model.addAttribute("keyword", keyword);
-
         model.addAttribute("sortBy", sortBy);
-
         model.addAttribute("order", order);
-
         model.addAttribute("totalPages", hospitals.getTotalPages());
-
         model.addAttribute("totalElements", hospitals.getTotalElements());
-
         model.addAttribute("page", page);
-
         model.addAttribute("pageSize", size);
-
         model.addAttribute("pageSizes", new Integer[]{5, 10, 20, 50, 100});
         return "hospitals/index";
     }
@@ -65,44 +56,5 @@ public class HospitalController {
         HospitalDTO hospitalDTO = hospitalService.findById(id);
         model.addAttribute("hospital", hospitalDTO);
         return "hospitals/details";
-    }
-
-    @GetMapping("/create")
-    public String create(Model model) {
-        var hospitalCreateDTO = new HospitalCreateDTO();
-        var departments = hospitalService.getAllDepartments();
-        model.addAttribute("departments", departments);
-        model.addAttribute("hospitalCreateDTO", hospitalCreateDTO);
-        return "hospitals/create";
-    }
-
-    @PostMapping("/create")
-    public String create(@ModelAttribute @Valid HospitalCreateDTO hospitalCreateDTO,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "hospitals/create";
-        }
-        System.out.println(hospitalCreateDTO.getDepartmentIds());
-        hospitalService.create(hospitalCreateDTO);
-        return "redirect:/hospitals";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable UUID id, ModelMap model) {
-        var hospitalDTO = hospitalService.findById(id);
-        model.addAttribute("hospitalDTO", hospitalDTO);
-        return "hospitals/edit";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String edit(@PathVariable UUID id, @ModelAttribute HospitalDTO hospitalDTO) {
-        hospitalService.update(id, hospitalDTO);
-        return "redirect:/hospitals";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id) {
-        hospitalService.delete(id);
-        return "redirect:/hospitals";
     }
 }

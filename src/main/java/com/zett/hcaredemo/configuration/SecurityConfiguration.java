@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -15,7 +17,15 @@ public class SecurityConfiguration {
         public PasswordEncoder bCryptPasswordEncoder() {
                 return new BCryptPasswordEncoder();
         }
-
+        @Bean
+        public WebMvcConfigurer corsConfigurer() {
+                return new WebMvcConfigurer() {
+                        @Override
+                        public void addCorsMappings(CorsRegistry registry) {
+                                registry.addMapping("/**").allowedOrigins("*");
+                        }
+                };
+        }
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf().disable();
@@ -38,7 +48,7 @@ public class SecurityConfiguration {
                                 // allow access to static resources
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                                 // protect admin resources
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/admin/**").permitAll()
                                 .requestMatchers("/patient/**").hasAnyRole("ADMIN", "PATIENT")
                                 .requestMatchers("/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
                                 // protect all other requests and require user authentication

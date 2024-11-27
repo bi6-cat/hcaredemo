@@ -52,9 +52,9 @@ public class Hospital {
         updatedAt = LocalDateTime.now();
     }
 
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Department> departments;
 
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<HealthCheckAppointment> healthCheckAppointments;
 }

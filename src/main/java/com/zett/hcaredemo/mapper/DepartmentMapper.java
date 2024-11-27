@@ -4,15 +4,11 @@ import com.zett.hcaredemo.dto.department.DepartmentCreateDTO;
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.department.DepartmentUpdateDTO;
 import com.zett.hcaredemo.entity.Department;
-import com.zett.hcaredemo.entity.Hospital;
-import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 
-@Component
 public class DepartmentMapper {
 
-    public static Department toEntity(DepartmentCreateDTO dto, Hospital hospital) {
+    public static Department toEntity(DepartmentCreateDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -21,7 +17,6 @@ public class DepartmentMapper {
         department.setDescription(dto.getDescription());
         department.setHeadOfDepartment(dto.getHeadOfDepartment());
         department.setPhone(dto.getPhone());
-        department.setHospital(hospital);
         return department;
     }
 

@@ -35,6 +35,9 @@ public class PatientController {
     @GetMapping
     public String index(Model model) {
         PatientDTO patientDTO = patientService.findByUser();
+        if(patientDTO==null){
+            return "redirect:/patients/create";
+        }
         model.addAttribute("patientDTO", patientDTO);
         return "patients/index";
     }
@@ -113,6 +116,6 @@ public class PatientController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable UUID id) {
         patientService.delete(id);
-        return "redirect:/patients";
+        return "redirect:/";
     }
 }

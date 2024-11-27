@@ -20,7 +20,7 @@
         </div>
 
         <!-- Form Chỉnh Sửa Bác Sĩ -->
-        <form th:action="@{/doctors/edit}" th:object="${doctorDTO}" method="post" class="bg-white p-8 rounded-lg shadow-md">
+        <form th:action="@{/admin/doctors/edit}" th:object="${doctorDTO}" method="post" class="bg-white p-8 rounded-lg shadow-md">
             <input type="hidden" th:field="*{id}"/>
             <div class="mb-4">
                 <label for="fullName" class="block text-gray-700 font-medium">Họ và Tên:</label>

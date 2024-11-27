@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi Tiết Bác Sĩ</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="container">
+    <h1>Chi Tiết Bác Sĩ</h1>
+    <div class="doctor-details">
+        <!-- Ảnh đại diện -->
+        <div class="profile-picture">
+            <img th:src="${doctor.profilePictureUrl ?: '/images/default-profile.png'}" alt="Ảnh Đại Diện" width="150" height="150">
+        </div>
+
+        <!-- Thông tin chi tiết -->
+        <div class="info">
+            <p><strong>ID:</strong> <span th:text="${doctor.id ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Họ và Tên:</strong> <span th:text="${doctor.fullName ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Bằng Cấp:</strong> <span th:text="${doctor.degree ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Giới Tính:</strong> <span th:text="${doctor.gender ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Số Điện Thoại:</strong> <span th:text="${doctor.phoneNumber ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${doctor.email ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Kinh Nghiệm:</strong> <span th:text="${doctor.experience ?: 'Không có thông tin'}"></span></p>
+            <p><strong>Phòng Ban:</strong> <span th:text="${doctor.department?.name ?: 'Không có thông tin'}"></span></p>
+        </div>
+    </div>
+
+    <!-- Lịch làm việc -->
+    <div class="doctor-schedule">
+        <h2>Lịch Làm Việc</h2>
+        <ul>
+            <li th:each="schedule : ${doctor.doctorSchedules}">
+                <span th:text="${schedule.startTime ?: 'Không có thông tin'}"></span> -
+                <span th:text="${schedule.scheduleDate ?: 'Không có thông tin'}"></span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Lịch hẹn khám -->
+    <div class="health-check-appointments">
+        <h2>Lịch Hẹn Khám</h2>
+        <ul>
+            <li th:each="appointment : ${doctor.healthCheckAppointments}">
+                <span th:text="${appointment.id ?: 'Không có thông tin'}"></span> -
+                <span th:text="${appointment.id ?: 'Không có thông tin'}"></span> -
+                <span th:text="${appointment.status ?: 'Không có thông tin'}"></span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Đơn thuốc -->
+    <div class="prescriptions">
+        <h2>Đơn Thuốc</h2>
+        <ul>
+            <li th:each="prescription : ${doctor.prescriptions}">
+                <span th:text="${prescription.id ?: 'Không có thông tin'}"></span>:
+                <span th:text="${prescription.id ?: 'Không có thông tin'}"></span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Hồ sơ bệnh án -->
+    <div class="medical-records">
+        <h2>Hồ Sơ Bệnh Án</h2>
+        <ul>
+            <li th:each="record : ${doctor.medicalRecords}">
+                <span th:text="${record.id ?: 'Không có thông tin'}"></span> -
+                <span th:text="${record.patient?.fullName ?: 'Không có thông tin'}"></span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Nút chỉnh sửa -->
+    <div class="actions">
+        <a th:href="@{/admin/doctors/edit/{id}(id=${doctor.id ?: 0})}" class="btn btn-primary">Chỉnh Sửa</a>
+        <a href="/admin/doctors" class="btn btn-secondary">Quay Lại</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a th:href="@{/admin/doctors/{id}/schedules(id=${doctor.id})}"
+           class="mt-8 inline-block text-white py-3 px-6 rounded-lg add-button">
+            <i class="fas fa-plus"></i>
+            Thêm Lịch Hẹn
+        </a>
+    </div>
+</div>
+</body>
+</html>
