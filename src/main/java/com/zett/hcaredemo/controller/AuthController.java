@@ -27,10 +27,10 @@ public class AuthController {
         return "auth/login";
     }
 
+
     @GetMapping("/register")
-    public String register(Model model) {
-        var registerDTO = new RegisterDTO();
-        model.addAttribute("registerDTO", registerDTO);
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("registerDTO", new RegisterDTO());
         return "auth/register";
     }
 
@@ -50,7 +50,7 @@ public class AuthController {
             model.addAttribute("error", "An error occurred while registering the user");
             return "auth/register";
         }
-        
+
         return "redirect:/auth/login";
     }
 

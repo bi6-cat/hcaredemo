@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Information</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+<div class="container mx-auto px-4 pt-12">
+  <!-- Patient Information Card -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Thông tin bệnh nhân</h1>
+
+    <!-- Patient Profile Picture -->
+    <div class="flex items-center mb-6">
+      <div class="w-24 h-24 rounded-full overflow-hidden mr-4">
+        <img th:src="${patientDTO.profilePictureUrl}" alt="Profile Picture" class="object-cover w-full h-full">
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-700" th:text="${patientDTO.fullName}">Tên bệnh nhân</h2>
+        <p class="text-sm text-gray-500" th:text="${patientDTO.email}">Email</p>
+      </div>
+    </div>
+
+    <!-- Patient Details -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-gray-600">Họ và tên:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.fullName}">Nguyen Quang</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Giới tính:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.gender}">Nam</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Số điện thoại:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.phoneNumber}">0337000031</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Ngày sinh:</label>
+        <p class="text-gray-800 font-semibold" th:text="${#temporals.format(patientDTO.dateOfBirth, 'dd/MM/yyyy')}">04/11/2020</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Địa chỉ:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.address}">123 Main St, City</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Liên hệ khẩn cấp:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.emergencyContact}">0987654321</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Nhóm máu:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.bloodType}">O+</p>
+      </div>
+      <div>
+        <label class="block text-gray-600">Dị ứng:</label>
+        <p class="text-gray-800 font-semibold" th:text="${patientDTO.allergies}">None</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 flex gap-4">
+      <a href="/patients/edit" th:href="@{'/patients/edit/' + ${patientDTO.id}}"
+         class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+        Chỉnh sửa
+      </a>
+      <a href="/patients/delete" th:href="@{'/patients/delete/' + ${patientDTO.id}}"
+         class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+        Xóa
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>

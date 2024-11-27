@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments of Hospital</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .department-table {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .department-table thead {
+            background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+        }
+
+        .department-table th {
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            padding: 1.25rem 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .department-table tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .department-table td {
+            padding: 1.25rem 1rem;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .add-button {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(59, 130, 246, 0.5);
+        }
+
+        .hospital-title {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        .hospital-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            border-radius: 4px;
+        }
+
+        .page-container {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+
+        .department-icon {
+            width: 40px;
+            height: 40px;
+            background: #e0e7ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+        }
+
+        @media (max-width: 640px) {
+            .department-table {
+                display: block;
+                overflow-x: auto;
+                border-radius: 12px;
+            }
+
+            .hospital-title {
+                font-size: 1.5rem;
+            }
+
+            .page-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+<section layout:fragment="content">
+    <div class="page-container">
+        <div class="container mx-auto px-4 pt-24 pb-12">
+            <!-- Hospital Name Header -->
+            <div class="flex items-center gap-4 mb-12">
+                <div class="department-icon">
+                    <i class="fas fa-hospital-alt"></i>
+                </div>
+                <h1 class="text-4xl font-bold hospital-title">
+                    Các khoa của bệnh viện <span th:text="${hospital.name}">Tên bệnh viện</span>
+                </h1>
+            </div>
+
+            <!-- Departments Table -->
+            <div class="department-table bg-white">
+                <table class="min-w-full">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Tên Khoa</th>
+                        <th class="text-left">Mô tả</th>
+                        <th class="text-left">Trưởng Khoa</th>
+                        <th class="text-left">Số điện thoại</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="department : ${departments}">
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-stethoscope text-blue-600"></i>
+                                <span th:text="${department.name}">Tên Khoa</span>
+                            </div>
+                        </td>
+                        <td th:text="${department.description}">Mô tả</td>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-user-md text-blue-600"></i>
+                                <span th:text="${department.headOfDepartment}">Trưởng Khoa</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone text-blue-600"></i>
+                                <span th:text="${department.phone}">Số điện thoại</span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Create New Department Button -->
+            <a th:href="@{/hospitals/{hospitalId}/departments/create(hospitalId=${hospital.id})}"
+               class="mt-8 inline-block text-white py-3 px-6 rounded-lg add-button">
+                <i class="fas fa-plus"></i>
+                Thêm Khoa Mới
+            </a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

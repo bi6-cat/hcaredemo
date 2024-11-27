@@ -27,7 +27,7 @@
                 <a th:href="@{/hospitals}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bệnh viện</a>
                 <a th:href="@{/doctors}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bác sĩ</a>
                 <a th:href="@{/contact}" class="text-gray-700 hover:text-blue-600 transition duration-300">Liên hệ</a>
-                
+
                 <!-- Hiển thị khi chưa đăng nhập -->
                 <div th:if="${#authentication.principal == 'anonymousUser'}" class="flex items-center space-x-4">
                     <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
@@ -66,7 +66,7 @@
                             <a th:href="@{payments/payment-history}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <i class="fas fa-history mr-2"></i>Lịch sử thanh toán
                             </a>
-                            <a th:href="@{/profile}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                            <a th:href="@{/patients}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <i class="fas fa-user mr-2"></i>Hồ sơ
                             </a>
                             <a th:href="@{/change-password}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
