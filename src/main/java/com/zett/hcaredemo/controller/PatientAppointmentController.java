@@ -39,7 +39,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/appointments")
-public class HealthCheckAppointmentController {
+public class PatientAppointmentController {
 
     @Autowired
     private HealthCheckAppointmentRepository appointmentRepository;

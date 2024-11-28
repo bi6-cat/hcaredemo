@@ -36,5 +36,5 @@ public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, 
 
     List<DoctorSchedule> findByDoctorIdAndIsAvailableTrueOrderByScheduleDateAscStartTimeAsc(UUID doctorId);
 
-
+    
 }

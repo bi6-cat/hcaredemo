@@ -37,15 +37,12 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Controller
 @RequestMapping("/admin")
-public class Admin {
+public class AdminController {
     private final MedicineService medicineService;
     private final HospitalService hospitalService;
     private final DepartmentService departmentService;
@@ -58,7 +55,7 @@ public class Admin {
     private DoctorRepository doctorRepository;
 
 
-    public Admin(MedicineService medicineService, HospitalService hospitalService, DepartmentService departmentService, DoctorService doctorService, DoctorScheduleService doctorScheduleService, ActivityService activityService) {
+    public AdminController(MedicineService medicineService, HospitalService hospitalService, DepartmentService departmentService, DoctorService doctorService, DoctorScheduleService doctorScheduleService, ActivityService activityService) {
         this.medicineService = medicineService;
         this.hospitalService = hospitalService;
         this.departmentService = departmentService;
@@ -110,107 +107,25 @@ public class Admin {
         return "admin/departments/index";
     }
 
-//    @GetMapping("/departments/create")
-//    public String createDepartment(Model model) {
-//        log.info("Accessing Department Creation Form");
-//        model.addAttribute("department", new DepartmentCreateDTO());
-//        log.info("Successfully loaded Department Creation Form");
-//        return "admin/departments/create";
-//    }
-
-//    @PostMapping("/departments/create")
-//    public String saveDepartment(@ModelAttribute @Valid DepartmentCreateDTO department, BindingResult bindingResult, Model model) {
-//        log.info("Starting Department Creation Process");
-//
-//        if (bindingResult.hasErrors()) {
-//            log.warn("Validation errors while creating department: {}", bindingResult.getAllErrors());
-//            return "admin/departments/create";
-//        }
-//
-//        try {
-//            DepartmentDTO departmentDTO = departmentService.createByAdmin(department);
-//            log.info("Successfully created Department: {}", departmentDTO.getName());
-//        } catch (Exception e) {
-//            log.error("Error occurred while creating department: {}", e.getMessage(), e);
-//            model.addAttribute("message", "Failed to create department");
-//            return "admin/departments/create";
-//        }
-//
-//        return "redirect:/admin/departments";
-//    }
-
-//    @GetMapping("/departments/edit/{id}")
-//    public String editDepartment(@PathVariable UUID id, Model model) {
-//        log.info("Accessing Edit Form for Department with ID: {}", id);
-//
-//        try {
-//            DepartmentDTO departmentDTO = departmentService.findById(id);
-//            model.addAttribute("departmentUpdateDTO", new DepartmentUpdateDTO());
-//            model.addAttribute("departmentDTO", departmentDTO);
-//            log.info("Successfully loaded Edit Form for Department: {}", departmentDTO.getName());
-//        } catch (Exception e) {
-//            log.error("Error occurred while loading department for editing: {}", e.getMessage(), e);
-//            throw new RuntimeException("Failed to load department for editing", e);
-//        }
-//
-//        return "admin/departments/edit";
-//    }
-
-//    @PostMapping("/departments/edit/{id}")
-//    public String updateDepartment(@PathVariable UUID id, @ModelAttribute @Valid DepartmentUpdateDTO departmentUpdateDTO,
-//                                   BindingResult bindingResult, Model model) {
-//        log.info("Starting Update Process for Department with ID: {}", id);
-//        if (bindingResult.hasErrors()) {
-//            log.warn("Validation errors while updating department with ID {}: {}", id, bindingResult.getAllErrors());
-//            model.addAttribute("departmentDTO", departmentService.findById(id));
-//            return "admin/departments/edit";
-//        }
-//        try {
-//            departmentService.update(id, departmentUpdateDTO);
-//            log.info("Successfully updated Department with ID: {}", id);
-//        } catch (Exception e) {
-//            log.error("Error occurred while updating department with ID: {}", id, e);
-//            model.addAttribute("message", "Failed to update department");
-//            return "admin/departments/edit";
-//        }
-//        return "redirect:/admin/departments";
-//    }
-
-//    @GetMapping("/departments/delete/{id}")
-//    public String deleteDepartment(@PathVariable UUID id) {
-//        log.info("Starting Delete Process for Department with ID: {}", id);
-//
-//        try {
-//            departmentService.delete(id);
-//            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thành công");
-//            log.info("Successfully deleted Department with ID: {}", id);
-//        } catch (Exception e) {
-//            log.error("Error occurred while deleting department with ID: {}", id, e);
-//            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thất bại");
-//            throw new RuntimeException("Failed to delete department", e);
-//        }
-//
-//        return "redirect:/admin/departments";
-//    }
-
+    
     @PostMapping("/doctors/create")
     public String createDoctor(@ModelAttribute @Valid DoctorCreateDTO doctorCreateDTO,
-                               @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
-                               BindingResult bindingResult, Model model) {
+    @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture,
+    BindingResult bindingResult, Model model) {
         log.info("Starting Doctor Creation Process");
 
         if (bindingResult.hasErrors()) {
             log.warn("Validation failed during doctor creation: {}", bindingResult.getAllErrors());
             return "admin/doctors/create";
         }
-
+        
         if (profilePicture != null && !profilePicture.isEmpty()) {
             try {
                 byte[] bytes = profilePicture.getBytes();
 
                 String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
-
+                
                 Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
                 if (!Files.exists(directoryPath)) {
                     Files.createDirectories(directoryPath);
@@ -226,29 +141,29 @@ public class Admin {
                 return "admin/doctors/create";
             }
         }
-
+        
         doctorService.create(doctorCreateDTO);
         activityService.logActivity("Thêm bác sĩ mới: " + doctorCreateDTO.getFullName(), "Admin", "Thành công");
         log.info("Successfully created new doctor with name: {}", doctorCreateDTO.getFullName());
         return "redirect:/admin/doctors";
     }
-
+    
     @GetMapping("/doctors/{doctorId}/schedules")
     public String getDoctorSchedule(@PathVariable UUID doctorId, Model model) {
         LocalDate startDate = LocalDate.now();
         doctorScheduleService.updateExpiredSchedules();
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id " + doctorId));
+        .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id " + doctorId));
         doctorScheduleService.generateSchedules(startDate, doctor);
         List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctorId(doctorId);
         model.addAttribute("schedules", schedules);
         return "/doctors/schedule/schedule_list"; // Return the name of the view template
     }
-
+    
     @GetMapping("/doctors/{id}/edit")
     public String editDoctor(@PathVariable UUID id, ModelMap model) {
         log.info("Accessing Edit Page for Doctor with ID: {}", id);
-
+        
         try {
             var doctorDTO = doctorService.findById(id);
             model.addAttribute("doctorDTO", doctorDTO);
@@ -257,13 +172,13 @@ public class Admin {
             log.error("Failed to load doctor data for editing: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to load doctor data for editing", e);
         }
-
+        
         return "admin/doctors/edit";
     }
-
+    
     @PostMapping("/doctors/{id}/edit")
     public String editDoctor(@PathVariable UUID id, @ModelAttribute DoctorUpdateDTO doctorDTO,
-                             @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
+    @RequestParam(name = "profilePicture", required = false) MultipartFile profilePicture, Model model) {
         log.info("Starting Edit Process for Doctor with ID: {}", id);
 
         try {
@@ -276,26 +191,27 @@ public class Admin {
             } else {
                 // Case 2: User selects a new image
                 byte[] bytes = profilePicture.getBytes();
-
+                
                 String uploadDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hhmmss"));
-
+                
                 Path directoryPath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/");
-
+                
                 if (!Files.exists(directoryPath)) {
                     Files.createDirectories(directoryPath);
                     log.info("Created directory for doctor profile picture at: {}", directoryPath);
                 }
-
+                
                 Path filePath = Paths.get("src/main/resources/static/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
                 Files.write(filePath, bytes);
-
+                
                 doctorDTO.setProfilePictureUrl("/images/doctors/" + uploadDate + "/" + uploadTime + profilePicture.getOriginalFilename());
                 log.info("Updated profile picture for doctor with ID: {}", id);
             }
-
+            
             doctorService.update(id, doctorDTO);
             activityService.logActivity("Cập nhật thông tin bác sĩ: " + doctorDTO.getFullName(), "Admin", "Thành công");
+            
             log.info("Successfully updated doctor with ID: {}", id);
         } catch (Exception e) {
             log.error("Failed to edit doctor with ID: {}", id, e);
@@ -586,4 +502,88 @@ public class Admin {
         }
         return "redirect:/admin/medicines";
     }
+
+
+    //    @GetMapping("/departments/create")
+            //    public String createDepartment(Model model) {
+            //        log.info("Accessing Department Creation Form");
+            //        model.addAttribute("department", new DepartmentCreateDTO());
+            //        log.info("Successfully loaded Department Creation Form");
+            //        return "admin/departments/create";
+            //    }
+            
+            //    @PostMapping("/departments/create")
+            //    public String saveDepartment(@ModelAttribute @Valid DepartmentCreateDTO department, BindingResult bindingResult, Model model) {
+            //        log.info("Starting Department Creation Process");
+            //
+            //        if (bindingResult.hasErrors()) {
+            //            log.warn("Validation errors while creating department: {}", bindingResult.getAllErrors());
+            //            return "admin/departments/create";
+            //        }
+            //
+            //        try {
+            //            DepartmentDTO departmentDTO = departmentService.createByAdmin(department);
+            //            log.info("Successfully created Department: {}", departmentDTO.getName());
+            //        } catch (Exception e) {
+            //            log.error("Error occurred while creating department: {}", e.getMessage(), e);
+            //            model.addAttribute("message", "Failed to create department");
+            //            return "admin/departments/create";
+            //        }
+            //
+            //        return "redirect:/admin/departments";
+            //    }
+            
+            //    @GetMapping("/departments/edit/{id}")
+            //    public String editDepartment(@PathVariable UUID id, Model model) {
+            //        log.info("Accessing Edit Form for Department with ID: {}", id);
+            //
+            //        try {
+            //            DepartmentDTO departmentDTO = departmentService.findById(id);
+            //            model.addAttribute("departmentUpdateDTO", new DepartmentUpdateDTO());
+            //            model.addAttribute("departmentDTO", departmentDTO);
+            //            log.info("Successfully loaded Edit Form for Department: {}", departmentDTO.getName());
+            //        } catch (Exception e) {
+            //            log.error("Error occurred while loading department for editing: {}", e.getMessage(), e);
+            //            throw new RuntimeException("Failed to load department for editing", e);
+            //        }
+            //
+            //        return "admin/departments/edit";
+            //    }
+            
+            //    @PostMapping("/departments/edit/{id}")
+            //    public String updateDepartment(@PathVariable UUID id, @ModelAttribute @Valid DepartmentUpdateDTO departmentUpdateDTO,
+            //                                   BindingResult bindingResult, Model model) {
+            //        log.info("Starting Update Process for Department with ID: {}", id);
+            //        if (bindingResult.hasErrors()) {
+            //            log.warn("Validation errors while updating department with ID {}: {}", id, bindingResult.getAllErrors());
+            //            model.addAttribute("departmentDTO", departmentService.findById(id));
+            //            return "admin/departments/edit";
+            //        }
+            //        try {
+            //            departmentService.update(id, departmentUpdateDTO);
+            //            log.info("Successfully updated Department with ID: {}", id);
+            //        } catch (Exception e) {
+            //            log.error("Error occurred while updating department with ID: {}", id, e);
+            //            model.addAttribute("message", "Failed to update department");
+            //            return "admin/departments/edit";
+            //        }
+            //        return "redirect:/admin/departments";
+            //    }
+            
+            //    @GetMapping("/departments/delete/{id}")
+            //    public String deleteDepartment(@PathVariable UUID id) {
+            //        log.info("Starting Delete Process for Department with ID: {}", id);
+            //
+            //        try {
+            //            departmentService.delete(id);
+            //            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thành công");
+            //            log.info("Successfully deleted Department with ID: {}", id);
+            //        } catch (Exception e) {
+            //            log.error("Error occurred while deleting department with ID: {}", id, e);
+            //            activityService.logActivity("Xóa khoa: " + id, "Admin", "Thất bại");
+            //            throw new RuntimeException("Failed to delete department", e);
+            //        }
+            //
+            //        return "redirect:/admin/departments";
+            //    }
 }

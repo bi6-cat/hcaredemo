@@ -83,8 +83,10 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
                 .findExpiredSchedules(currentDate, currentTime);
 
         for (DoctorSchedule schedule : expiredSchedules) {
+            // Delete expired schedules
             schedule.setIsAvailable(false);
             schedule.setUpdatedAt(now);
+            doctorScheduleRepository.delete(schedule);
         }
 
         // Save all updated schedules

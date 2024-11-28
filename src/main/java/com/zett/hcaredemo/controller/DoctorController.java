@@ -64,4 +64,5 @@ public class DoctorController {
         model.addAttribute("department", department);
         return "doctors/details";
     }
+
 }
