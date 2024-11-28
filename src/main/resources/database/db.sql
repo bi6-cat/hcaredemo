@@ -2,216 +2,229 @@ CREATE DATABASE hms_db_final;
 
 USE hms_db_final;
 
-CREATE TABLE Role (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+CREATE TABLE roles (
+    id BINARY(16) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE User (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE users (
+    id BINARY(16) PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role_id INT,
     email VARCHAR(255) NOT NULL UNIQUE,
-    phone_number VARCHAR(20),
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    is_active BIT,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Patient (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name NVARCHAR(100),
+CREATE TABLE user_roles (
+    user_id BINARY(16) NOT NULL,
+    role_id BINARY(16) NOT NULL,
+    PRIMARY KEY (user_id, role_id)
+);
+
+CREATE TABLE patients (
+    id BINARY(16) PRIMARY KEY,
+    full_name VARCHAR(100),
     date_of_birth DATE,
-    gender ENUM('MALE', 'FEMALE', 'OTHER'),
-    address NVARCHAR(255),
-    emergency_contact NVARCHAR(20),
-    blood_type NVARCHAR(10),
-    allergies NVARCHAR(1000),
-    profile_picture_url NVARCHAR(255),
-    user_id INT,
+    gender VARCHAR(10),
+    address VARCHAR(255),
+    emergency_contact VARCHAR(20),
+    blood_type VARCHAR(10),
+    allergies VARCHAR(1000),
+    profile_picture_url VARCHAR(255),
+    phone_number VARCHAR(20),
+    health_insurance_number VARCHAR(50),
+    ethnicity VARCHAR(50),
+    user_id BINARY(16) UNIQUE
 );
 
-CREATE TABLE Doctor (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name NVARCHAR(100),
-    degree NVARCHAR(10),
-    gender ENUM('MALE', 'FEMALE', 'OTHER'),
-    email NVARCHAR(100),
-    experience NVARCHAR(1000),
-    profile_picture_url NVARCHAR(255),
-    department_id INT,
-    user_id INT,
+CREATE TABLE doctors (
+    id BINARY(16) PRIMARY KEY,
+    full_name VARCHAR(100),
+    degree VARCHAR(10),
+    gender VARCHAR(10),
+    email VARCHAR(100),
+    phone_number VARCHAR(20),
+    experience VARCHAR(1000),
+    profile_picture_url VARCHAR(255),
+    rating DECIMAL(5,2),
+    review_count INT,
+    department_id BINARY(16),
+    user_id BINARY(16) UNIQUE
 );
 
-CREATE TABLE DoctorSchedule (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    doctor_id INT,
+CREATE TABLE doctor_schedules (
+    id BINARY(16) PRIMARY KEY,
+    doctor_id BINARY(16),
     schedule_date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    is_available BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+    time TIME NOT NULL,
+    is_available BIT,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Hospital (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE hospitals (
+    id BINARY(16) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    address VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
     phone VARCHAR(15),
     email VARCHAR(100),
-    website NVARCHAR(255),
+    website VARCHAR(255),
     description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Department (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE departments (
+    id BINARY(16) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    hospital_id INT,
     description TEXT,
-    head_of_department NVARCHAR(100),
+    head_of_department VARCHAR(100),
     phone VARCHAR(15),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+    hospital_id BINARY(16),
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE DepartmentService (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    department_id INT,
+CREATE TABLE department_services (
+    id BINARY(16) PRIMARY KEY,
+    department_id BINARY(16),
     service_name VARCHAR(100) NOT NULL,
     description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+    price DECIMAL(10,2) NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
--- CREATE TABLE Room (
---     id INT AUTO_INCREMENT PRIMARY KEY,
---     room_number VARCHAR(50) NOT NULL,
---     type ENUM('EXAMINATION', 'TESTING', 'WAITING', 'VACCINATION') NOT NULL,
---     department_id INT,
---     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
---     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
--- );
-
-CREATE TABLE HealthCheckAppointment (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    hospital_id INT,
-    department_id INT,
-    departmentService_id INT,
-    patient_id INT,
-    doctor_id INT,
+CREATE TABLE health_check_appointments (
+    id BINARY(16) PRIMARY KEY,
+    hospital_id BINARY(16),
+    department_id BINARY(16),
+    department_service_id BINARY(16),
+    patient_id BINARY(16),
+    doctor_id BINARY(16),
     appointment_date DATETIME NOT NULL,
-    status ENUM('PENDING', 'COMPLETED', 'CANCELLED') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    status VARCHAR(20) NOT NULL,
+    code VARCHAR(50) UNIQUE,
+    note TEXT,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Prescription (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT,
-    doctor_id INT,
-    appointment_id INT,
+CREATE TABLE prescriptions (
+    id BINARY(16) PRIMARY KEY,
+    patient_id BINARY(16),
+    doctor_id BINARY(16),
+    appointment_id BINARY(16),
     notes VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE PrescriptionMedicine (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    prescription_id INT,
-    medicine_id INT,
+CREATE TABLE prescription_medicines (
+    id BINARY(16) PRIMARY KEY,
+    prescription_id BINARY(16),
+    medicine_id BINARY(16),
     dosage VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
-    notes VARCHAR(255)
+    note VARCHAR(255)
 );
 
-CREATE TABLE LabTest (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE lab_tests (
+    id BINARY(16) PRIMARY KEY,
     test_name VARCHAR(100) NOT NULL,
     description TEXT,
     room VARCHAR(50) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    price DECIMAL(10,2) NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE LabTestAppointment (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT,
-    lab_test_id INT,
+CREATE TABLE lab_test_appointments (
+    id BINARY(16) PRIMARY KEY,
+    patient_id BINARY(16),
+    lab_test_id BINARY(16),
     appointment_date DATETIME NOT NULL,
-    status ENUM('PENDING', 'COMPLETED', 'CANCELLED') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    status VARCHAR(20) NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE MedicalRecord (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT,
-    doctor_id INT,
+CREATE TABLE medical_records (
+    id BINARY(16) PRIMARY KEY,
+    patient_id BINARY(16),
+    doctor_id BINARY(16),
     diagnosis TEXT,
     treatment_plan TEXT,
     notes TEXT,
-    prescription_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    prescription_id BINARY(16) UNIQUE,
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Medicine (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE medicines (
+    id BINARY(16) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
+    price DOUBLE NOT NULL,
     quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME,
+    updated_at DATETIME
 );
 
-CREATE TABLE Payment (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT,
-    amount DECIMAL(10, 2) NOT NULL,
+CREATE TABLE payments (
+    id BINARY(16) PRIMARY KEY,
+    patient_id BINARY(16),
+    amount DECIMAL(10,2) NOT NULL,
+    appointment_code VARCHAR(50) NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
-    status ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    status VARCHAR(20) NOT NULL,
+    created_at DATETIME
 );
 
-CREATE TABLE Notification (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    message TEXT NOT NULL,
+CREATE TABLE notifications (
+    id BINARY(16) PRIMARY KEY,
+    user_id BINARY(16),
+    message VARCHAR(255) NOT NULL,
     type VARCHAR(50) NOT NULL,
-    status ENUM('SENT', 'READ', 'UNREAD') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    status VARCHAR(20) NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME
+);
+
+CREATE TABLE activities (
+    id BINARY(16) PRIMARY KEY,
+    action VARCHAR(255),
+    admin_name VARCHAR(255),
+    status VARCHAR(255),
+    timestamp DATETIME
 );
 
 -- Foreign Key Constraints
-ALTER TABLE User ADD FOREIGN KEY (role_id) REFERENCES Role(id);
-ALTER TABLE Doctor ADD FOREIGN KEY (department_id) REFERENCES Department(id);
-ALTER TABLE DoctorSchedule ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
-ALTER TABLE Department ADD FOREIGN KEY (hospital_id) REFERENCES Hospital(id);
-ALTER TABLE DepartmentService ADD FOREIGN KEY (department_id) REFERENCES Department(id);
--- ALTER TABLE Room ADD FOREIGN KEY (department_id) REFERENCES Department(id);
--- ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (room_id) REFERENCES Room(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (departmentService_id) REFERENCES DepartmentService(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (hospital_id) REFERENCES Hospital(id);
-ALTER TABLE HealthCheckAppointment ADD FOREIGN KEY (department_id) REFERENCES Department(id);
-ALTER TABLE Prescription ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
-ALTER TABLE Prescription ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
-ALTER TABLE Prescription ADD FOREIGN KEY (appointment_id) REFERENCES HealthCheckAppointment(id);
-ALTER TABLE PrescriptionMedicine ADD FOREIGN KEY (prescription_id) REFERENCES Prescription(id);
-ALTER TABLE PrescriptionMedicine ADD FOREIGN KEY (medicine_id) REFERENCES Medicine(id);
--- ALTER TABLE LabTest ADD FOREIGN KEY (room_id) REFERENCES Room(id);
-ALTER TABLE LabTestAppointment ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
-ALTER TABLE LabTestAppointment ADD FOREIGN KEY (lab_test_id) REFERENCES LabTest(id);
-ALTER TABLE MedicalRecord ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
-ALTER TABLE MedicalRecord ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(id);
-ALTER TABLE MedicalRecord ADD FOREIGN KEY (prescription_id) REFERENCES Prescription(id);
-ALTER TABLE Payment ADD FOREIGN KEY (patient_id) REFERENCES Patient(id);
-ALTER TABLE Notification ADD FOREIGN KEY (user_id) REFERENCES User(id);
+ALTER TABLE user_roles ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE user_roles ADD FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE patients ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE doctors ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE doctors ADD FOREIGN KEY (department_id) REFERENCES departments(id);
+ALTER TABLE doctor_schedules ADD FOREIGN KEY (doctor_id) REFERENCES doctors(id);
+ALTER TABLE departments ADD FOREIGN KEY (hospital_id) REFERENCES hospitals(id);
+ALTER TABLE department_services ADD FOREIGN KEY (department_id) REFERENCES departments(id);
+ALTER TABLE health_check_appointments ADD FOREIGN KEY (hospital_id) REFERENCES hospitals(id);
+ALTER TABLE health_check_appointments ADD FOREIGN KEY (department_id) REFERENCES departments(id);
+ALTER TABLE health_check_appointments ADD FOREIGN KEY (department_service_id) REFERENCES department_services(id);
+ALTER TABLE health_check_appointments ADD FOREIGN KEY (patient_id) REFERENCES patients(id);
+ALTER TABLE health_check_appointments ADD FOREIGN KEY (doctor_id) REFERENCES doctors(id);
+ALTER TABLE prescriptions ADD FOREIGN KEY (patient_id) REFERENCES patients(id);
+ALTER TABLE prescriptions ADD FOREIGN KEY (doctor_id) REFERENCES doctors(id);
+ALTER TABLE prescriptions ADD FOREIGN KEY (appointment_id) REFERENCES health_check_appointments(id);
+ALTER TABLE prescription_medicines ADD FOREIGN KEY (prescription_id) REFERENCES prescriptions(id);
+ALTER TABLE prescription_medicines ADD FOREIGN KEY (medicine_id) REFERENCES medicines(id);
+ALTER TABLE lab_test_appointments ADD FOREIGN KEY (patient_id) REFERENCES patients(id);
+ALTER TABLE lab_test_appointments ADD FOREIGN KEY (lab_test_id) REFERENCES lab_tests(id);
+ALTER TABLE medical_records ADD FOREIGN KEY (patient_id) REFERENCES patients(id);
+ALTER TABLE medical_records ADD FOREIGN KEY (doctor_id) REFERENCES doctors(id);
+ALTER TABLE medical_records ADD FOREIGN KEY (prescription_id) REFERENCES prescriptions(id);
+ALTER TABLE payments ADD FOREIGN KEY (patient_id) REFERENCES patients(id);
+ALTER TABLE notifications ADD FOREIGN KEY (user_id) REFERENCES users(id);
