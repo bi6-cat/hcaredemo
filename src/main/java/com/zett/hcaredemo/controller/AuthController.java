@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.controller;
 
+import com.zett.hcaredemo.dto.auth.LoginDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,8 +24,25 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+        if (!model.containsAttribute("loginDTO")) {
+            model.addAttribute("loginDTO", new LoginDTO());
+        }
         return "auth/login";
+    }
+
+    @PostMapping("/login")
+    public String loginPost(@Valid @ModelAttribute("loginDTO") LoginDTO loginDTO,
+                            BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "auth/login";
+        }
+
+        if (!authService.login(loginDTO)) {
+            model.addAttribute("error", "Invalid username or password");
+            return "auth/login";
+        }
+        return "redirect:/";
     }
 
 
