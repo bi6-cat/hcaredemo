@@ -1,7 +1,11 @@
 package com.zett.hcaredemo.dto.hospital;
 
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,4 +27,6 @@ public class HospitalCreateDTO {
     private String website;
     
     private String description;
+
+    private Set<UUID> departmentIds;
 }

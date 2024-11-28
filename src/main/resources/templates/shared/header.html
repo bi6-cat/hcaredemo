@@ -1,10 +1,25 @@
-<!-- Header -->
 <header class="bg-white shadow-lg fixed w-full z-40" th:fragment="header">
+    <style>
+        .group:hover .group-hover\:opacity-100 {
+            opacity: 1;
+        }
+        .group:hover .group-hover\:visible {
+            visibility: visible;
+        }
+        .group-hover\:opacity-100 {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .group-hover\:visible {
+            visibility: hidden;
+            transition: visibility 0.3s;
+        }
+    </style>
     <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-3xl mr-2"></i>
-                <span class="text-blue-600 text-2xl font-bold">HealthCare</span>
+                
+                <a th:href="@{/}" class="text-blue-600 text-2xl font-bold"><i class="fas fa-heartbeat text-blue-600 text-3xl mr-2"></i>HealthCare</a>
             </div>
             <div class="hidden md:flex items-center space-x-8">
                 <a th:href="@{/}" class="text-gray-700 hover:text-blue-600 transition duration-300">Trang chủ</a>
@@ -12,12 +27,60 @@
                 <a th:href="@{/hospitals}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bệnh viện</a>
                 <a th:href="@{/doctors}" class="text-gray-700 hover:text-blue-600 transition duration-300">Bác sĩ</a>
                 <a th:href="@{/contact}" class="text-gray-700 hover:text-blue-600 transition duration-300">Liên hệ</a>
-                <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
-                    Đăng nhập
-                </button>
-                <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold">
-                    Đăng ký ngay
-                </button>
+
+                <!-- Hiển thị khi chưa đăng nhập -->
+                <div th:if="${#authentication.principal == 'anonymousUser'}" class="flex items-center space-x-4">
+                    <button onclick="toggleLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300">
+                        <a th:href="@{/auth/login}">Đăng nhập</a>
+                    </button>
+                    <button class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold">
+                        <a th:href="@{/auth/register}">Đăng ký ngay</a>
+                    </button>
+                </div>
+
+                <!-- Hiển thị khi đã đăng nhập -->
+                <div th:if="${#authentication.principal != 'anonymousUser'}" class="flex items-center space-x-6">
+                    <!-- Notification Icon -->
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-blue-600 transition duration-300">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                        </button>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                <i class="fas fa-user text-gray-600 text-xl"></i>
+                            </div>
+                            <span class="text-gray-700 font-medium" th:text="${#authentication.principal.username}"></span>
+                            <i class="fas fa-chevron-down text-gray-500 transition duration-300 group-hover:rotate-180"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                            <a th:href="@{/appointments}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <i class="fas fa-calendar-alt mr-2"></i>Lịch khám
+                            </a>
+                            <a th:href="@{payments/payment-history}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <i class="fas fa-history mr-2"></i>Lịch sử thanh toán
+                            </a>
+                            <a th:href="@{/patients}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <i class="fas fa-user mr-2"></i>Hồ sơ
+                            </a>
+                            <a th:href="@{/auth/change-password}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <i class="fas fa-key mr-2"></i>Đổi mật khẩu
+                            </a>
+                            <hr class="my-2">
+                            <form th:action="@{/auth/logout}" method="post" class="block">
+                                <button type="submit" class="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 hover:text-red-700">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+import java.util.UUID;
+
 @Getter
 @Setter
 public class DoctorCreateDTO {
@@ -21,9 +24,9 @@ public class DoctorCreateDTO {
 
     @NotBlank(message = "Email is required")
     private String email;
-
     private String experience;
-
     private String profilePictureUrl;
-
+    private UUID departmentId;
+    private UUID userId;
+    private Set<UUID> doctorScheduleIds;
 }

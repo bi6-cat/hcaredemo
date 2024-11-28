@@ -1,11 +1,14 @@
 package com.zett.hcaredemo.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-import jakarta.persistence.*;
-import lombok.*;
 
 @Getter
 @Setter
@@ -44,6 +47,12 @@ public class Patient {
 
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;
+
+    @Column(name = "health_insurance_number", columnDefinition = "NVARCHAR(50)")
+    private String healthInsuranceNumber;
+
+    @Column(name ="ethnicity", columnDefinition = "NVARCHAR(50)")
+    private String ethnicity;
 
     @OneToOne
     @JoinColumn(name = "user_id")

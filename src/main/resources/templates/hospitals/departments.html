@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments of Hospital</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+            --secondary-gradient: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-wrapper {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .hospital-header {
+            background: var(--secondary-gradient);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hospital-title {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hospital-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .department-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .department-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1);
+        }
+
+        .department-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-item {
+            background: rgba(243, 244, 246, 0.7);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .description-box {
+            background: rgba(243, 244, 246, 0.5);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .departments-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<section layout:fragment="content">
+    <div class="page-wrapper">
+        <div class="container mx-auto px-24">
+            <!-- Hospital Header -->
+            <div class="hospital-header">
+                <div class="flex items-center gap-4">
+                    <div class="hospital-icon">
+                        <i class="fas fa-hospital-alt"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl hospital-title mb-2">
+                            <span th:text="${hospital.name}">Tên bệnh viện</span>
+                        </h1>
+                        <p class="text-gray-600">Chăm sóc sức khỏe chuyên nghiệp - Tận tâm phục vụ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departments Grid -->
+            <div class="departments-grid">
+                <div th:each="department : ${departments}" class="department-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="department-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800" th:text="${department.name}">Tên Khoa</h2>
+                            <p class="text-sm text-gray-500">Chuyên khoa điều trị</p>
+                        </div>
+                    </div>
+
+                    <div class="description-box">
+                        <p class="text-gray-700" th:text="${department.description}">
+                            Mô tả chi tiết về khoa
+                        </p>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">Trưởng Khoa</div>
+                            <div class="text-sm font-semibold text-gray-800" th:text="${department.headOfDepartment}">
+                                Tên Trưởng Khoa
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="text-xs text-gray-500">Liên hệ</div>
+                            <div class="text-sm font-semibold text-gray-800" th:text="${department.phone}">
+                                Số điện thoại
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

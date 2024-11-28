@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <section layout:fragment="content" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-full max-w-4xl">
+                        <div class="relative">
+                            <div class="flex mb-2 items-center justify-between">
+                                <!-- Previous completed steps -->
+                                <div th:each="step : ${#numbers.sequence(1, 4)}" class="w-1/6 text-center">
+                                    <div class="bg-green-500 rounded-full h-12 w-12 flex items-center justify-center text-white text-xl font-bold mx-auto">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-sm font-medium text-green-500 mt-2" 
+                                          th:text="${step == 1 ? 'Bệnh viện' : step == 2 ? 'Khoa' : step == 3 ? 'Dịch vụ' : 'Bác sĩ'}">
+                                    </span>
+                                </div>
+                                
+                                <!-- Current step -->
+                                <div class="w-1/6 text-center">
+                                    <div class="bg-blue-600 rounded-full h-12 w-12 flex items-center justify-center text-white text-xl font-bold mx-auto">5</div>
+                                    <span class="text-sm font-medium text-blue-600 mt-2">Lịch khám</span>
+                                </div>
+                                
+                                <!-- Next step -->
+                                <div class="w-1/6 text-center">
+                                    <div class="bg-gray-300 rounded-full h-12 w-12 flex items-center justify-center text-gray-600 text-xl font-bold mx-auto">6</div>
+                                    <span class="text-sm font-medium text-gray-500 mt-2">Thanh toán</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress bar -->
+                            <div class="relative pt-1">
+                                <div class="w-full bg-gray-200 rounded-full">
+                                    <div class="w-5/6 bg-blue-600 h-2 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Container with relative positioning -->
+            <div class="relative">
+                <!-- Selection Summary with z-index -->
+                <div class="max-w-7xl mx-auto mb-8 relative z-10">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <!-- Hospital Info -->
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-hospital text-3xl text-blue-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-semibold text-gray-900 truncate" th:text="${session.selectedHospital.name}">Bệnh viện</h3>
+                                    <p class="text-sm text-gray-500" th:text="${session.selectedHospital.address}">Địa chỉ</p>
+                                </div>
+                            </div>
+
+                            <!-- Department Info -->
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-stethoscope text-3xl text-blue-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-semibold text-gray-900 truncate" th:text="${session.selectedDepartment.name}">Khoa</h3>
+                                    <p class="text-sm text-gray-500" th:text="${session.selectedDepartment.description}">Mô tả</p>
+                                </div>
+                            </div>
+
+                            <!-- Service Info -->
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-notes-medical text-3xl text-blue-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-semibold text-gray-900 truncate" th:text="${session.selectedService.name}">Dịch vụ</h3>
+                                    <p class="text-sm text-gray-500" th:text="${#numbers.formatDecimal(session.selectedService.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</p>
+                                </div>
+                            </div>
+
+                            <!-- Doctor Info -->
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-user-md text-3xl text-blue-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-semibold text-gray-900 truncate" th:text="${doctor.fullName}">Bác sĩ</h3>
+                                    <p class="text-sm text-gray-500" th:text="${doctor.degree}">Chuyên khoa</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule Selection with background -->
+                <div class="max-w-7xl mx-auto relative z-0">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-2xl font-bold mb-6">Chọn lịch khám</h2>
+
+                        <!-- Date Selection -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">Chọn ngày</h3>
+                            <div class="flex overflow-x-auto space-x-4 pb-4 hide-scrollbar">
+                                <button th:each="scheduleDate : ${scheduleDates}"
+                                        onclick="selectDate(this)"
+                                        class="date-button flex-none w-24 p-4 rounded-lg border-2 focus:outline-none transition-colors duration-200"
+                                        th:data-date="${scheduleDate}"
+                                        th:classappend="${scheduleDate == selectedDate ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:border-blue-600'}">
+                                    <div class="text-center">
+                                        <span class="block text-sm" th:text="${#temporals.format(scheduleDate, 'EEE')}">Thứ</span>
+                                        <span class="block text-xl font-bold" th:text="${#temporals.format(scheduleDate, 'dd')}">Ngày</span>
+                                        <span class="block text-sm" th:text="${#temporals.format(scheduleDate, 'MM/yyyy')}">Tháng/Năm</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Time Slots Container with fixed height and scrolling -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">Chọn giờ</h3>
+                            <div class="time-slots-container h-[300px] overflow-y-auto">
+                                <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+                                    <button th:each="schedule : ${schedules}"
+                                            th:if="${schedule.scheduleDate == selectedDate}"
+                                            onclick="selectTimeSlot(this)"
+                                            class="time-slot p-4 rounded-lg border-2 focus:outline-none transition-colors duration-200"
+                                            th:data-id="${schedule.id}"
+                                            th:classappend="${schedule.id == selectedSchedule?.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:border-blue-600'}">
+                                        <span class="block text-center" th:text="${#temporals.format(schedule.startTime, 'HH:mm')}">00</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Confirm Button -->
+                <div class="mt-8 flex justify-end">
+                    <form th:action="@{/appointments/create/save}" method="post">
+                        <input type="hidden" id="selectedScheduleId" name="scheduleId" />
+                        <button id="submitButton"
+                                type="submit"
+                                class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold 
+                                    hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 
+                                    disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+                                disabled>
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Xác nhận lịch khám
+                        </button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .hide-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .time-slots-container {
+                position: relative;
+                background-color: white;
+            }
+            .time-slots-container::-webkit-scrollbar {
+                width: 6px;
+            }
+            .time-slots-container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            .time-slots-container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 3px;
+            }
+        </style>
+        <!-- JavaScript -->
+        <script th:inline="javascript">
+            let selectedScheduleId = null;
+
+            function selectDate(button) {
+                // Update UI for date selection
+                document.querySelectorAll('.date-button').forEach(btn => {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                });
+                button.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                
+                // Reset time slot selection
+                selectedScheduleId = null;
+                document.getElementById('selectedScheduleId').value = '';
+                document.getElementById('submitButton').disabled = true;
+                
+                // Update available time slots
+                const selectedDate = button.getAttribute('data-date');
+                updateTimeSlots(selectedDate);
+            }
+
+            function selectTimeSlot(button) {
+                selectedScheduleId = button.getAttribute('data-id');
+                document.getElementById('selectedScheduleId').value = selectedScheduleId;
+                document.getElementById('submitButton').disabled = false;
+
+                // Update UI for time slot selection
+                document.querySelectorAll('.time-slot').forEach(slot => {
+                    slot.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    slot.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                });
+                button.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+            }
+
+            function updateTimeSlots(date) {
+                const formattedDate = date.split('T')[0];
+                const doctorId = /*[[${doctor.id}]]*/ '';
+            
+                fetch(`/api/schedules?date=${formattedDate}&doctorId=${doctorId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Sắp xếp data theo startTime
+                        data.sort((a, b) => {
+                            const timeA = new Date(`${formattedDate}T${a.startTime}`);
+                            const timeB = new Date(`${formattedDate}T${b.startTime}`);
+                            return timeA - timeB;
+                        });
+            
+                        const timeSlotsContainer = document.querySelector('.grid');
+                        timeSlotsContainer.innerHTML = '';
+                        data.forEach(schedule => {
+                            const button = document.createElement('button');
+                            button.className = 'time-slot p-4 rounded-lg border-2 focus:outline-none transition-colors duration-200 bg-white text-gray-700 border-gray-200 hover:border-blue-600';
+                            button.setAttribute('data-id', schedule.id);
+                            button.onclick = () => selectTimeSlot(button);
+                            button.innerHTML = `<span class="block text-center">${schedule.startTime}</span>`;
+                            timeSlotsContainer.appendChild(button);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching schedules:', error);
+                    });
+            }
+        </script>
+    </section>
+</body>
+</html>

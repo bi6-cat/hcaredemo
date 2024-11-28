@@ -1,11 +1,12 @@
 package com.zett.hcaredemo.service;
 
+import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
 import com.zett.hcaredemo.entity.Hospital;
 import com.zett.hcaredemo.mapper.HospitalMapper;
 import com.zett.hcaredemo.repository.HospitalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
-    @Autowired
-    private HospitalRepository hospitalRepository;
+    private final HospitalRepository hospitalRepository;
+    private final DepartmentService departmentService;
+
+    public HospitalServiceImpl(HospitalRepository hospitalRepository, DepartmentService departmentService) {
+        this.hospitalRepository = hospitalRepository;
+        this.departmentService = departmentService;
+    }
+
+
+    @Override
+    public List<DepartmentDTO> getAllDepartments() {
+        return departmentService.findAllDepartments();
+    }
 
     @Override
     public List<HospitalDTO> findAll() {
@@ -48,8 +61,8 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public HospitalDTO create(HospitalCreateDTO hospitalCreateDTO) {
         Hospital hospital = HospitalMapper.toEntity(hospitalCreateDTO);
-        Hospital savedHospital = hospitalRepository.save(hospital);
-        return HospitalMapper.toDTO(savedHospital);
+        hospitalRepository.save(hospital);
+        return HospitalMapper.toDTO(hospital);
     }
 
     @Override
@@ -72,5 +85,10 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public void delete(UUID id) {
         hospitalRepository.deleteById(id);
+    }
+
+    @Override
+    public long countHospital() {
+        return hospitalRepository.count();
     }
 }
