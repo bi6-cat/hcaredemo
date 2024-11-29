@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("/payments")
+@RequestMapping("patient/payments")
 
 public class PaymentController {
     private final PaymentService paymentService;
@@ -52,6 +52,6 @@ public class PaymentController {
     public String processPayment(@PathVariable String code) {
         HealthCheckAppointment appointment = healthCheckAppointmentService.getByCode(code);
         paymentService.processPayment(code);
-        return "redirect:/appointments/" + appointment.getId();
+        return "redirect:/patient/appointments/" + appointment.getId();
     }
 }

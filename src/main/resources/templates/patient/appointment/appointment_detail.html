@@ -13,7 +13,7 @@
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-4">Chi tiết lịch hẹn</h1>
             <div class="inline-block">
-                <a th:href="@{/appointments}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-300 flex items-center">
+                <a th:href="@{/patient/appointments}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-300 flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Quay lại danh sách
                 </a>
@@ -126,7 +126,7 @@
             <!-- Payment Button - For Pending Status -->
             <div class="border-t border-gray-100 p-6" th:if="${appointment.status == 'PENDING'}">
                 <div class="flex justify-center">
-                    <a th:href="@{/payments/confirm/{code}(code=${appointment.code})}" 
+                    <a th:href="@{/patient/payments/confirm/{code}(code=${appointment.code})}" 
                        class="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition duration-300 flex items-center">
                         <i class="fas fa-credit-card mr-2"></i>
                         Thanh toán ngay

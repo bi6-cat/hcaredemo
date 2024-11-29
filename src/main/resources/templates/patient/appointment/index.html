@@ -15,7 +15,7 @@
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Quản lý lịch khám</h1>
             <div class="flex space-x-4">
-                <a href="/appointments/create/step1" 
+                <a href="/patient/appointments/create/step1" 
                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center">
                     <i class="fas fa-calendar-plus mr-2"></i>
                     Đặt lịch khám
@@ -30,7 +30,7 @@
 
         <!-- Filters and Sort -->
         <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-            <form th:action="@{/appointments}" method="get" class="flex flex-wrap gap-4">
+            <form th:action="@{/patient/appointments}" method="get" class="flex flex-wrap gap-4">
                 <div class="flex items-center">
                     <label class="mr-2">Sắp xếp theo:</label>
                     <select name="sortBy" class="border rounded px-3 py-1">
@@ -123,7 +123,7 @@
                             <div class="flex space-x-4">
                                 <div class="flex space-x-4">
                                     <!-- Nút xem -->
-                                    <a th:href="@{/appointments/{id}(id=${appointment.id})}" 
+                                    <a th:href="@{/patient/appointments/{id}(id=${appointment.id})}" 
                                        class="text-blue-600 hover:text-blue-900 text-xs font-semibold 
                                               rounded-md py-1 px-3 bg-blue-100 hover:bg-blue-200 
                                               transition-all duration-300">
@@ -131,7 +131,7 @@
                                     </a>
                                     
                                     <!-- Nút hủy -->
-                                    <form th:action="@{/appointments/{id}/cancel(id=${appointment.id})}" 
+                                    <form th:action="@{/patient/appointments/{id}/cancel(id=${appointment.id})}" 
                                           method="POST" 
                                           class="inline"
                                           th:if="${appointment.status == 'PENDING' || appointment.status == 'CONFIRMED'}">
