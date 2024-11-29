@@ -134,7 +134,7 @@ public class HealthCheckAppointmentServiceImpl implements HealthCheckAppointment
     }
 
     @Override
-    public Object findByDoctorId(UUID doctorId) {
-        return healthCheckAppointmentRepository.findByDoctorId(doctorId);
+    public List<HealthCheckAppointment> findByDoctorId(UUID doctorId) {
+        return healthCheckAppointmentRepository.findAllByDoctorId(doctorId);
     }
 }

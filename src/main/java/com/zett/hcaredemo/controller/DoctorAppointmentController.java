@@ -2,6 +2,7 @@ package com.zett.hcaredemo.controller;
 
 import com.zett.hcaredemo.dto.medicine.PrescriptionForm;
 import com.zett.hcaredemo.entity.Doctor;
+import com.zett.hcaredemo.entity.HealthCheckAppointment;
 import com.zett.hcaredemo.entity.User;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 import com.zett.hcaredemo.repository.DoctorRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -46,7 +48,7 @@ public class DoctorAppointmentController {
         Doctor doctor = doctorRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found for user with id " + user.getId()));
         UUID doctorId = doctor.getId();        
-        var appointments = healthCheckAppointmentService.findByDoctorId(doctorId);
+        List<HealthCheckAppointment> appointments = healthCheckAppointmentService.findByDoctorId(doctorId);
         model.addAttribute("appointments", appointments);
         return "doctors/appointment/list";
     }

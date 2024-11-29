@@ -20,5 +20,5 @@ public interface HealthCheckAppointmentService {
     Page<HealthCheckAppointment> findByDoctorId(UUID doctorId, Pageable pageable);
     String generateUniqueCode();
     HealthCheckAppointment getByCode(String code);
-    Object findByDoctorId(UUID doctorId);
+    List<HealthCheckAppointment> findByDoctorId(UUID doctorId);
 }

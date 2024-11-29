@@ -19,4 +19,5 @@ public interface HealthCheckAppointmentRepository extends JpaRepository<HealthCh
     boolean existsByCode(String code);
     Optional<HealthCheckAppointment> findByCode(String code);
     Object findByDoctorId(UUID doctorId);
+    List<HealthCheckAppointment> findAllByDoctorId(UUID doctorId);
 }
