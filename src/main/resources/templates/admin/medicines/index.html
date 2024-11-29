@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCare Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: #f4f4f9;
+        }
+
+        #wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            flex-shrink: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, .8);
+            padding: 15px 25px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: #34495e;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+            background-color: #eef2f7;
+            transition: all 0.3s ease;
+        }
+
+        .main-content h2 {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .table-responsive {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            margin-bottom: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background: #3498db;
+            color: white;
+            font-size: 1em;
+            text-align: center;
+            border: none;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            font-size: 0.9em;
+            border-radius: 5px;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            border: none;
+        }
+
+        .btn-info:hover {
+            background-color: #46b8da;
+        }
+
+        .btn-warning {
+            background-color: #f0ad4e;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #ec971f;
+        }
+
+        /* Cố định độ rộng của cột Thao tác */
+        .action-column {
+            width: 300px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            #wrapper {
+                flex-direction: column;
+            }
+        }
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-footer .btn {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .modal-footer .btn:hover {
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-3">
+            <h4>HCare Admin</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/admin">📊 Tổng quan</a>
+            <a class="nav-link active" href="/admin/hospitals">🏥 Quản lý bệnh viện</a>
+            <a class="nav-link" href="/admin/medicines">💊 Quản lý thuốc</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Quản lý thuốc</h2>
+            <a href="/admin/medicines/create" class="btn btn-primary">Thêm thuốc</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Mô tả</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thao Tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="medicine : ${medicines}">
+                    <td th:text="${medicine.name}"></td>
+                    <td th:text="${medicine.description}"></td>
+                    <td th:text="${medicine.price}"></td>
+                    <td th:text="${medicine.quantity}"></td>
+                    <td>
+                        <a th:href="@{/admin/medicines/update/{id}(id=${medicine.id})}" class="btn btn-primary">Sửa</a>
+                        <a th:href="@{/admin/medicines/delete/{id}(id=${medicine.id})}" class="btn btn-danger btn-delete">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold" id="confirmDeleteLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Xác nhận xóa
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="bi bi-trash text-danger display-4 mb-3"></i>
+                <p class="fw-semibold">Bạn có chắc chắn muốn xóa mục này không?</p>
+                <p class="text-muted">Hành động này không thể hoàn tác. Hãy cân nhắc trước khi thực hiện.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
+                    <i class="bi bi-arrow-left-circle me-1"></i>Hủy
+                </button>
+                <a id="confirmDeleteButton" href="#" class="btn btn-danger">
+                    <i class="bi bi-trash-fill me-1"></i>Xóa
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".btn-delete");
+        const confirmDeleteModal = new bootstrap.Modal(document.getElementById("confirmDeleteModal"));
+        const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                const deleteUrl = button.getAttribute("href");
+                confirmDeleteButton.setAttribute("href", deleteUrl);
+                confirmDeleteModal.show();
+            });
+        });
+    });
+</script>
+</body>
+</html>

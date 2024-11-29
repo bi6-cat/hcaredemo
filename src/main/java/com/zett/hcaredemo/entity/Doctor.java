@@ -41,6 +41,12 @@ public class Doctor {
     @Column(name = "profile_picture_url", columnDefinition = "NVARCHAR(255)")
     private String profilePictureUrl;
 
+    @Column(name = "rating", columnDefinition = "DECIMAL(2, 1)")
+    private Double rating;
+
+    @Column(name = "review_count")
+    private Integer reviewCount;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -49,15 +55,15 @@ public class Doctor {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DoctorSchedule> doctorSchedules;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<HealthCheckAppointment> healthCheckAppointments;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Prescription> prescriptions;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MedicalRecord> medicalRecords;
 }

@@ -17,16 +17,16 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String name;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "head_of_department", columnDefinition = "VARCHAR(100)")
+    @Column(name = "head_of_department", columnDefinition = "NVARCHAR(100)")
     private String headOfDepartment;
 
-    @Column(name = "phone", columnDefinition = "VARCHAR(15)")
+    @Column(name = "phone", columnDefinition = "NVARCHAR(15)")
     private String phone;
 
     @Column(name = "created_at", updatable = false)
@@ -50,13 +50,13 @@ public class Department {
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Doctor> doctors;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DepartmentService> services;
 
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<HealthCheckAppointment> healthCheckAppointments;
 
 }

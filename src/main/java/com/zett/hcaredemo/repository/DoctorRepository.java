@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
@@ -19,4 +20,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
     Page<Doctor> findByKeyword(String keyword, Pageable pageable);
 
     Doctor findByUser(User user);
+
+    List<Doctor> findByDepartmentId(UUID id);
+
+    Optional<Doctor> findByUserId(UUID id);
 }

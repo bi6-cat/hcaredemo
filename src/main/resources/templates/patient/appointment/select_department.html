@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <section layout:fragment="content" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-full max-w-3xl">
+                        <div class="relative">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div class="w-1/5 text-center">
+                                    <div class="bg-green-500 rounded-full h-12 w-12 flex items-center justify-center text-white text-xl font-bold mx-auto">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-sm font-medium text-green-500 mt-2">Bệnh viện</span>
+                                </div>
+                                <div class="w-1/5 text-center">
+                                    <div class="bg-blue-600 rounded-full h-12 w-12 flex items-center justify-center text-white text-xl font-bold mx-auto">2</div>
+                                    <span class="text-sm font-medium text-blue-600 mt-2">Khoa</span>
+                                </div>
+                                <div class="w-1/5 text-center">
+                                    <div class="bg-gray-300 rounded-full h-12 w-12 flex items-center justify-center text-gray-600 text-xl font-bold mx-auto">3</div>
+                                    <span class="text-sm font-medium text-gray-500 mt-2">Dịch vụ</span>
+                                </div>
+                                <div class="w-1/5 text-center">
+                                    <div class="bg-gray-300 rounded-full h-12 w-12 flex items-center justify-center text-gray-600 text-xl font-bold mx-auto">4</div>
+                                    <span class="text-sm font-medium text-gray-500 mt-2">Bác sĩ</span>
+                                </div>
+                                <div class="w-1/5 text-center">
+                                    <div class="bg-gray-300 rounded-full h-12 w-12 flex items-center justify-center text-gray-600 text-xl font-bold mx-auto">5</div>
+                                    <span class="text-sm font-medium text-gray-500 mt-2">Lịch khám</span>
+                                </div>
+                            </div>
+                            <div class="relative pt-1">
+                                <div class="flex mb-2 items-center justify-between">
+                                    <div class="w-full bg-gray-200 rounded-full">
+                                        <div class="w-2/5 bg-blue-600 h-2 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Selected Hospital Info -->
+            <div class="max-w-7xl mx-auto mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-hospital text-3xl text-blue-600 mr-4"></i>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800" th:text="${hospital.name}">Tên bệnh viện</h3>
+                                <p class="text-gray-600">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span th:text="${hospital.address}">Địa chỉ bệnh viện</span>
+                                </p>
+                            </div>
+                        </div>
+                        <a href="javascript:history.back()" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit mr-2"></i>Thay đổi
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Department List -->
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Chọn Khoa Khám Bệnh</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div th:each="department : ${departments}" 
+                         class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-stethoscope text-3xl text-blue-600 mr-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-800" th:text="${department.name}">Tên khoa</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4" th:text="${department.description}">Mô tả khoa</p>
+                            <!-->
+                            <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                                <span>
+                                    <i class="fas fa-user-md mr-2"></i>
+                                    <span th:text="${department.doctorCount} + ' bác sĩ'">Số lượng bác sĩ</span>
+                                </span>
+                                <span>
+                                    <i class="fas fa-procedures mr-2"></i>
+                                    <span th:text="${department.serviceCount} + ' dịch vụ'">Số dịch vụ</span>
+                                </span>
+                            </div>
+                            <!-->
+                            <a th:href="@{'/patient/appointments/create/step3/' + ${department.id}}" 
+                               class="block w-full text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                                Chọn khoa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

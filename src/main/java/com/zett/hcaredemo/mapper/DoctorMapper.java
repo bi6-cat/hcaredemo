@@ -2,6 +2,7 @@ package com.zett.hcaredemo.mapper;
 
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
+import com.zett.hcaredemo.dto.doctor.DoctorIndexDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorUpdateDTO;
 import com.zett.hcaredemo.entity.Doctor;
 import org.springframework.stereotype.Component;
@@ -26,16 +27,32 @@ public class DoctorMapper {
         doctorEntity.setProfilePictureUrl(doctor.getProfilePictureUrl());
         doctorEntity.setUser(UserMapper.toUser(doctor.getUser()));
         doctorEntity.setDepartment(DepartmentMapper.toEntity(doctor.getDepartment()));
-        doctorEntity.setDoctorSchedules(doctor.getDoctorSchedules().stream()
-                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()));
-        doctorEntity.setMedicalRecords(doctor.getMedicalRecords().stream()
-                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()));
-        doctorEntity.setPrescriptions(doctor.getPrescriptions().stream()
-                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()));
-        doctorEntity.setHealthCheckAppointments(doctor.getHealthCheckAppointments().stream()
-                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()));
+        doctorEntity.setDoctorSchedules(doctor.getDoctorSchedules() != null ? doctor.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctorEntity.setMedicalRecords(doctor.getMedicalRecords() != null ? doctor.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctorEntity.setPrescriptions(doctor.getPrescriptions() != null ? doctor.getPrescriptions().stream()
+                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctorEntity.setHealthCheckAppointments(doctor.getHealthCheckAppointments() != null ? doctor.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()) : null);
 
         return doctorEntity;
+    }
+    public static DoctorIndexDTO doctorIndexDTO(Doctor doctor) {
+        if (doctor == null) {
+            return null;
+        }
+        DoctorIndexDTO doctorIndexDTO = new DoctorIndexDTO();
+        doctorIndexDTO.setId(doctor.getId());
+        doctorIndexDTO.setFullName(doctor.getFullName());
+        doctorIndexDTO.setDegree(doctor.getDegree());
+        doctorIndexDTO.setGender(doctor.getGender());
+        doctorIndexDTO.setPhoneNumber(doctor.getPhoneNumber());
+        doctorIndexDTO.setEmail(doctor.getEmail());
+        doctorIndexDTO.setExperience(doctor.getExperience());
+        doctorIndexDTO.setProfilePictureUrl(doctor.getProfilePictureUrl());
+        doctorIndexDTO.setDepartment(doctor.getDepartment() != null ? doctor.getDepartment().getName() : null);
+        return doctorIndexDTO;
     }
 
     public static DoctorDTO toDTO(Doctor doctor) {
@@ -50,17 +67,17 @@ public class DoctorMapper {
         doctorDTO.setPhoneNumber(doctor.getPhoneNumber());
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setExperience(doctor.getExperience());
-        doctorDTO.setProfilePictureUrl(doctor.getProfilePictureUrl());
-        doctorDTO.setUser(UserMapper.toDTO(doctor.getUser()));
-        doctorDTO.setDepartment(DepartmentMapper.toDTO(doctor.getDepartment()));
-        doctorDTO.setDoctorSchedules(doctor.getDoctorSchedules().stream()
-                .map(DoctorScheduleMapper::toDTO).collect(Collectors.toSet()));
-        doctorDTO.setMedicalRecords(doctor.getMedicalRecords().stream()
-                .map(MedicalRecordMapper::toDTO).collect(Collectors.toSet()));
-        doctorDTO.setPrescriptions(doctor.getPrescriptions().stream()
-                .map(PrescriptionMapper::toDTO).collect(Collectors.toSet()));
-        doctorDTO.setHealthCheckAppointments(doctor.getHealthCheckAppointments().stream()
-                .map(HealthCheckAppointmentMapper::toDTO).collect(Collectors.toSet()));
+        doctorDTO.setProfilePictureUrl(doctor.getProfilePictureUrl()== null ? "https://i.imgur.com/7lI7D2a.png" : doctor.getProfilePictureUrl());
+        doctorDTO.setUser(doctor.getUser() != null ? UserMapper.toDTO(doctor.getUser()) : null);
+        doctorDTO.setDepartment(doctor.getDepartment() != null ? DepartmentMapper.toDTO(doctor.getDepartment()) : null);
+        doctorDTO.setDoctorSchedules(doctor.getDoctorSchedules() != null ? doctor.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toDTO).collect(Collectors.toSet()) : null);
+        doctorDTO.setMedicalRecords(doctor.getMedicalRecords() != null ? doctor.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toDTO).collect(Collectors.toSet()) : null);
+        doctorDTO.setPrescriptions(doctor.getPrescriptions() != null ? doctor.getPrescriptions().stream()
+                .map(PrescriptionMapper::toDTO).collect(Collectors.toSet()) : null);
+        doctorDTO.setHealthCheckAppointments(doctor.getHealthCheckAppointments() != null ? doctor.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toDTO).collect(Collectors.toSet()) : null);
         return doctorDTO;
     }
 
@@ -95,14 +112,14 @@ public class DoctorMapper {
         doctor.setProfilePictureUrl(doctorUpdateDTO.getProfilePictureUrl());
         doctor.setDepartment(DepartmentMapper.toEntity(doctorUpdateDTO.getDepartment()));
         doctor.setUser(UserMapper.toUser(doctorUpdateDTO.getUser()));
-        doctor.setDoctorSchedules(doctorUpdateDTO.getDoctorSchedules().stream()
-                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()));
-        doctor.setMedicalRecords(doctorUpdateDTO.getMedicalRecords().stream()
-                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()));
-        doctor.setPrescriptions(doctorUpdateDTO.getPrescriptions().stream()
-                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()));
-        doctor.setHealthCheckAppointments(doctorUpdateDTO.getHealthCheckAppointments().stream()
-                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()));
+        doctor.setDoctorSchedules(doctorUpdateDTO.getDoctorSchedules() != null ? doctorUpdateDTO.getDoctorSchedules().stream()
+                .map(DoctorScheduleMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctor.setMedicalRecords(doctorUpdateDTO.getMedicalRecords() != null ? doctorUpdateDTO.getMedicalRecords().stream()
+                .map(MedicalRecordMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctor.setPrescriptions(doctorUpdateDTO.getPrescriptions() != null ? doctorUpdateDTO.getPrescriptions().stream()
+                .map(PrescriptionMapper::toEntity).collect(Collectors.toSet()) : null);
+        doctor.setHealthCheckAppointments(doctorUpdateDTO.getHealthCheckAppointments() != null ? doctorUpdateDTO.getHealthCheckAppointments().stream()
+                .map(HealthCheckAppointmentMapper::toEntity).collect(Collectors.toSet()) : null);
         return doctor;
     }
 }

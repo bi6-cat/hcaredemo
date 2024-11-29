@@ -34,7 +34,7 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
         List<DoctorSchedule> schedules = new ArrayList<>();
         LocalDate currentDate = startDate;
 
-        for (int day = 0; day < 5; day++) {
+        for (int day = 0; day < 7; day++) {
             if (scheduleExists(currentDate, doctor)) {
                 currentDate = currentDate.plusDays(1);
                 continue; // Skip to the next date if a schedule already exists
@@ -83,8 +83,10 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
                 .findExpiredSchedules(currentDate, currentTime);
 
         for (DoctorSchedule schedule : expiredSchedules) {
+            // Delete expired schedules
             schedule.setIsAvailable(false);
             schedule.setUpdatedAt(now);
+            doctorScheduleRepository.delete(schedule);
         }
 
         // Save all updated schedules

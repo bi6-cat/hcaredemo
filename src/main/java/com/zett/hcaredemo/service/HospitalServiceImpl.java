@@ -3,7 +3,6 @@ package com.zett.hcaredemo.service;
 import com.zett.hcaredemo.dto.department.DepartmentDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalCreateDTO;
 import com.zett.hcaredemo.dto.hospital.HospitalDTO;
-import com.zett.hcaredemo.entity.Department;
 import com.zett.hcaredemo.entity.Hospital;
 import com.zett.hcaredemo.mapper.HospitalMapper;
 import com.zett.hcaredemo.repository.HospitalRepository;
@@ -12,7 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -59,21 +60,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public HospitalDTO create(HospitalCreateDTO hospitalCreateDTO) {
-        // Lấy danh sách Department từ departmentIds
-        Set<Department> departments = new HashSet<>();
-        if (hospitalCreateDTO.getDepartmentIds() != null) {
-            departments = departmentService.findAllByIds(hospitalCreateDTO.getDepartmentIds());
-            if (departments.size() != hospitalCreateDTO.getDepartmentIds().size()) {
-                throw new IllegalArgumentException("One or more Department IDs are invalid");
-            }
-        }
-        // Ánh xạ DTO sang Entity
-        Hospital hospital = HospitalMapper.toEntity(hospitalCreateDTO, departments);
-        // Ánh xạ hospital cho các department
-        for (Department department : departments) {
-            department.setHospital(hospital);
-        }
-        // Lưu hospital vào cơ sở dữ liệu
+        Hospital hospital = HospitalMapper.toEntity(hospitalCreateDTO);
         hospitalRepository.save(hospital);
         return HospitalMapper.toDTO(hospital);
     }
@@ -98,5 +85,10 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public void delete(UUID id) {
         hospitalRepository.deleteById(id);
+    }
+
+    @Override
+    public long countHospital() {
+        return hospitalRepository.count();
     }
 }

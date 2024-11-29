@@ -18,6 +18,9 @@ public class Payment {
     
     @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10, 2)")
     private Double amount;
+
+    @Column(name = "appointment_code", nullable = false, columnDefinition = "VARCHAR(50)")
+    private String appointmentCode;
     
     @Column(name = "payment_method", nullable = false, columnDefinition = "VARCHAR(50)")
     private String paymentMethod;

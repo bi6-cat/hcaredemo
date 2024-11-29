@@ -72,5 +72,5 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private Set<Payment> payments;
-
 }
+

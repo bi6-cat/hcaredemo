@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .payment-method-card {
+            transition: all 0.3s ease;
+        }
+        .payment-method-card:hover {
+            transform: translateY(-2px);
+        }
+        .payment-method-radio:checked + .payment-method-card {
+            border-color: #10B981;
+            background-color: #F0FDF4;
+        }
+    </style>
+</head>
+
+<body>
+    <section layout:fragment="content" class="py-12 bg-gray-50">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">Xác nhận thanh toán</h1>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="space-y-4 mb-8">
+                    <div>
+                        <h3 class="text-sm text-gray-500">Mã lịch hẹn</h3>
+                        <p class="font-semibold" th:text="${appointment.code}">AP001</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-500">Dịch vụ</h3>
+                        <p class="font-semibold" th:text="${appointment.departmentService.name}">Khám tổng quát</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-500">Số tiền</h3>
+                        <p class="font-semibold text-xl" th:text="${#numbers.formatDecimal(appointment.departmentService.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">500.000 VNĐ</p>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4">Chọn phương thức thanh toán</h3>
+                    <form id="paymentForm" th:action="@{/patient/payments/process/{code}(code=${appointment.code})}" method="POST">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Cash Payment -->
+                            <div class="relative">
+                                <input type="radio" name="paymentMethod" value="CASH" id="cash" class="hidden payment-method-radio" checked>
+                                <label for="cash" class="payment-method-card block p-4 border rounded-lg cursor-pointer">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full mr-4">
+                                            <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Tiền mặt</h4>
+                                            <p class="text-sm text-gray-500">Thanh toán trực tiếp tại quầy</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Payment Test -->
+                            <div class="relative">
+                                <input type="radio" name="paymentMethod" value="TEST" id="test" class="hidden payment-method-radio">
+                                <label for="test" class="payment-method-card block p-4 border rounded-lg cursor-pointer">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-full mr-4">
+                                            <i class="fas fa-vial text-blue-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Payment Test</h4>
+                                            <p class="text-sm text-gray-500">Thanh toán thử nghiệm</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Momo -->
+                            <div class="relative opacity-50">
+                                <input type="radio" name="paymentMethod" value="MOMO" id="momo" class="hidden payment-method-radio" disabled>
+                                <label for="momo" class="payment-method-card block p-4 border rounded-lg cursor-not-allowed">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 flex items-center justify-center bg-pink-100 rounded-full mr-4">
+                                            <i class="fas fa-wallet text-pink-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Momo</h4>
+                                            <p class="text-sm text-gray-500">Đang phát triển</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Bank Transfer -->
+                            <div class="relative opacity-50">
+                                <input type="radio" name="paymentMethod" value="BANK" id="bank" class="hidden payment-method-radio" disabled>
+                                <label for="bank" class="payment-method-card block p-4 border rounded-lg cursor-not-allowed">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 flex items-center justify-center bg-purple-100 rounded-full mr-4">
+                                            <i class="fas fa-university text-purple-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold">Chuyển khoản</h4>
+                                            <p class="text-sm text-gray-500">Đang phát triển</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-end space-x-4">
+                            <a th:href="@{/patient/appointments/{code}(code=${appointment.code})}" 
+                               class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-300">
+                                Hủy
+                            </a>
+                            <button type="submit" 
+                                    class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition duration-300">
+                                Xác nhận thanh toán
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

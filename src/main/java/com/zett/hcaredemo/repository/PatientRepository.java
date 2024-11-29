@@ -12,4 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface PatientRepository extends JpaRepository<Patient, UUID>{
     @Query("SELECT p FROM Patient p WHERE p.fullName LIKE %?1%")
     Page<Patient> findAll(String keyword, Pageable pageable);
+    Patient findByUser_Username(String username);
+
 }
