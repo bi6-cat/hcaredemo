@@ -249,8 +249,11 @@
                 <div class="book-appointment text-center" data-aos="zoom-in">
                     <h3 class="text-2xl font-bold mb-3">Đặt khám ngay</h3>
                     <p class="mb-6 text-lg">Đặt lịch khám dễ dàng, nhanh chóng</p>
-                    <button class="transform hover:scale-105 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold"
-                            onclick="window.location.href='/appointments'">Đặt lịch ngay</button>
+                    <a th:href="@{/patient/appointments/create/step2/{id}(id=${hospital.id})}"
+                    class="inline-block transform transition-all duration-300 bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Đặt lịch ngay
+                 </a>
+                 
                 </div>
 
                 <div class="contact-info" data-aos="fade-left" data-aos-delay="100">

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -124,4 +125,16 @@ public class HealthCheckAppointmentServiceImpl implements HealthCheckAppointment
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with code: " + code));
     }
 
+    @Override
+    public void confirmAppointment(UUID id) {
+        HealthCheckAppointment appointment = findById(id);
+        appointment.setStatus("CONFIRMED");
+        appointment.setUpdatedAt(LocalDateTime.now());
+        healthCheckAppointmentRepository.save(appointment);
+    }
+
+    @Override
+    public List<HealthCheckAppointment> findByDoctorId(UUID doctorId) {
+        return healthCheckAppointmentRepository.findAllByDoctorId(doctorId);
+    }
 }

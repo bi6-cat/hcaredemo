@@ -4,6 +4,7 @@ import com.zett.hcaredemo.entity.HealthCheckAppointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface HealthCheckAppointmentService {
@@ -13,9 +14,11 @@ public interface HealthCheckAppointmentService {
     void delete(UUID id);
     HealthCheckAppointment cancelAppointment(UUID id);
     HealthCheckAppointment completeAppointment(UUID id);
+    void confirmAppointment(UUID id);
     boolean isTimeSlotAvailable(UUID doctorId, LocalDateTime appointmentDate);
     Page<HealthCheckAppointment> findByPatientId(UUID patientId, Pageable pageable);
     Page<HealthCheckAppointment> findByDoctorId(UUID doctorId, Pageable pageable);
     String generateUniqueCode();
     HealthCheckAppointment getByCode(String code);
+    List<HealthCheckAppointment> findByDoctorId(UUID doctorId);
 }

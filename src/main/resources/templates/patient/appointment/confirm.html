@@ -66,7 +66,7 @@
 
         <div class="text-center confirm-btn">
             <a href="#" onclick="history.back()" class="btn btn-secondary back-btn">Quay lại</a>
-            <form th:action="@{/appointment/create/save}" method="post" style="display: inline;">
+            <form th:action="@{/patient/appointment/create/save}" method="post" style="display: inline;">
                 <input type="hidden" name="scheduleId" th:value="${schedule.id}">
                 <button type="submit" class="btn btn-primary">Xác nhận đặt lịch</button>
             </form>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết lịch khám</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+</head>
+
+<body class="bg-gray-50">
+<section layout:fragment="content">
+    <div class="flex min-h-screen">
+        <main class="flex-1 p-8 mt-4">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Chi tiết lịch khám</h1>
+                        <p class="text-gray-600 mt-1">Mã lịch hẹn: <span th:text="${appointment.code}"></span></p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="/doctor/appointments" class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50">
+                            <i class="fa-solid fa-arrow-left mr-2"></i>Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <!-- Appointment Details -->
+                    <div class="col-span-2 space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h2 class="text-lg font-semibold mb-4">Thông tin lịch hẹn</h2>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Thời gian khám</p>
+                                    <p class="font-medium" th:text="${#temporals.format(appointment.appointmentDate, 'HH:mm dd/MM/yyyy')}"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Trạng thái</p>
+                                    <span th:class="${
+                                        appointment.status == 'PENDING' ? 'bg-yellow-50 text-yellow-600 border-yellow-200' :
+                                        appointment.status == 'PAID' ? 'bg-yellow-50 text-yellow-600 border-yellow-200' :
+                                        appointment.status == 'CONFIRMED' ? 'bg-blue-50 text-blue-600 border-blue-200' :
+                                        appointment.status == 'COMPLETED' ? 'bg-green-50 text-green-600 border-green-200' :
+                                        'bg-red-50 text-red-600 border-red-200'
+                                    } + ' px-3 py-1 rounded-full text-sm border'"
+                                          th:text="${
+                                            appointment.status == 'PENDING' ? 'Chờ xác nhận' :
+                                            appointment.status == 'PAID' ? 'Đã thanh toán' :
+                                            appointment.status == 'CONFIRMED' ? 'Đã xác nhận' :
+                                            appointment.status == 'COMPLETED' ? 'Hoàn thành' :
+                                            'Đã hủy'
+                                          }">
+                                    </span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Chuyên khoa</p>
+                                    <p class="font-medium" th:text="${appointment.department.name}"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Dịch vụ khám</p>
+                                    <p class="font-medium" th:text="${appointment.departmentService.name}"></p>
+                                </div>
+                                <div class="col-span-2">
+                                    <p class="text-sm text-gray-500 mb-1">Ghi chú</p>
+                                    <p class="font-medium" th:text="${appointment.note}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Patient Medical Records -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h2 class="text-lg font-semibold mb-4">Hồ sơ bệnh án</h2>
+                            <div class="space-y-4">
+                                <div class="border rounded-lg p-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <p class="font-medium">Lần khám ngày 15/03/2024</p>
+                                        <span class="text-sm text-gray-500">BS. Nguyễn Văn A</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-2">Chẩn đoán: Viêm họng cấp</p>
+                                    <p class="text-gray-600">Đơn thuốc: Paracetamol 500mg, Vitamin C 1000mg</p>
+                                </div>
+                                <!-- More medical records -->
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+
+                        <h2 class="text-lg font-semibold mb-4">Kê đơn thuốc</h2>
+            
+                        <form th:action="@{/prescriptions/create/{id}(id=${id})}" 
+                              th:object="${prescriptionForm}" 
+                              method="post" 
+                              class="space-y-6">
+                            
+                            <!-- Notes Section -->
+                            <div>
+                                <label for="notes" class="text-sm text-gray-500 mb-1 block">Ghi chú chung</label>
+                                <textarea th:field="*{notes}" rows="3" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    placeholder="Nhập ghi chú chung cho đơn thuốc"></textarea>
+                            </div>
+            
+                            <!-- Medicines Section -->
+                            <div id="medicines" class="space-y-4">
+                                <h3 class="text-sm font-medium text-gray-900">Danh sách thuốc</h3>
+                                
+                                <!-- Medicine Entry Template -->
+                                <div class="medicine-entry bg-gray-50 p-4 rounded-lg relative">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <div>
+                                            <label class="text-sm text-gray-500 mb-1 block">Thuốc</label>
+                                            <select name="medicineRequests[0].medicineId" 
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                <option value="">Chọn thuốc</option>
+                                                <option th:each="medicine : ${medicines}" 
+                                                        th:value="${medicine.id}" 
+                                                        th:text="${medicine.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-sm text-gray-500 mb-1 block">Liều dùng</label>
+                                            <input type="text" th:field="*{medicineRequests[0].dosage}" 
+                                                placeholder="VD: 1 viên 3 lần/ngày"
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label class="text-sm text-gray-500 mb-1 block">Số lượng</label>
+                                            <input type="number" th:field="*{medicineRequests[0].quantity}" 
+                                                placeholder="Số lượng"
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label class="text-sm text-gray-500 mb-1 block">Ghi chú</label>
+                                            <input type="text" th:field="*{medicineRequests[0].note}" 
+                                                placeholder="Ghi chú bổ sung"
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Action Buttons -->
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" onclick="addMedicineEntry()" 
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Thêm thuốc
+                                </button>
+                                
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Lưu đơn thuốc
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+
+                    <!-- Patient Information Sidebar -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="text-center mb-4">
+                                <div class="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-regular fa-user text-4xl text-blue-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-lg" th:text="${appointment.patient.fullName}"></h3>
+                                <p class="text-gray-500" th:text="${appointment.patient.phoneNumber}"></p>
+                            </div>
+                            <div class="border-t pt-4 space-y-3">
+                                <div>
+                                    <p class="text-sm text-gray-500">Ngày sinh</p>
+                                    <p class="font-medium" th:text="${appointment.patient.dateOfBirth}"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Giới tính</p>
+                                    <p class="font-medium" th:text="${appointment.patient.gender}"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Địa chỉ</p>
+                                    <p class="font-medium" th:text="${appointment.patient.address}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical History Summary -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Tiền sử bệnh</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                                    <span>Dị ứng Penicillin</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-info text-blue-500"></i>
+                                    <span>Huyết áp cao</span>
+                                </div>
+                                <!-- More medical history items -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        let medicineCount = 1;
+    
+        function addMedicineEntry() {
+            const medicinesDiv = document.getElementById('medicines');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'medicine-entry bg-gray-50 p-4 rounded-lg relative';
+            
+            const template = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Medicine</label>
+                        <select name="medicineRequests[${medicineCount}].medicineId" 
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Chọn thuốc</option>
+                            ${document.querySelector('select[name="medicineRequests[0].medicineId"]').innerHTML}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+                        <input type="text" name="medicineRequests[${medicineCount}].dosage" 
+                            placeholder="e.g., 1 viên 3 lần/day"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                        <input type="number" name="medicineRequests[${medicineCount}].quantity" 
+                            placeholder="Số lượng"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Note</label>
+                        <input type="text" name="medicineRequests[${medicineCount}].note" 
+                            placeholder="Ghi chú thêm"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" 
+                    class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            newEntry.innerHTML = template;
+            medicinesDiv.appendChild(newEntry);
+            medicineCount++;
+        }
+    </script>
+</section>
+
+
+</body>
+</html>

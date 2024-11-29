@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/appointments")
-public class HealthCheckAppointmentController {
+@RequestMapping("patient/appointments")
+public class PatientAppointmentController {
 
     @Autowired
     private HealthCheckAppointmentRepository appointmentRepository;
@@ -210,7 +210,7 @@ public class HealthCheckAppointmentController {
         session.removeAttribute("selectedService");
         session.removeAttribute("selectedDoctor");
     
-        return "redirect:/appointments";
+        return "redirect:/patient/appointments";
     }
 
     @GetMapping("/{id}/edit")
@@ -228,7 +228,7 @@ public class HealthCheckAppointmentController {
         appointment.setStatus("COMPLETED");
         appointment.setUpdatedAt(LocalDateTime.now());
         appointmentRepository.save(appointment);
-        return "redirect:/appointments";
+        return "redirect:/patient/appointments";
     }
 
     @GetMapping("/{id}")
