@@ -1,11 +1,15 @@
 package com.zett.hcaredemo.controller;
 
+import com.zett.hcaredemo.dto.medicine.PrescriptionForm;
 import com.zett.hcaredemo.entity.Doctor;
 import com.zett.hcaredemo.entity.User;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 import com.zett.hcaredemo.repository.DoctorRepository;
+import com.zett.hcaredemo.repository.MedicineRepository;
 import com.zett.hcaredemo.repository.UserRepository;
 import com.zett.hcaredemo.service.HealthCheckAppointmentService;
+import com.zett.hcaredemo.service.MedicineService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +32,9 @@ public class DoctorAppointmentController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MedicineService medicineService;
+
     @GetMapping
     public String listAppointments(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); 
@@ -47,7 +54,10 @@ public class DoctorAppointmentController {
     @GetMapping("/{id}")
     public String viewAppointment(@PathVariable UUID id, Model model) {
         var appointment = healthCheckAppointmentService.findById(id);
+        model.addAttribute("prescriptionForm", new PrescriptionForm());
         model.addAttribute("appointment", appointment);
+        model.addAttribute("id", id);
+        model.addAttribute("medicines", medicineService.getAllMedicines());
         return "doctors/appointment/detail";
     }
 

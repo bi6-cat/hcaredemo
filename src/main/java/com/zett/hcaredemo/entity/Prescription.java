@@ -49,7 +49,7 @@ public class Prescription {
     @JoinColumn(name = "appointment_id")
     private HealthCheckAppointment appointment;
 
-    @OneToMany(mappedBy = "prescription")
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<PrescriptionMedicine> prescriptionMedicines;
 
     @OneToOne(mappedBy = "prescription")

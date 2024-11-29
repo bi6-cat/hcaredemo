@@ -14,4 +14,11 @@ public class MedicineDTO {
     private Double price;
     private Integer quantity;
     private Set<PrescriptionMedicineDTO> prescriptionMedicines;
+
+    public MedicineDTO() {}
+    
+    public MedicineDTO(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
