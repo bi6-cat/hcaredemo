@@ -241,7 +241,7 @@
             <div class="bg-white p-8 rounded-lg shadow-md" data-aos="fade-up">
                 <h2 class="section-title text-2xl font-bold">Giới thiệu</h2>
                 <p class="text-gray-600 leading-relaxed">
-                    Bệnh viện Lê Văn Thịnh được xây dựng vào năm 2008 với quy mô ban đầu chỉ 50 giường bệnh, thực hiện nghĩa vụ khám, chữa bệnh cho nhân dân trên địa bàn suốt 10 năm xây dựng và trưởng thành...
+                    <span th:text="${hospital.description}">Mô tả bệnh viện</span>
                 </p>
             </div>
 
@@ -263,7 +263,9 @@
                     <h3 class="section-title text-xl font-bold">Tổng đài hỗ trợ</h3>
                     <p class="text-gray-600">Hotline</p>
                     <p class="font-bold text-gray-800 text-lg">(028)6677 8386</p>
-                    <p class="text-gray-600 mt-2">Tư vấn đặt khám: +84 123 456 789</p>
+                    <p class="text-gray-600 mt-2">Tư vấn đặt khám:
+                    <span th:text="${hospital.phone}" class="font-bold text-gray-800 text-lg"></span>
+                    </p>
                 </div>
             </div>
         </div>

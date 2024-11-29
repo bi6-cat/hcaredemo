@@ -25,6 +25,7 @@ public class DoctorCreateDTO {
     @NotBlank(message = "Email is required")
     private String email;
     private String experience;
+    private String description;
     private String profilePictureUrl;
     private UUID departmentId;
     private UUID userId;

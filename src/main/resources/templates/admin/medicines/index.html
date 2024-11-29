@@ -206,7 +206,18 @@
     <div class="main-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Quản lý thuốc</h2>
-            <a href="/admin/medicines/create" class="btn btn-primary">Thêm thuốc</a>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Form Tìm kiếm -->
+                <form class="d-flex w-100 me-2" th:action="@{/admin/medicines}" method="get">
+                    <input type="text" name="keyword" class="form-control me-2" placeholder="Tìm kiếm theo tên thuốc..." th:value="${keyword}">
+                    <button class="btn btn-info" type="submit">Tìm kiếm</button>
+                </form>
+
+                <!-- Nút Thêm thuốc -->
+                <a href="/admin/medicines/create" class="btn btn-primary">Thêm thuốc</a>
+            </div>
+
+
         </div>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -233,6 +244,43 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Phân trang -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div>
+                <span>Hiển thị từ <span th:text="${page * size + 1}"></span> đến <span th:text="${(page + 1) * size}"></span> trong tổng số <span th:text="${totalElements}"></span> thuốc</span>
+            </div>
+            <div>
+                <ul class="pagination justify-content-end">
+                    <!-- Trang đầu tiên -->
+                    <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/medicines(page=0, size=${pageSize}, keyword=${keyword}, sortBy=${sortBy}, order=${order})}">Đầu</a>
+                    </li>
+
+                    <!-- Trang trước -->
+                    <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/medicines(page=${page - 1}, size=${pageSize}, keyword=${keyword}, sortBy=${sortBy}, order=${order})}">Trước</a>
+                    </li>
+
+                    <!-- Các trang giữa -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == page} ? 'active'">
+                        <a class="page-link" th:href="@{/admin/medicines(page=${i}, size=${pageSize}, keyword=${keyword}, sortBy=${sortBy}, order=${order})}" th:text="${i + 1}"></a>
+                    </li>
+
+                    <!-- Trang sau -->
+                    <li class="page-item" th:classappend="${page == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/medicines(page=${page + 1}, size=${pageSize}, keyword=${keyword}, sortBy=${sortBy}, order=${order})}">Sau</a>
+                    </li>
+
+                    <!-- Trang cuối cùng -->
+                    <li class="page-item" th:classappend="${page == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/medicines(page=${totalPages - 1}, size=${pageSize}, keyword=${keyword}, sortBy=${sortBy}, order=${order})}">Cuối</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
     </div>
 </div>
 

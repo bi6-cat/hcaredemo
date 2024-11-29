@@ -83,8 +83,9 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public boolean delete(UUID id) {
         hospitalRepository.deleteById(id);
+        return false;
     }
 
     @Override

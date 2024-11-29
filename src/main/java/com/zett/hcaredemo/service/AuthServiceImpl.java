@@ -1,6 +1,7 @@
 package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.auth.ChangePasswordDTO;
+import com.zett.hcaredemo.dto.auth.LoginDTO;
 import com.zett.hcaredemo.dto.auth.RegisterDTO;
 import com.zett.hcaredemo.dto.auth.UserDTO;
 import com.zett.hcaredemo.entity.Patient;
@@ -122,5 +123,25 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         userRepository.save(user);
+    }
+    @Override
+    public boolean login(LoginDTO loginDTO) {
+        // Validate login request
+        if (loginDTO == null) {
+            throw new IllegalArgumentException("Login request cannot be null");
+        }
+
+        // Check if username exists
+        var user = userRepository.findByUsername(loginDTO.getUsername());
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        // Check if password is correct
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+        return false;
     }
 }

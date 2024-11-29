@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/doctors")
 public class DoctorController {
     private final DoctorService doctorService;
 
@@ -26,7 +25,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @GetMapping
+    @GetMapping("/doctors")
     public String index(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "12") Integer size,
@@ -54,7 +53,7 @@ public class DoctorController {
         return "doctors/index";
     }
 
-    @GetMapping("details/{id}")
+    @GetMapping("/doctors/details/{id}")
     public String viewDetails(@PathVariable UUID id, Model model) {
         DoctorDTO doctor = doctorService.findById(id);
         DepartmentDTO department = doctor.getDepartment();
@@ -64,4 +63,30 @@ public class DoctorController {
         model.addAttribute("department", department);
         return "doctors/details";
     }
+    @GetMapping("/doctor")
+    public String doctor(Model model) {
+        DoctorDTO doctor = doctorService.findByUser();
+        model.addAttribute("doctorDTO", doctor);
+        return "doctor-layer/index";
+    }
+    @GetMapping("/doctor/update")
+    public String updateForm(Model model) {
+        DoctorDTO doctor = doctorService.findByUser();
+        model.addAttribute("doctorUpdateDTO", doctor);
+        return "doctor/update";
+    }
+    @GetMapping("/doctor/schedule")
+    public String schedule(Model model) {
+        DoctorDTO doctor = doctorService.findByUser();
+        Set<DoctorScheduleDTO> doctorSchedules = doctor.getDoctorSchedules();
+        model.addAttribute("doctorSchedules", doctorSchedules);
+        return "doctor/schedule";
+    }
+    @GetMapping("/doctor/schedule/create")
+    public String createScheduleForm(Model model) {
+        model.addAttribute("doctorScheduleDTO", new DoctorScheduleDTO());
+        return "doctor/schedule-create";
+    }
+//    @GetMapping("/doctor/schedule/edit/{id}")
+
 }
