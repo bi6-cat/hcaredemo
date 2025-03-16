@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.service;
 
+import com.zett.hcaredemo.dto.auth.AccountDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorIndexDTO;
@@ -11,6 +12,7 @@ import com.zett.hcaredemo.entity.User;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 import com.zett.hcaredemo.mapper.DoctorMapper;
 import com.zett.hcaredemo.repository.DoctorRepository;
+import com.zett.hcaredemo.repository.RoleRepository;
 import com.zett.hcaredemo.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -34,18 +38,22 @@ public class DoctorServiceImpl implements DoctorService {
     private final UserService userService;
     private final DepartmentService departmentService;
     private final DoctorScheduleService doctorScheduleService;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
     public DoctorServiceImpl(DoctorRepository doctorRepository, UserRepository userRepository,
                              DoctorMapper doctorMapper, UserService userService,
-                             DepartmentService departmentService, DoctorScheduleService doctorScheduleService) {
+                             DepartmentService departmentService, DoctorScheduleService doctorScheduleService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
         this.userRepository = userRepository;
         this.doctorMapper = doctorMapper;
         this.userService = userService;
         this.departmentService = departmentService;
         this.doctorScheduleService = doctorScheduleService;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -77,25 +85,63 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDTO create(DoctorCreateDTO doctorCreateDTO) {
-        User user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+    public AccountDTO create(DoctorCreateDTO doctorCreateDTO) {
+
+        String randomUsername = generateRandomUsername();
+        String randomPassword = generateRandomPassword();
+
+        User user = new User();
+        user.setUsername(randomUsername);
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        user.setRoles(Set.of(roleRepository.findByName("DOCTOR")));
+        user.setEmail(doctorCreateDTO.getEmail());
+        user.setPhone(doctorCreateDTO.getPhoneNumber());
+
+        user.setIsActive(true);
+        userRepository.save(user);
+
         Doctor doctor = DoctorMapper.toEntity(doctorCreateDTO);
+
         doctor.setUser(user);
         user.setDoctor(doctor);
+
         Department department = departmentService.findByIdEntity(doctorCreateDTO.getDepartmentId());
         doctor.setDepartment(department);
+
         Set<Doctor> doctors = department.getDoctors();
         doctors.add(doctor);
         department.setDoctors(doctors);
-        Set<DoctorSchedule> doctorSchedule = doctorScheduleService.findAllByIds(doctorCreateDTO.getDoctorScheduleIds());
-        doctor.setDoctorSchedules(doctorSchedule);
-        for (DoctorSchedule schedule : doctorSchedule) {
-            schedule.setDoctor(doctor);
-        }
-        Doctor savedDoctor = doctorRepository.save(doctor);
-        userRepository.save(user);
-        return DoctorMapper.toDTO(savedDoctor);
+
+        doctorRepository.save(doctor);
+
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setUsername(randomUsername);
+        accountDTO.setPassword(randomPassword);
+        log.info("Doctor created with username: {}", randomUsername);
+        log.info("Doctor created with password: {}", randomPassword);
+        return accountDTO;
+
     }
+    // Phương thức tạo username ngẫu nhiên
+    private String generateRandomUsername() {
+        return "user_" + UUID.randomUUID().toString(); // Tạo username với UUID duy nhất
+    }
+
+    // Phương thức tạo mật khẩu ngẫu nhiên
+    private String generateRandomPassword() {
+        int length = 10; // Độ dài mật khẩu
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=<>?"; // Các ký tự cho mật khẩu
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index)); // Chọn ngẫu nhiên một ký tự từ chuỗi
+        }
+
+        return password.toString(); // Trả về mật khẩu ngẫu nhiên
+    }
+
 
     @Override
     public DoctorDTO update(UUID id, DoctorUpdateDTO dto) {
@@ -136,9 +182,15 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Set<DoctorDTO> getDoctorsByDepartment(UUID departmentId) {
+    public Set<DoctorIndexDTO> getDoctorsByDepartment(UUID departmentId) {
         return doctorRepository.findByDepartmentId(departmentId).stream()
-                .map(DoctorMapper::toDTO)
+                .map(DoctorMapper::doctorIndexDTO)
                 .collect(Collectors.toSet());
+    }
+    @Override
+    public DoctorDTO findByUser() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Doctor doctor = doctorRepository.findByUser(user);
+        return DoctorMapper.toDTO(doctor);
     }
 }

@@ -24,7 +24,7 @@ public interface DepartmentService {
 
     Department findByIdEntity(UUID id);
 
-    DepartmentDTO create(DepartmentCreateDTO departmentCreateDTO, UUID hospitalId);
+    void create(DepartmentCreateDTO departmentCreateDTO, UUID hospitalId);
 
     DepartmentDTO update(UUID id, DepartmentUpdateDTO departmentDTO);
 

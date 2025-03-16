@@ -42,15 +42,17 @@ public class SecurityConfiguration {
                                 .requestMatchers("/hospitals/**").permitAll()
 //                                .requestMatchers("/hospitals/**/departments/**").hasAnyRole("ADMIN", "DOCTOR", "PATIENT")
                                 .requestMatchers("/contact/**").permitAll()
-                                .requestMatchers("/appointments/**").hasRole("PATIENT")
+//                                .requestMatchers("/appointments/**").hasRole("PATIENT")
+                                .requestMatchers("/appointments/**").permitAll()
 
                                 .requestMatchers("/h2-console/**").permitAll()
                                 // allow access to static resources
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                                 // protect admin resources
-                                .requestMatchers("/admin/**").permitAll()
+                                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/patient/**").hasAnyRole("ADMIN", "PATIENT")
-                                .requestMatchers("/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
+//                                .requestMatchers("/doctor/**").hasAnyRole("ADMIN", "DOCTOR")
+                                .requestMatchers("/doctor/**").permitAll()
                                 // protect all other requests and require user authentication
                                 .anyRequest().authenticated())
                                 // configure login/logout redirection

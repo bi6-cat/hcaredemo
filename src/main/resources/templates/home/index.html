@@ -171,7 +171,7 @@
                 </div>
                 <h3 class="text-2xl font-bold mb-4 text-gray-800">Đặt lịch trực tuyến</h3>
                 <p class="text-gray-600 leading-relaxed mb-6">Dễ dàng đặt lịch khám với bác sĩ yêu thích của bạn chỉ với vài thao tác đơn giản.</p>
-                <a href="#" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                <a th:href="@{/patient/appointments}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors">
                     Tìm hiểu thêm
                     <i class="fas fa-arrow-right ml-2"></i>
                 </a>
@@ -197,7 +197,7 @@
                 </div>
                 <h3 class="text-2xl font-bold mb-4 text-gray-800">Hồ sơ điện tử</h3>
                 <p class="text-gray-600 leading-relaxed mb-6">Quản lý hồ sơ bệnh án và đơn thuốc trực tuyến một cách an toàn, bảo mật.</p>
-                <a href="#" class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700 transition-colors">
+                <a th:href="@{/patients}" class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700 transition-colors">
                     Tìm hiểu thêm
                     <i class="fas fa-arrow-right ml-2"></i>
                 </a>
@@ -225,12 +225,12 @@
         </div>
 
         <!-- CTA Button -->
-        <div class="text-center mt-16">
-            <a th:href="@{/appointment}" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                <i class="fas fa-stethoscope mr-2"></i>
-                <span th:text="#{button.bookNow}">Đặt lịch khám ngay</span>
-            </a>
-        </div>
+<!--        <div class="text-center mt-16">-->
+<!--            <a th:href="@{/appointment}" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">-->
+<!--                <i class="fas fa-stethoscope mr-2"></i>-->
+<!--                <span th:text="#{button.bookNow}">Đặt lịch khám ngay</span>-->
+<!--            </a>-->
+<!--        </div>-->
     </div>
 </section>
 

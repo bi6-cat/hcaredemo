@@ -1,5 +1,6 @@
 package com.zett.hcaredemo.service;
 
+import com.zett.hcaredemo.dto.auth.AccountDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorCreateDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorDTO;
 import com.zett.hcaredemo.dto.doctor.DoctorIndexDTO;
@@ -22,7 +23,7 @@ public interface DoctorService {
 
     DoctorDTO getDoctorByUsername(String name);
 
-    DoctorDTO create(DoctorCreateDTO doctorCreateDTO);
+    AccountDTO create(DoctorCreateDTO doctorCreateDTO);
 
     DoctorDTO update(UUID id, DoctorUpdateDTO doctorDTO);
 
@@ -30,6 +31,8 @@ public interface DoctorService {
 
     long countDoctor();
 
-    Set<DoctorDTO> getDoctorsByDepartment(UUID departmentId);
+    Set<DoctorIndexDTO> getDoctorsByDepartment(UUID departmentId);
+
+    DoctorDTO findByUser();
 
 }

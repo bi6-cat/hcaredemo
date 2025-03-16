@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @Controller
-//@RequestMapping("/hospitals/{hospitalId}")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -65,7 +64,7 @@ public class DepartmentController {
     // Handle department creation
     @PostMapping("/hospitals/{hospitalId}/departments/create")
     public String saveDepartment(@PathVariable UUID hospitalId, @ModelAttribute DepartmentCreateDTO department) {
-        DepartmentDTO departmentDTO = departmentService.create(department, hospitalId);
+        departmentService.create(department, hospitalId);
         return "redirect:/hospitals/" + hospitalId + "/departments";
     }
 
@@ -96,6 +95,7 @@ public class DepartmentController {
         departmentService.delete(id);
         return "redirect:/departments";
     }
+
     @GetMapping("hospitals/{hospitalId}/departments/delete/{id}")
     public String deleteByHospitalId(@PathVariable UUID hospitalId, @PathVariable UUID id) {
         departmentService.delete(id);
