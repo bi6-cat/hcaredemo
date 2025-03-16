@@ -2,13 +2,17 @@
 package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.entity.HealthCheckAppointment;
+import com.zett.hcaredemo.entity.Patient;
+import com.zett.hcaredemo.entity.User;
 import com.zett.hcaredemo.repository.HealthCheckAppointmentRepository;
 import com.zett.hcaredemo.exception.ResourceNotFoundException;
 
+import com.zett.hcaredemo.repository.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,9 @@ public class HealthCheckAppointmentServiceImpl implements HealthCheckAppointment
 
     @Autowired
     private HealthCheckAppointmentRepository healthCheckAppointmentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -136,5 +143,14 @@ public class HealthCheckAppointmentServiceImpl implements HealthCheckAppointment
     @Override
     public List<HealthCheckAppointment> findByDoctorId(UUID doctorId) {
         return healthCheckAppointmentRepository.findAllByDoctorId(doctorId);
+    }
+    @Override
+    public Page<HealthCheckAppointment> findByUser(Pageable pageable) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        Patient patient = user.getPatient();
+        return healthCheckAppointmentRepository.findByPatientId(patient.getId(), pageable);
     }
 }

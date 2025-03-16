@@ -1,6 +1,7 @@
 package com.zett.hcaredemo.service;
 
 import com.zett.hcaredemo.dto.auth.ChangePasswordDTO;
+import com.zett.hcaredemo.dto.auth.LoginDTO;
 import com.zett.hcaredemo.dto.auth.RegisterDTO;
 import com.zett.hcaredemo.dto.auth.UserDTO;
 import com.zett.hcaredemo.entity.Patient;
@@ -28,16 +29,14 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PatientRepository patientRepository;
 
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                             UserMapper userMapper, RoleRepository roleRepository, 
+                            RoleRepository roleRepository,
                              PatientRepository patientRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.patientRepository = patientRepository;
     }
@@ -87,9 +86,9 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         }
 
         // Create a new user
-        var user = userMapper.toUser(registerDTO);
+        var user = UserMapper.toUser(registerDTO);
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        Role patientRole = roleRepository.findByName("PATIENT");
+        Role patientRole = roleRepository.findByName("DOCTOR");
         user.setRoles(Set.of(patientRole));
         user.setIsActive(true);
         user = userRepository.save(user);
@@ -101,6 +100,27 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         // Return user DTO
 
         return UserMapper.toUserDTO(user);
+    }
+
+    @Override
+    public boolean login(LoginDTO loginDTO) {
+        // Validate login request
+        if (loginDTO == null) {
+            throw new IllegalArgumentException("Login request cannot be null");
+        }
+
+        // Check if username exists
+        var user = userRepository.findByUsername(loginDTO.getUsername());
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        // Check if password is correct
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+        return false;
     }
 
     @Override

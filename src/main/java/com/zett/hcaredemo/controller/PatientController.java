@@ -6,7 +6,6 @@ import com.zett.hcaredemo.dto.patient.PatientUpdateDTO;
 import com.zett.hcaredemo.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +26,6 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    @Autowired
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
@@ -35,7 +33,7 @@ public class PatientController {
     @GetMapping
     public String index(Model model) {
         PatientDTO patientDTO = patientService.findByUser();
-        if(patientDTO==null){
+        if (patientDTO == null) {
             return "redirect:/patients/create";
         }
         model.addAttribute("patientDTO", patientDTO);
