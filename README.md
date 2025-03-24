@@ -1,4 +1,4 @@
-# HCare
+# HCare - Hệ thống đặt lịch khám và chăm sóc sức khỏe
 
 ## Mô tả
 **HCare** là một hệ thống quản lý chăm sóc sức khỏe được thiết kế để hỗ trợ đặt lịch hẹn, quản lý bệnh nhân, bác sĩ, và các dịch vụ liên quan.  
