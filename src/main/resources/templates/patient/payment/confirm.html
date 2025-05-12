@@ -19,6 +19,18 @@
             border-color: #10B981;
             background-color: #F0FDF4;
         }
+        .stripe-card {
+            border: 2px solid #635BFF;
+            background-color: #F5F5FF;
+        }
+        .stripe-banner {
+            background-color: #635BFF;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 
@@ -26,6 +38,11 @@
     <section layout:fragment="content" class="py-12 bg-gray-50">
         <div class="max-w-2xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-800 mb-8">Xác nhận thanh toán</h1>
+            
+            <!-- Stripe banner -->
+            <div class="stripe-banner mb-6">
+                <span class="font-semibold">Mới!</span> Thanh toán nhanh với Stripe - Thẻ tín dụng quốc tế
+            </div>
             
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="space-y-4 mb-8">
@@ -42,10 +59,27 @@
                         <p class="font-semibold text-xl" th:text="${#numbers.formatDecimal(appointment.departmentService.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">500.000 VNĐ</p>
                     </div>
                 </div>
+                
+                <!-- Stripe Direct Payment Card -->
+                <div class="mb-6 p-4 stripe-card rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://cdn.worldvectorlogo.com/logos/stripe-4.svg" alt="Stripe" class="h-10 w-auto mr-4">
+                            <div>
+                                <h4 class="font-semibold text-lg">Thanh toán nhanh với Stripe</h4>
+                                <p class="text-gray-600">Thanh toán bằng thẻ quốc tế an toàn</p>
+                            </div>
+                        </div>
+                        <a th:href="@{https://buy.stripe.com/test_3cI5kCeTzeYHbsSbIP28800}" 
+                           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-credit-card mr-2"></i>Thanh toán ngay
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Payment Methods -->
                 <div class="mb-8">
-                    <h3 class="text-lg font-semibold mb-4">Chọn phương thức thanh toán</h3>
+                    <h3 class="text-lg font-semibold mb-4">Hoặc chọn phương thức thanh toán khác</h3>
                     <form id="paymentForm" th:action="@{/patient/payments/process/{code}(code=${appointment.code})}" method="POST">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Cash Payment -->
@@ -126,6 +160,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
     </section>
 </body>

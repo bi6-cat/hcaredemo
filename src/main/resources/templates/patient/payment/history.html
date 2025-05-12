@@ -47,7 +47,7 @@
                                     </td>
                                     <td class="px-4 py-2" th:text="${#temporals.format(payment.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td class="px-4 py-2 text-center">
-                                        <a th:href="@{'/payments/detail/' + ${payment.id}}" 
+                                        <a th:href="@{#}" 
                                            class="text-blue-600 hover:text-blue-800 flex items-center">
                                             <i class="fas fa-eye mr-1"></i> Xem
                                         </a>

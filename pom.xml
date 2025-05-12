@@ -34,6 +34,13 @@
         <mapstruct.version>1.6.2</mapstruct.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.0.0</version>
+        </dependency>
+
         <!-- Tạo mã random -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -143,7 +150,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <!-- Maven Compiler Plugin with Lombok and MapStruct -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

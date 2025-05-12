@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/layout}">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính năng đang phát triển - HealthCare Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .development-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(99, 91, 255, 0.7);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px rgba(99, 91, 255, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(99, 91, 255, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section layout:fragment="content" class="py-12 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <!-- Banner phát triển -->
+                <div class="bg-indigo-600 p-6 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                        <svg class="-ml-1 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
+                            <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        ĐANG PHÁT TRIỂN
+                    </span>
+                    <h1 class="mt-4 text-3xl font-extrabold text-white tracking-tight">
+                        Tính năng này đang được xây dựng
+                    </h1>
+                    <p class="mt-2 text-lg text-indigo-100">
+                        Chúng tôi đang nỗ lực để mang đến trải nghiệm tốt nhất cho bạn.
+                    </p>
+                </div>
+                
+                <!-- Nội dung chính -->
+                <div class="p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-center">
+                        <div class="development-animation mb-8 md:mb-0 md:mr-12 flex-shrink-0">
+                            <div class="w-64 h-64 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-code-branch text-indigo-600 text-7xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Chúng tôi đang làm gì?</h2>
+                            <ul class="space-y-4">
+                                <li class="flex">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                    <span>Phát triển giao diện người dùng trực quan và thân thiện</span>
+                                </li>
+                                <li class="flex">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                    <span>Tối ưu hóa quá trình đặt lịch và thanh toán</span>
+                                </li>
+                                <li class="flex">
+                                    <i class="fas fa-spinner fa-spin text-indigo-500 mt-1 mr-3"></i>
+                                    <span>Tích hợp thêm nhiều phương thức thanh toán</span>
+                                </li>
+                                <li class="flex">
+                                    <i class="fas fa-spinner fa-spin text-indigo-500 mt-1 mr-3"></i>
+                                    <span>Hoàn thiện hệ thống thông báo và nhắc nhở lịch hẹn</span>
+                                </li>
+                                <li class="flex">
+                                    <i class="fas fa-spinner fa-spin text-indigo-500 mt-1 mr-3"></i>
+                                    <span>Phát triển tính năng theo dõi kết quả xét nghiệm</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-lightbulb text-yellow-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-yellow-700">
+                                            Tính năng này dự kiến sẽ hoàn thành vào 
+                                            <strong th:text="${@environment.getProperty('app.feature.completion-date') ?: 'Quý 3/2025'}">Quý 3/2025</strong>.
+                                            Vui lòng quay lại sau!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phần đề xuất tính năng -->
+                    <div class="mt-12 border-t border-gray-200 pt-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Bạn có đề xuất cho chúng tôi?</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label for="suggestion" class="block text-sm font-medium text-gray-700">
+                                    Ý kiến đóng góp của bạn sẽ giúp chúng tôi phát triển tốt hơn
+                                </label>
+                                <textarea id="suggestion" name="suggestion" rows="3" 
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          placeholder="Nhập ý kiến đóng góp của bạn..."></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" 
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Gửi đề xuất
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="bg-gray-50 px-8 py-6">
+                    <div class="flex justify-between items-center">
+                        <a href="/patient/appointments" 
+                           class="inline-flex items-center text-indigo-600 hover:text-indigo-900">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Trở về trang quản lý lịch hẹn
+                        </a>
+                        
+                        <a href="/" class="inline-flex items-center text-indigo-600 hover:text-indigo-900">
+                            <i class="fas fa-home mr-2"></i>
+                            Trang chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

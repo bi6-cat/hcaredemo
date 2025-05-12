@@ -58,6 +58,11 @@ public class AuthController {
         return "auth/403";
     }
 
+    @GetMapping("/under-development")
+    public String underDevelopment() {
+        return "auth/undev";
+    }
+
     @GetMapping("/change-password")
     public String showChangePasswordForm(Model model) {
         model.addAttribute("changePasswordDTO", new ChangePasswordDTO());

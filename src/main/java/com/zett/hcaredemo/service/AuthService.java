@@ -7,4 +7,5 @@ import com.zett.hcaredemo.dto.auth.UserDTO;
 public interface AuthService {
     void changePassword(ChangePasswordDTO changePasswordDTO);
     UserDTO register(RegisterDTO registerDTO);
+    
 }
