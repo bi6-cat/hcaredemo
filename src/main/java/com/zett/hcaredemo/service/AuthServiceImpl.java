@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,34 +73,39 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         if (registerDTO == null) {
             throw new IllegalArgumentException("Register request cannot be null");
         }
-
+    
         // Check if username is already taken
         var existingUser = userRepository.findByUsername(registerDTO.getUsername());
-
+    
         if (existingUser != null) {
             throw new IllegalArgumentException("Username is already taken");
         }
-
+    
         // Compare password and confirm password
         if (registerDTO.getPassword() == null ||
                 !registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
-
+    
         // Create a new user
         var user = userMapper.toUser(registerDTO);
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        
+        // Fix for the NullPointerException
         Role patientRole = roleRepository.findByName("PATIENT");
-        user.setRoles(Set.of(patientRole));
+        if (patientRole == null) {
+            throw new IllegalStateException("Required role 'PATIENT' not found in the database");
+        }
+        
+        user.setRoles(Collections.singleton(patientRole));
         user.setIsActive(true);
         user = userRepository.save(user);
-
+    
         Patient patient = new Patient();
         patient.setUser(user);
         patientRepository.save(patient);
-
+    
         // Return user DTO
-
         return UserMapper.toUserDTO(user);
     }
 
